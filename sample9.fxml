@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="554.0" prefWidth="399.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane layoutX="-135.0" layoutY="-185.0" prefHeight="741.0" prefWidth="530.0" style="-fx-background-color: Black;" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="-135.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-185.0">
+         <center>
+            <ImageView fitHeight="48.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="-5.0" right="225.0" top="-650.0" />
+               </BorderPane.margin>
+               <image>
+                  <Image url="@../unnamed.jpeg" />
+               </image>
+            </ImageView>
+         </center>
+         <top>
+            <Label prefHeight="38.0" prefWidth="220.0" style="-fx-text-fill: white; -fx-font-size: 18;" text="Chain Reaction Preferences" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="100.0" right="-100.0" top="200.0" />
+               </BorderPane.margin>
+            </Label>
+         </top>
+         <left>
+            <Line endX="-105.0" startX="290.0" stroke="AQUA" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="-10.0" left="135.0" right="-500.0" top="-600.0" />
+               </BorderPane.margin>
+            </Line>
+         </left>
+      </BorderPane>
+      <Button alignment="TOP_CENTER" layoutX="29.0" layoutY="67.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="354.0" style="-fx-text-fill: White; -fx-background-color: Black; -fx-border-color: Black Black Grey Black;" text="                           Red&#10;Red Component of Player 6's Orb Color" wrapText="true" AnchorPane.bottomAnchor="429.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="67.0" />
+      <Button alignment="TOP_CENTER" contentDisplay="TOP" layoutX="25.0" layoutY="137.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="363.0" style="-fx-background-color: black; -fx-text-fill: white; -fx-border-color: black black grey black;" text="                           Green&#10;Green Component of Player 6's Orb Color" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="11.0" />
+      <Button alignment="TOP_CENTER" layoutX="25.0" layoutY="202.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="354.0" style="-fx-background-color: Black; -fx-border-color: black black grey black; -fx-text-fill: white;" text="                            Blue&#10;Blue Component of Player 6's Orb Color" AnchorPane.bottomAnchor="294.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="202.0" />
+   </children>
+</AnchorPane>
