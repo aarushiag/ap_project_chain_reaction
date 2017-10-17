@@ -3,8 +3,10 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+//import javafx.event.EventListener;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -12,18 +14,28 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 class cell extends StackPane{
 	private Rectangle r;
-	private Label l;
+	private chain2 ch;
+	//private Label l;
 	private int value;
-	public cell(int gx,int gy,int x,int y,int width,int height){
+	public cell(chain2 ch,int gx,int gy,int x,int y,int width,int height){
 		r=new Rectangle(width,height);
 		r.setStroke(Color.RED);
 		r.setFill(Color.BLACK);
-		Label l=new Label(new String("0"));
+		//Label l=new Label(new String("0"));
+		//this.setOnMouseClicked(new cell_click_event());
+		this.ch=ch;
 		value=0;
 		setTranslateX(x);
 		setTranslateY(y);
 		getChildren().addAll(r);
 	}
+	/*class cell_click_event implements EventHandler<MouseEvent>{
+		@Override
+		public void handle(MouseEvent m){
+			System.out.println("cell click");
+			if (ch.turn!=10)r.setFill(Color.BROWN);
+		}
+	}*/
 	public Rectangle get_rectangle(){
 		return r;
 	}
@@ -98,6 +110,42 @@ class grid{
 }
 public class chain2 extends Application{
 	public static int turn=0;
+	private cell[][] gr;
+	class cell_click_event implements EventHandler<MouseEvent>{
+		@Override
+		public void handle(MouseEvent m){
+			System.out.println("cell click");
+			cell temp=(cell)m.getSource();
+			//temp.get_rectangle().setFill(Color.BROWN);
+			Circle crc=new Circle();
+			crc.setRadius(15);
+			if (turn==0)crc.setFill(Color.RED);
+			if (turn==1)crc.setFill(Color.GREEN);
+			if (turn==2)crc.setFill(Color.BLUE);
+			if (turn==3)crc.setFill(Color.PINK);
+			if (turn==4)crc.setFill(Color.YELLOW);
+			if (turn==5)crc.setFill(Color.CYAN);
+			if (turn==6)crc.setFill(Color.MEDIUMPURPLE);
+			if (turn==7)crc.setFill(Color.SNOW);
+			temp.getChildren().add(crc);
+			turn=(turn+1)%8;
+			System.out.println("click identified");
+			for (int i=0;i<6;i++){
+				for (int j=0;j<9;j++){
+					Rectangle r1=gr[i][j].get_rectangle();
+					if (turn==0)r1.setStroke(Color.RED);
+					if (turn==1)r1.setStroke(Color.GREEN);
+					if (turn==2)r1.setStroke(Color.BLUE);
+					if (turn==3)r1.setStroke(Color.PINK);
+					if (turn==4)r1.setStroke(Color.YELLOW);
+					if (turn==5)r1.setStroke(Color.CYAN);
+					if (turn==6)r1.setStroke(Color.MEDIUMPURPLE);
+					if (turn==7)r1.setStroke(Color.SNOW);
+				}
+			}
+		}
+	}
+
 	public static void main(String[] args){
 		launch(args);
 	}
@@ -124,13 +172,14 @@ public class chain2 extends Application{
 		root.getChildren().add(r);*/
 		int n=6;
 		int m=9;
-		cell[][] gr=new cell[n][m];
+		gr=new cell[n][m];
 		for (int i=0;i<n;i++){
 			for (int j=0;j<m;j++){
-				cell c=new cell(i,j,i*50+90,j*50+60,50,50);
+				cell c=new cell(this,i,j,i*50+90,j*50+60,50,50);
 				root.getChildren().add(c);
 				gr[i][j]=c;
-				c.setOnMouseClicked(new EventHandler<MouseEvent>(){
+				c.setOnMouseClicked(new cell_click_event());
+				/*c.setOnMouseClicked(new EventHandler<MouseEvent>(){
 					@Override
 					public void handle(MouseEvent t){
 						boolean b=c.change_value();
@@ -141,12 +190,13 @@ public class chain2 extends Application{
 							if ((i>=0)&&(j+1<=8))Event.fireEvent(gr[i][j+1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
 						}
 					}
-				});
+				});*/
+				//c.setOnMouseClicked(cell_clicked());
 			}
 		}
 		grid g=new grid(gr);
 		//root.getChildren().add(g.get_rectangle());
-		Rectangle r=g.get_rectangle();
+		/*Rectangle r=g.get_rectangle();
 		r.setOnMouseClicked(new EventHandler<MouseEvent>(){
 			@Override
 			public void handle(MouseEvent t){
@@ -168,7 +218,7 @@ public class chain2 extends Application{
 				
 			}
 		});
-		root.getChildren().add(r);
+		root.getChildren().add(r);*/
 		Scene scene=new Scene(root,500,550,Color.WHITE);
 		primaryStage.setScene(scene);
 		primaryStage.show();
