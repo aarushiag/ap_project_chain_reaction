@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane fx:id="subroots6" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s2controller">
+   <children>
+      <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Line endX="290.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
+            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 18;" text="Chain Reaction Preferences" />
+            <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../unnamed.jpeg" />
+               </image>
+            </ImageView>
+            <Button alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="65.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="367.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Red&#10;Red Component of Player 4's Orb Color&#10;" />
+            <Button alignment="BOTTOM_LEFT" layoutX="13.0" layoutY="127.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="367.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 4's Orb Color" />
+            <Button alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="190.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="367.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 4's Orb Color" />
+            <Button fx:id="Backs6" layoutX="282.0" layoutY="528.0" mnemonicParsing="false" onAction="#backs6" prefHeight="42.0" prefWidth="110.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Back" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

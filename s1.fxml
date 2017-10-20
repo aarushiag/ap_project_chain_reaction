@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane fx:id="subroots1" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s1controller">
+   <children>
+      <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: Black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Line endX="290.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
+            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 18;" text="Chain Reaction" />
+            <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../unnamed.jpeg" />
+               </image>
+            </ImageView>
+            <Label layoutX="115.0" layoutY="78.0" prefHeight="35.0" prefWidth="136.0" style="-fx-text-fill: white; -fx-font-size: 20;" text="Chain Reaction" />
+            <ComboBox fx:id="nplayers" layoutX="13.0" layoutY="129.0" onAction="#todo" onTouchReleased="#todo" prefHeight="35.0" prefWidth="361.0">
+               <effect>
+                  <Glow />
+               </effect>
+            </ComboBox>
+            <Button fx:id="PLay1" layoutX="18.0" layoutY="194.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Play with 9*6 Grid" />
+            <Button fx:id="PLay2" layoutX="209.0" layoutY="194.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Play with 15*10 Grid" />
+            <Button fx:id="Resume" layoutX="105.0" layoutY="250.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" style="-fx-background-color: Grey; -fx-text-fill: white;" text="Resume Game" />
+            <Button fx:id="Aboutgame" layoutX="105.0" layoutY="297.0" mnemonicParsing="false" onAction="#aboutgame" prefHeight="35.0" prefWidth="178.0" style="-fx-background-color: Grey; -fx-text-fill: white;" text="About Game" />
+            <Button fx:id="Settings" layoutX="214.0" layoutY="537.0" mnemonicParsing="false" onAction="#settings" prefHeight="35.0" prefWidth="178.0" style="-fx-background-color: Grey; -fx-text-fill: white;" text="Player Settings" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
