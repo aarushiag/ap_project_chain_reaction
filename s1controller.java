@@ -27,7 +27,7 @@ public class s1controller extends AnchorPane
 	
 	 
 	@FXML
-	private AnchorPane subroots1;	
+	private  AnchorPane subroots1;	
 	 
 	@FXML
 	private ComboBox<String> nplayers;
@@ -60,7 +60,7 @@ public class s1controller extends AnchorPane
  
 	
 	@FXML
-	private void settings() throws IOException
+	public void settings() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
 		subroots1.getChildren().setAll(a1);
@@ -84,4 +84,26 @@ public class s1controller extends AnchorPane
 		
 		 
 	}
+	
+	@FXML
+	public  void play1() throws IOException
+	{
+		 
+		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 	 
+		
+		Main obj=new Main();
+		obj.play1(a1);
+	}
+	
+	
+//	@FXML
+//	public  void play2(AnchorPane a2) throws IOException
+//	{
+//		 
+//		 
+//		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 		 
+//		a2.getChildren().setAll(a1);
+//		Main obj=new Main();
+//		obj.play1(a1);
+//	}
 }

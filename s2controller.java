@@ -17,13 +17,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import hello.pages.s1controller;
 public class s2controller extends AnchorPane
 {
 	
 	 
 	 
 	
-	 
+	
+	
 	 
 	@FXML
 	private AnchorPane subroots2;
@@ -105,14 +108,11 @@ public class s2controller extends AnchorPane
 	@FXML
 	private Button Player8;
 	
+ 
 	
-	@FXML
-	private void aboutgame() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s11.fxml"));
-		subroots1.getChildren().setAll(a1);
-	}
 	
+ 
+ 
 	@FXML
 	private void backs11() throws IOException
 	{

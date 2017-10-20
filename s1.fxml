@@ -27,7 +27,7 @@
                   <Glow />
                </effect>
             </ComboBox>
-            <Button fx:id="PLay1" layoutX="18.0" layoutY="194.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Play with 9*6 Grid" />
+            <Button fx:id="PLay1" layoutX="18.0" layoutY="194.0" mnemonicParsing="false" onAction="#play1" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Play with 9*6 Grid" />
             <Button fx:id="PLay2" layoutX="209.0" layoutY="194.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Play with 15*10 Grid" />
             <Button fx:id="Resume" layoutX="105.0" layoutY="250.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" style="-fx-background-color: Grey; -fx-text-fill: white;" text="Resume Game" />
             <Button fx:id="Aboutgame" layoutX="105.0" layoutY="297.0" mnemonicParsing="false" onAction="#aboutgame" prefHeight="35.0" prefWidth="178.0" style="-fx-background-color: Grey; -fx-text-fill: white;" text="About Game" />
