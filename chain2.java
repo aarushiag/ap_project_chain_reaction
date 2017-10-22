@@ -14,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 //import javafx.event.EventListener;
 import javafx.scene.paint.Color;
@@ -150,6 +151,8 @@ class cell extends StackPane{
 	private int value;
 	public int gx;
 	public int gy;
+	public int x;
+	public int y;
 	public atom a1;
 	public atom2 a2;
 	public atom3 a3;
@@ -166,6 +169,8 @@ class cell extends StackPane{
 		value=0;
 		this.gx=gx;
 		this.gy=gy;
+		this.x=x;
+		this.y=y;
 		if ((gx==0)&&(gy==0))threshold=1;
 		else if ((gx==5)&&(gy==0))threshold=1;
 		else if ((gx==0)&&(gy==8))threshold=1;
@@ -178,6 +183,7 @@ class cell extends StackPane{
 		setTranslateX(x);
 		setTranslateY(y);
 		getChildren().addAll(r);
+		//System.out.println(r.getX()+" "+r.getY());
 	}
 	/*class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
@@ -345,14 +351,14 @@ class cell extends StackPane{
 			rt.play();
 			rt2.play();
 			rt3.play();*/
-			Ellipse crc_path=new Ellipse(3,2);
+			Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
 			PathTransition pt=new PathTransition();
 			pt.setNode(a3.crc);
 			pt.setPath(crc_path);
 			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(3000));
+			pt.setDuration(Duration.millis(1000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
 			//PathTransition pt2=new PathTransition();
@@ -421,14 +427,14 @@ class cell extends StackPane{
 			rt.play();
 			rt2.play();
 			rt3.play();*/
-			Ellipse crc_path=new Ellipse(3,2);
+			Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
 			PathTransition pt=new PathTransition();
 			pt.setNode(a3.crc);
 			pt.setPath(crc_path);
 			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(10000));
+			pt.setDuration(Duration.millis(1000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
 			//PathTransition pt2=new PathTransition();
@@ -508,6 +514,34 @@ class cell extends StackPane{
 		System.out.println("cell burst");
 		this.getChildren().remove(molatom);
 		if ((gx-1>=0)&&(gy>=0)){
+			Sphere s=new Sphere(10);
+			set_color(s);
+			/*Bounds b1=this.r.getBoundsInParent();
+			Bounds b2=ch.gr[gx-1][gy].r.getBoundsInParent();
+			double x1=b1.getMinX()+b1.getWidth()/2;
+			double y1=b1.getMinY()+b1.getHeight()/2;
+			double x2=b2.getMinX()+b2.getWidth()/2;
+			double y2=b2.getMinX()+b2.getHeight()/2;*/
+			double x1=490+50*gx;
+			double x2=490+50*(gx-1);
+			double y1=150+50*gy;
+			double y2=150+50*gy;
+			//System.out.println(r.getX()+" "+r.getY()+" "+ch.gr[gx-1][gy].r.getX()+" "+ch.gr[gx-1][gy].r.getY());
+			Line l=new Line(x1,y1,x2,y2);
+			//Ellipse crc_path=new Ellipse(3,4);
+			//Circle crc2_path=new Circle(20);
+			//Circle crc3_path=new Circle(20);
+			PathTransition pt=new PathTransition();
+			pt.setNode(s);
+			pt.setPath(l);
+			pt.setInterpolator(Interpolator.LINEAR);
+			pt.setDuration(Duration.millis(1000));
+			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			pt.setCycleCount(1);
+			l.setVisible(false);
+			pt.play();
+			this.getChildren().add(s);
+			//ch.gr[gx-1][gy].getChildren().add(s);
 			/*final PathTransition p1=new PathTransition();
 			p1.setDuration(Duration.seconds(10.0));
 			//p1.setDelay(Duration.seconds(1.0));
@@ -529,8 +563,41 @@ class cell extends StackPane{
 			Path p1=new Path();*/
 			//p1.getElements().addAll(new MoveTo((gx-1)*50+90,gy*50+60),new VLineTo(100));
 			ch.gr[gx-1][gy].change_value(false);
+			this.getChildren().remove(s);
 		}
 		if ((gx+1<=5)&&(gy>=0)){
+			Sphere s=new Sphere(10);
+			set_color(s);
+			/*Bounds b1=this.r.getBoundsInLocal();
+			Bounds b2=ch.gr[gx+1][gy].r.getBoundsInLocal();
+			double x1=b1.getMinX()+b1.getWidth()/2;
+			double y1=b1.getMinY()+b1.getHeight()/2;
+			double x2=b2.getMinX()+b2.getWidth()/2;
+			double y2=b2.getMinX()+b2.getHeight()/2;*/
+			double x1=490+50*gx;
+			double x2=490+50*(gx+1);
+			double y1=150+50*gy;
+			double y2=150+50*gy;
+			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			Line l=new Line(x1,y1,x2,y2);
+			//Ellipse crc_path=new Ellipse(3,4);
+			//Circle crc2_path=new Circle(20);
+			//Circle crc3_path=new Circle(20);
+			//----------------------------------
+			PathTransition pt=new PathTransition();
+			pt.setNode(s);
+			pt.setPath(l);
+			pt.setInterpolator(Interpolator.LINEAR);
+			pt.setDuration(Duration.millis(10000));
+			//----------------------------------
+			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			//-----------------------------------
+			pt.setCycleCount(1);
+			l.setVisible(false);
+			pt.play();
+			//----------------------------------
+			this.getChildren().add(s);
+			//ch.gr[gx+1][gy].getChildren().add(s);
 			//final PathTransition p1=new PathTransition();
 			//p1.setDuration(Duration.seconds(10.0));
 			//p1.setDelay(Duration.seconds(1.0));
@@ -546,8 +613,36 @@ class cell extends StackPane{
 			//p1.play();
 			//new ParallelTransition(p1).play();
 			ch.gr[gx+1][gy].change_value(false);
+			//this.getChildren().remove(s);
 		}
 		if ((gx>=0)&&(gy-1>=0)){
+			Sphere s=new Sphere(10);
+			set_color(s);
+			/*Bounds b1=this.r.getBoundsInLocal();
+			Bounds b2=ch.gr[gx][gy-1].r.getBoundsInLocal();
+			double x1=b1.getMinX()+b1.getWidth()/2;
+			double y1=b1.getMinY()+b1.getHeight()/2;
+			double x2=b2.getMinX()+b2.getWidth()/2;
+			double y2=b2.getMinX()+b2.getHeight()/2;*/
+			double x1=490+50*gx;
+			double x2=490+50*(gx);
+			double y1=150+50*gy;
+			double y2=150+50*(gy-1);
+			Line l=new Line(x1,y1,x2,y2);
+			//Ellipse crc_path=new Ellipse(3,4);
+			//Circle crc2_path=new Circle(20);
+			//Circle crc3_path=new Circle(20);
+			PathTransition pt=new PathTransition();
+			pt.setNode(s);
+			pt.setPath(l);
+			pt.setInterpolator(Interpolator.LINEAR);
+			pt.setDuration(Duration.millis(1000));
+			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			pt.setCycleCount(1);
+			l.setVisible(false);
+			pt.play();
+			this.getChildren().add(s);
+			//ch.gr[gx][gy-1].getChildren().add(s);
 			//final PathTransition p1=new PathTransition();
 			//p1.setDuration(Duration.seconds(10.0));
 			//p1.setDelay(Duration.seconds(1.0));
@@ -563,8 +658,36 @@ class cell extends StackPane{
 			//new ParallelTransition(p1).play();
 			//p1.play();
 			ch.gr[gx][gy-1].change_value(false);
+			this.getChildren().remove(s);
 		}
 		if ((gx>=0)&&(gy+1<=8)){
+			Sphere s=new Sphere(10);
+			set_color(s);
+			/*Bounds b1=this.r.getBoundsInLocal();
+			Bounds b2=ch.gr[gx][gy+1].r.getBoundsInLocal();
+			double x1=b1.getMinX()+b1.getWidth()/2;
+			double y1=b1.getMinY()+b1.getHeight()/2;
+			double x2=b2.getMinX()+b2.getWidth()/2;
+			double y2=b2.getMinX()+b2.getHeight()/2;*/
+			double x1=490+50*gx;
+			double x2=490+50*(gx);
+			double y1=150+50*gy;
+			double y2=150+50*(gy+1);
+			Line l=new Line(x1,y1,x2,y2);
+			//Ellipse crc_path=new Ellipse(3,4);
+			//Circle crc2_path=new Circle(20);
+			//Circle crc3_path=new Circle(20);
+			PathTransition pt=new PathTransition();
+			pt.setNode(s);
+			pt.setPath(l);
+			pt.setInterpolator(Interpolator.LINEAR);
+			pt.setDuration(Duration.millis(1000));
+			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			pt.setCycleCount(1);
+			l.setVisible(false);
+			pt.play();
+			this.getChildren().add(s);
+			//ch.gr[gx][gy+1].getChildren().add(s);
 			//final PathTransition p1=new PathTransition();
 			//p1.setDuration(Duration.seconds(10.0));
 			//p1.setDelay(Duration.seconds(1.0));
@@ -580,6 +703,7 @@ class cell extends StackPane{
 			//p1.play();
 			//new ParallelTransition(p1).play();
 			ch.gr[gx][gy+1].change_value(false);
+			this.getChildren().remove(s);
 		}
 		//a=null;
 	}
@@ -657,6 +781,7 @@ public class chain2 extends Application{
 		public void handle(MouseEvent m){
 			//System.out.println("cell click");
 			cell temp=(cell)m.getSource();
+			System.out.println(m.getScreenX()+" "+m.getScreenY());
 			System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
 			if (temp.get_value()==0){
