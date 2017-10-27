@@ -10,6 +10,7 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.event.Event;
@@ -34,19 +35,21 @@ import javafx.scene.input.MouseEvent;
 //import java.awt.Font;
 //---------------------------------
 //ISSUES
-//1.need to map players to turn indexes when other players are eliminated
+//1.need to map players to turn indexes when other players are eliminated--->>done
 //2.no splitting animation
 //3.convert grid
 //4.allow change in number of players--->>done
-//5.allow change in size of grid
-//6.allow elimination of players
-//7.elimination of players
-//8.serialisation
-//9.allow change of colors--->>done
+//5.allow change in size of grid--->>done
+//6.allow elimination of players--->>done
+//7.serialisation
+//8.allow change of colors--->>done
 //---------------------------------
 //SOLVED ISSUES
 //4.allow change in number of players
-//9.allow change of colors
+//8.allow change of colors
+//1.need to map players to turn indexes when other players are eliminated
+//5.allow change in size of grid
+//6.allow elimination of players
 //---------------------------------
 class player{
 	int index;
@@ -239,7 +242,8 @@ class cell extends StackPane{
 	public int get_player_index(){
 		if (value==1)return a1.player_index;
 		else if (value==2)return a2.player_index;
-		else return a3.player_index;
+		else if (value==3)return a3.player_index;
+		else return 0;
 	}
 	public int get_value(){
 		return value;
@@ -827,10 +831,13 @@ class grid{
 }
 public class chain2 extends Application{
 	public static int turn=0;
+	public int num_turn=0;
 	public cell[][] gr;
 	public Group root;
-	public int num_players=8;
+	public int num_players=4;
 	public player[] all_players;
+	public int hor;
+	public int ver;
 	public int[] red={0,255,0,150,120,10,255,255};
 	public int[] green={255,0,0,20,255,255,10,255};
 	public int[] blue={0,0,255,190,10,255,255,255};
@@ -858,16 +865,87 @@ public class chain2 extends Application{
 			System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
 			if (temp.get_value()==0){
+				num_turn++;
 				atom a=new atom(chain2.this);
 				temp.a1=a;
 				temp.value_plus();
 				temp.getChildren().add(temp.a1.get_atom());
 				temp.molatom=a.molatom;
+				//while(alive[turn-1]==false){
+				
+				if (num_turn>num_players){
+					for (int i=0;i<num_players;i++){
+						all_players[i].num_atom=0;
+					}
+					for (int i=0;i<hor;i++){
+						for (int j=0;j<ver;j++){
+							int pl=gr[i][j].get_player_index();
+							if (gr[i][j].get_value()>0){
+							all_players[pl].num_atom++;
+						}
+						}
+					}
+					System.out.println();
+					for (int i=0;i<num_players;i++){
+						System.out.print(all_players[i].num_atom+" ");
+						if (all_players[i].num_atom==0)alive[i]=false;
+					}
+				}
+				/*do{
+					turn=(turn+1)%num_players;
+					}
+					while(alive[turn]==false);*/
 				turn=(turn+1)%num_players;
+				while(alive[turn]==false){
+					turn=(turn+1)%num_players;
+				}
+					//num_turn++;
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
+				num_turn++;
 				temp.getChildren().remove(temp.a1.get_atom());
 				b=temp.change_value(true);
+				
+				//evaluation of number of atoms should be done after cells have burst
+				if (num_turn>num_players){
+					for (int i=0;i<num_players;i++){
+						all_players[i].num_atom=0;
+					}
+					for (int i=0;i<hor;i++){
+						for (int j=0;j<ver;j++){
+							int pl=gr[i][j].get_player_index();
+							if (gr[i][j].get_value()>0){
+							all_players[pl].num_atom++;
+							}
+						}
+					}
+					System.out.println();
+					for (int i=0;i<num_players;i++){
+						System.out.print(all_players[i].num_atom+" ");
+						if (all_players[i].num_atom==0)alive[i]=false;
+					}
+				}
+				/*do{
+					turn=(turn+1)%num_players;
+					}
+					while(alive[turn]==false);*/
 				turn=(turn+1)%num_players;
+				while(alive[turn]==false){
+					turn=(turn+1)%num_players;
+				}
+					//num_turn++;
+			}
+			int ct=0;
+			int flag=-1;
+			for (int i=0;i<num_players;i++){
+				if (alive[i]==true){
+					ct++;
+					flag=i;
+				}
+			}
+			if (ct==1){
+				System.out.println("Player "+(flag+1)+" won");
+				Platform.exit();
+				System.exit(0);
 			}
 			//if (temp.get_value()!=0)temp.getChildren().remove(temp.a.get_atom());
 			//boolean b=temp.change_value(true);//!!!!!!!!!!!!
@@ -918,8 +996,8 @@ public class chain2 extends Application{
 			//}
 			//turn=(turn+1)%8;
 			System.out.println("click identified");
-			for (int i=0;i<6;i++){
-				for (int j=0;j<9;j++){
+			for (int i=0;i<hor;i++){
+				for (int j=0;j<ver;j++){
 					Rectangle r1=gr[i][j].get_rectangle();
 					//----------------------------------------
 					//!!! Needs to change according to number of players remaining in the game
@@ -975,11 +1053,11 @@ public class chain2 extends Application{
 		r.setWidth(50);
 		r.setHeight(50);
 		root.getChildren().add(r);*/
-		int n=6;
-		int m=9;
-		gr=new cell[n][m];
-		for (int i=0;i<n;i++){
-			for (int j=0;j<m;j++){
+		hor=6;
+		ver=9;
+		gr=new cell[hor][ver];
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
 				cell c=new cell(this,i,j,i*50+90,j*50+60,50,50);
 				root.getChildren().add(c);
 				gr[i][j]=c;
