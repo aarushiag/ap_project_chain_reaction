@@ -32,10 +32,48 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 //import java.awt.Font;
+//---------------------------------
+//ISSUES
+//1.need to map players to turn indexes when other players are eliminated
+//2.no splitting animation
+//3.convert grid
+//4.allow change in number of players--->>done
+//5.allow change in size of grid
+//6.allow elimination of players
+//7.elimination of players
+//8.serialisation
+//9.allow change of colors--->>done
+//---------------------------------
+//SOLVED ISSUES
+//4.allow change in number of players
+//9.allow change of colors
+//---------------------------------
 class player{
 	int index;
 	int num_atom;
 	int num_cell;
+	boolean alive=true;
+	int red;
+	int green;
+	int blue;
+	public player(int index,int red,int green,int blue){
+		this.index=index;
+		this.red=red;
+		this.green=green;
+		this.blue=blue;
+	}
+	public void kill_player(){
+		alive=false;
+	}
+	public int get_red(){
+		return red;
+	}
+	public int get_green(){
+		return green;
+	}
+	public int get_blue(){
+		return blue;
+	}
 }
 class atom{
 	int num;
@@ -62,30 +100,32 @@ class atom{
 	public void change_color(Sphere crc){
 		player_index=ch.turn;
 		final PhongMaterial redm=new PhongMaterial();
-		redm.setDiffuseColor(Color.RED);
+		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
 		final PhongMaterial greenm=new PhongMaterial();
-		greenm.setDiffuseColor(Color.GREEN);
+		greenm.setDiffuseColor(Color.rgb(ch.red[1],ch.green[1],ch.blue[1]));
 		greenm.setSpecularColor(Color.BLACK);
 		final PhongMaterial bluem=new PhongMaterial();
-		bluem.setDiffuseColor(Color.BLUE);
+		bluem.setDiffuseColor(Color.rgb(ch.red[2],ch.green[2],ch.blue[2]));
 		bluem.setSpecularColor(Color.BLACK);
 		final PhongMaterial pinkm=new PhongMaterial();
-		pinkm.setDiffuseColor(Color.PINK);
+		pinkm.setDiffuseColor(Color.rgb(ch.red[3],ch.green[3],ch.blue[3]));
 		pinkm.setSpecularColor(Color.BLACK);
 		final PhongMaterial yellowm=new PhongMaterial();
-		yellowm.setDiffuseColor(Color.YELLOW);
+		yellowm.setDiffuseColor(Color.rgb(ch.red[4],ch.green[4],ch.blue[4]));
 		yellowm.setSpecularColor(Color.BLACK);
 		final PhongMaterial cyanm=new PhongMaterial();
-		cyanm.setDiffuseColor(Color.CYAN);
+		cyanm.setDiffuseColor(Color.rgb(ch.red[5],ch.green[5],ch.blue[5]));
 		cyanm.setSpecularColor(Color.BLACK);
 		final PhongMaterial purplem=new PhongMaterial();
-		purplem.setDiffuseColor(Color.PURPLE);
+		purplem.setDiffuseColor(Color.rgb(ch.red[6],ch.green[6],ch.blue[6]));
 		purplem.setSpecularColor(Color.BLACK);
 		final PhongMaterial whitem=new PhongMaterial();
-		whitem.setDiffuseColor(Color.WHITE);
+		whitem.setDiffuseColor(Color.rgb(ch.red[7],ch.green[7],ch.blue[7]));
 		whitem.setSpecularColor(Color.BLACK);
 		crc.setRadius(10);
+		//-------------------------------------------------
+		//!!! This part needs to change when players will be eliminated
 		if (ch.turn==0)crc.setMaterial(redm);
 		if (ch.turn==1)crc.setMaterial(greenm);
 		if (ch.turn==2)crc.setMaterial(bluem);
@@ -94,6 +134,7 @@ class atom{
 		if (ch.turn==5)crc.setMaterial(cyanm);
 		if (ch.turn==6)crc.setMaterial(purplem);
 		if (ch.turn==7)crc.setMaterial(whitem);
+		//-------------------------------------------------
 		
 	}
 }
@@ -161,7 +202,7 @@ class cell extends StackPane{
 	//public int player_index;
 	public cell(chain2 ch,int gx,int gy,int x,int y,int width,int height){
 		r=new Rectangle(width,height);
-		r.setStroke(Color.RED);
+		r.setStroke(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		r.setFill(Color.BLACK);
 		//Label l=new Label(new String("0"));
 		//this.setOnMouseClicked(new cell_click_event());
@@ -194,6 +235,11 @@ class cell extends StackPane{
 	}*/
 	public Rectangle get_rectangle(){
 		return r;
+	}
+	public int get_player_index(){
+		if (value==1)return a1.player_index;
+		else if (value==2)return a2.player_index;
+		else return a3.player_index;
 	}
 	public int get_value(){
 		return value;
@@ -475,30 +521,32 @@ class cell extends StackPane{
 	}
 	public void set_color(Sphere crc){
 		final PhongMaterial redm=new PhongMaterial();
-		redm.setDiffuseColor(Color.RED);
+		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
 		final PhongMaterial greenm=new PhongMaterial();
-		greenm.setDiffuseColor(Color.GREEN);
+		greenm.setDiffuseColor(Color.rgb(ch.red[1],ch.green[1],ch.blue[1]));
 		greenm.setSpecularColor(Color.BLACK);
 		final PhongMaterial bluem=new PhongMaterial();
-		bluem.setDiffuseColor(Color.BLUE);
+		bluem.setDiffuseColor(Color.rgb(ch.red[2],ch.green[2],ch.blue[2]));
 		bluem.setSpecularColor(Color.BLACK);
 		final PhongMaterial pinkm=new PhongMaterial();
-		pinkm.setDiffuseColor(Color.PINK);
+		pinkm.setDiffuseColor(Color.rgb(ch.red[3],ch.green[3],ch.blue[3]));
 		pinkm.setSpecularColor(Color.BLACK);
 		final PhongMaterial yellowm=new PhongMaterial();
-		yellowm.setDiffuseColor(Color.YELLOW);
+		yellowm.setDiffuseColor(Color.rgb(ch.red[4],ch.green[4],ch.blue[4]));
 		yellowm.setSpecularColor(Color.BLACK);
 		final PhongMaterial cyanm=new PhongMaterial();
-		cyanm.setDiffuseColor(Color.CYAN);
+		cyanm.setDiffuseColor(Color.rgb(ch.red[5],ch.green[5],ch.blue[5]));
 		cyanm.setSpecularColor(Color.BLACK);
 		final PhongMaterial purplem=new PhongMaterial();
-		purplem.setDiffuseColor(Color.PURPLE);
+		purplem.setDiffuseColor(Color.rgb(ch.red[6],ch.green[6],ch.blue[6]));
 		purplem.setSpecularColor(Color.BLACK);
 		final PhongMaterial whitem=new PhongMaterial();
-		whitem.setDiffuseColor(Color.WHITE);
+		whitem.setDiffuseColor(Color.rgb(ch.red[7],ch.green[7],ch.blue[7]));
 		whitem.setSpecularColor(Color.BLACK);
 		crc.setRadius(10);
+		//---------------------------------------------------
+		//!!!this part needs to change because when players are eliminated this will not be function properly
 		if (ch.turn==0)crc.setMaterial(redm);
 		if (ch.turn==1)crc.setMaterial(greenm);
 		if (ch.turn==2)crc.setMaterial(bluem);
@@ -507,6 +555,7 @@ class cell extends StackPane{
 		if (ch.turn==5)crc.setMaterial(cyanm);
 		if (ch.turn==6)crc.setMaterial(purplem);
 		if (ch.turn==7)crc.setMaterial(whitem);
+		//----------------------------------------------------
 		
 	}
 	public void burst_the_cell(){
@@ -563,11 +612,12 @@ class cell extends StackPane{
 			Path p1=new Path();*/
 			//p1.getElements().addAll(new MoveTo((gx-1)*50+90,gy*50+60),new VLineTo(100));
 			ch.gr[gx-1][gy].change_value(false);
-			this.getChildren().remove(s);
+			//this.getChildren().remove(s);
 		}
 		if ((gx+1<=5)&&(gy>=0)){
 			Sphere s=new Sphere(10);
 			set_color(s);
+			//s.setTranslateZ(1000);
 			/*Bounds b1=this.r.getBoundsInLocal();
 			Bounds b2=ch.gr[gx+1][gy].r.getBoundsInLocal();
 			double x1=b1.getMinX()+b1.getWidth()/2;
@@ -580,6 +630,9 @@ class cell extends StackPane{
 			double y2=150+50*gy;
 			System.out.println(x1+" "+y1+" "+x2+" "+y2);
 			Line l=new Line(x1,y1,x2,y2);
+			l.setStroke(Color.WHITE);
+			l.setFill(Color.WHITE);
+			l.setTranslateZ(1000);
 			//Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
@@ -658,7 +711,7 @@ class cell extends StackPane{
 			//new ParallelTransition(p1).play();
 			//p1.play();
 			ch.gr[gx][gy-1].change_value(false);
-			this.getChildren().remove(s);
+			//this.getChildren().remove(s);
 		}
 		if ((gx>=0)&&(gy+1<=8)){
 			Sphere s=new Sphere(10);
@@ -703,7 +756,7 @@ class cell extends StackPane{
 			//p1.play();
 			//new ParallelTransition(p1).play();
 			ch.gr[gx][gy+1].change_value(false);
-			this.getChildren().remove(s);
+			//this.getChildren().remove(s);
 		}
 		//a=null;
 	}
@@ -776,6 +829,26 @@ public class chain2 extends Application{
 	public static int turn=0;
 	public cell[][] gr;
 	public Group root;
+	public int num_players=8;
+	public player[] all_players;
+	public int[] red={0,255,0,150,120,10,255,255};
+	public int[] green={255,0,0,20,255,255,10,255};
+	public int[] blue={0,0,255,190,10,255,255,255};
+	public boolean[] alive;
+	{
+		alive=new boolean[num_players];
+		all_players=new player[num_players];
+		
+		for (int i=0;i<num_players;i++){
+			alive[i]=true;
+			all_players[i]=new player(i,red[i],green[i],blue[i]);
+		}
+	}
+	public void kill_player(int index){
+		if (index<num_players){
+		alive[index]=false;
+		}
+	}
 	class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
 		public void handle(MouseEvent m){
@@ -790,11 +863,11 @@ public class chain2 extends Application{
 				temp.value_plus();
 				temp.getChildren().add(temp.a1.get_atom());
 				temp.molatom=a.molatom;
-				turn=(turn+1)%8;
+				turn=(turn+1)%num_players;
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
 				temp.getChildren().remove(temp.a1.get_atom());
 				b=temp.change_value(true);
-				turn=(turn+1)%8;
+				turn=(turn+1)%num_players;
 			}
 			//if (temp.get_value()!=0)temp.getChildren().remove(temp.a.get_atom());
 			//boolean b=temp.change_value(true);//!!!!!!!!!!!!
@@ -848,14 +921,17 @@ public class chain2 extends Application{
 			for (int i=0;i<6;i++){
 				for (int j=0;j<9;j++){
 					Rectangle r1=gr[i][j].get_rectangle();
-					if (turn==0)r1.setStroke(Color.RED);
-					if (turn==1)r1.setStroke(Color.GREEN);
-					if (turn==2)r1.setStroke(Color.BLUE);
-					if (turn==3)r1.setStroke(Color.PINK);
-					if (turn==4)r1.setStroke(Color.YELLOW);
-					if (turn==5)r1.setStroke(Color.CYAN);
-					if (turn==6)r1.setStroke(Color.PURPLE);
-					if (turn==7)r1.setStroke(Color.SNOW);
+					//----------------------------------------
+					//!!! Needs to change according to number of players remaining in the game
+					if (turn==0)r1.setStroke(Color.rgb(red[0],green[0],blue[0]));
+					if (turn==1)r1.setStroke(Color.rgb(red[1],green[1],blue[1]));
+					if (turn==2)r1.setStroke(Color.rgb(red[2],green[2],blue[2]));
+					if (turn==3)r1.setStroke(Color.rgb(red[3],green[3],blue[3]));
+					if (turn==4)r1.setStroke(Color.rgb(red[4],green[4],blue[4]));
+					if (turn==5)r1.setStroke(Color.rgb(red[5],green[5],blue[5]));
+					if (turn==6)r1.setStroke(Color.rgb(red[6],green[6],blue[6]));
+					if (turn==7)r1.setStroke(Color.rgb(red[7],green[7],blue[7]));
+					//----------------------------------------
 				}
 			}
 		}
