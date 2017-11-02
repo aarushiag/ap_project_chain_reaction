@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 //import java.awt.Font;
@@ -43,6 +44,7 @@ import javafx.scene.input.MouseEvent;
 //6.allow elimination of players--->>done
 //7.serialisation
 //8.allow change of colors--->>done
+//9.undo option
 //---------------------------------
 //SOLVED ISSUES
 //4.allow change in number of players
@@ -101,6 +103,7 @@ class atom{
 		return player_index;
 	}
 	public void change_color(Sphere crc){
+		System.out.println("hi :)");
 		player_index=ch.turn;
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
@@ -188,7 +191,7 @@ class atom3 extends atom2{
 		super.change_color(crc3);
 	}
 }
-class cell extends StackPane{
+class cell extends Pane{
 	private Rectangle r;
 	private chain2 ch;
 	//private Label l;
@@ -201,12 +204,13 @@ class cell extends StackPane{
 	public atom2 a2;
 	public atom3 a3;
 	public Group molatom;
+	public Group animate;
 	private int threshold;
 	//public int player_index;
 	public cell(chain2 ch,int gx,int gy,int x,int y,int width,int height){
 		r=new Rectangle(width,height);
 		r.setStroke(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
-		r.setFill(Color.BLACK);
+		r.setFill(Color.TRANSPARENT);
 		//Label l=new Label(new String("0"));
 		//this.setOnMouseClicked(new cell_click_event());
 		this.ch=ch;
@@ -215,17 +219,19 @@ class cell extends StackPane{
 		this.gy=gy;
 		this.x=x;
 		this.y=y;
+		//hor and ver change here--->>done
 		if ((gx==0)&&(gy==0))threshold=1;
-		else if ((gx==5)&&(gy==0))threshold=1;
-		else if ((gx==0)&&(gy==8))threshold=1;
-		else if ((gx==5)&&(gy==8))threshold=1;
+		else if ((gx==ch.hor-1)&&(gy==0))threshold=1;
+		else if ((gx==0)&&(gy==ch.ver-1))threshold=1;
+		else if ((gx==ch.hor-1)&&(gy==ch.ver-1))threshold=1;
 		else if (gx==0)threshold=2;
 		else if (gy==0)threshold=2;
-		else if (gx==5)threshold=2;
-		else if (gy==8)threshold=2;
+		else if (gx==ch.hor-1)threshold=2;
+		else if (gy==ch.ver-1)threshold=2;
 		else threshold=3;
 		setTranslateX(x);
 		setTranslateY(y);
+		animate=new Group();
 		getChildren().addAll(r);
 		//System.out.println(r.getX()+" "+r.getY());
 	}
@@ -254,9 +260,23 @@ class cell extends StackPane{
 	public void increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
 			a1=new atom(ch);
+			System.out.println(a1.get_player_num()+"[]");
 			value++;
 			molatom=a1.molatom;
+			if (((gx==0)&&(gy==0))||((gx==0)&&(gy==ch.hor-1))||((gx==ch.ver-1)&&(gy==ch.hor-1))||((gx==ch.ver-1)&&(gy==0))){
+				System.out.println("I rotate");
+				RotateTransition rt=new RotateTransition();
+				rt.setNode(a1.crc);
+				rt.setAxis(Rotate.Y_AXIS);
+				rt.setByAngle(360);
+				rt.setDuration(Duration.millis(500));
+				rt.setCycleCount(Animation.INDEFINITE);
+				rt.setInterpolator(Interpolator.LINEAR);
+				rt.play();
+			}
 			this.getChildren().add(molatom);
+			molatom.setLayoutX(25);
+			molatom.setLayoutY(25);
 		}
 		else if ((value==1)&&(ch.turn==a1.get_player_num())){
 			this.getChildren().remove(molatom);
@@ -273,6 +293,7 @@ class cell extends StackPane{
 			pt.setPath(crc_path);
 			pt.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(3000));
+			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
 			/*PathTransition pt2=new PathTransition();
@@ -304,6 +325,8 @@ class cell extends StackPane{
 			//this.getChildren().add(a2.crc2);
 			//StackPane r2=new StackPane();
 			this.getChildren().add(molatom);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(23);
 			//r2.getChildren().add(a2.crc2);
 			//this.getChildren().add(crc_path);
 			//r2.getChildren().add(crc2_path);
@@ -347,6 +370,7 @@ class cell extends StackPane{
 			pt.setPath(crc_path);
 			pt.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(3000));
+			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
 			/*PathTransition pt2=new PathTransition();
@@ -364,6 +388,8 @@ class cell extends StackPane{
 			//StackPane r1=new StackPane();
 			//this.getChildren().add(a2.crc2);
 			this.getChildren().add(molatom);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(23);
 			//r1.getChildren().add(a2.crc2);
 			//this.getChildren().add(crc_path);
 			//r1.getChildren().add(crc2_path);
@@ -402,15 +428,28 @@ class cell extends StackPane{
 			rt2.play();
 			rt3.play();*/
 			Ellipse crc_path=new Ellipse(3,4);
+			Ellipse crc_path2=new Ellipse(5,7);
+			crc_path2.setCenterX(15);
+			crc_path2.setCenterY(5);
+			crc_path.setCenterX(5);
+			crc_path.setCenterY(5);
+			crc_path.setRotationAxis(Rotate.Y_AXIS);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
 			PathTransition pt=new PathTransition();
+			PathTransition pt2=new PathTransition();
 			pt.setNode(a3.crc);
+			pt2.setNode(a3.crc2);
 			pt.setPath(crc_path);
+			pt2.setPath(crc_path2);
 			pt.setInterpolator(Interpolator.LINEAR);
+			pt2.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(1000));
+			pt2.setDuration(Duration.millis(1000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
+			pt2.setCycleCount(Timeline.INDEFINITE);
 			//PathTransition pt2=new PathTransition();
 			//pt2.setNode(a3.crc2);
 			//pt2.setPath(crc2_path);
@@ -426,9 +465,12 @@ class cell extends StackPane{
 			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//pt3.setCycleCount(Timeline.INDEFINITE);
 			crc_path.setVisible(false);
+			crc_path2.setVisible(false);
 			//crc2_path.setVisible(false);
 			//crc3_path.setVisible(false);
-			pt.play();
+			//pt.play();
+			ParallelTransition p=new ParallelTransition(pt,pt2);
+			p.play();
 			//pt2.play();
 			//pt3.play();
 			//StackPane r1=new StackPane();
@@ -439,6 +481,8 @@ class cell extends StackPane{
 			//r1.getChildren().add(crc2_path);
 			//r1.getChildren().add(crc3_path);
 			this.getChildren().add(molatom);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(15);
 			//if (toggle==true)ch.turn=(ch.turn+1)%8;
 			/*if (toggle==false){
 				System.out.println("neighbour burst");
@@ -478,15 +522,28 @@ class cell extends StackPane{
 			rt2.play();
 			rt3.play();*/
 			Ellipse crc_path=new Ellipse(3,4);
+			Ellipse crc_path2=new Ellipse(5,7);
+			crc_path2.setCenterX(15);
+			crc_path2.setCenterY(5);
+			crc_path.setCenterX(5);
+			crc_path.setCenterY(5);
+			crc_path.setRotationAxis(Rotate.Y_AXIS);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
 			PathTransition pt=new PathTransition();
+			PathTransition pt2=new PathTransition();
 			pt.setNode(a3.crc);
+			pt2.setNode(a3.crc2);
 			pt.setPath(crc_path);
+			pt2.setPath(crc_path2);
 			pt.setInterpolator(Interpolator.LINEAR);
+			pt2.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(1000));
+			pt2.setDuration(Duration.millis(1000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
+			pt2.setCycleCount(Timeline.INDEFINITE);
 			//PathTransition pt2=new PathTransition();
 			//pt2.setNode(a3.crc2);
 			//pt2.setPath(crc2_path);
@@ -502,9 +559,11 @@ class cell extends StackPane{
 			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//pt3.setCycleCount(Timeline.INDEFINITE);
 			crc_path.setVisible(false);
-			//crc2_path.setVisible(false);
+			crc_path2.setVisible(false);
 			//crc3_path.setVisible(false);
-			pt.play();
+			ParallelTransition p=new ParallelTransition(pt,pt2);
+			p.play();
+			//pt.play();
 			//pt2.play();
 			//pt3.play();
 			//StackPane r1=new StackPane();
@@ -515,6 +574,8 @@ class cell extends StackPane{
 			//r1.getChildren().add(crc2_path);
 			//r1.getChildren().add(crc3_path);
 			this.getChildren().add(molatom);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(15);
 			
 		}
 		/*PointLight light=new PointLight(Color.WHITE);
@@ -524,6 +585,7 @@ class cell extends StackPane{
 		this.getChildren().add(light);*/
 	}
 	public void set_color(Sphere crc){
+		System.out.println("hi :(");
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -562,38 +624,74 @@ class cell extends StackPane{
 		//----------------------------------------------------
 		
 	}
-	public void burst_the_cell(){
+	public void clear_sphere(Group s){
+		getChildren().remove(s);
+	}
+	public void burst_the_cell(boolean toggle){
 		value=0;
 		System.out.println("cell burst");
 		this.getChildren().remove(molatom);
+		double x1=r.getLayoutX()+25;
+		double y1=r.getLayoutY()+25;
+		ParallelTransition p=new ParallelTransition();
 		if ((gx-1>=0)&&(gy>=0)){
 			Sphere s=new Sphere(10);
 			set_color(s);
+			double x2=x1-50;
+			double y2=y1;
+			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//s.setTranslateX(x1);
+			//s.setTranslateY(y1);
+			//s.setTranslateZ(1000);
+			//------------------------------------------------------------------!!
+			Line l1=new Line(x1,y1,x2,y2);
+			l1.setStroke(Color.WHITE);
+			PathTransition p1=new PathTransition();
+			p1.setPath(l1);
+			p1.setNode(s);
+			p1.setInterpolator(Interpolator.LINEAR);
+			p1.setDuration(Duration.seconds(1));
+			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			p1.setCycleCount(1);
+			
+			//p1.setOnFinished(e->ch.gr[gx-1][gy].change_value(false));
+			//p1.play();
+			l1.setVisible(false);
+			Group an1=new Group();
+			an1.getChildren().add(s);
+			an1.getChildren().add(l1);
+			ch.gr[gx][gy].getChildren().add(an1);
+			p1.setOnFinished(e->clear_sphere(an1));
+			p.getChildren().add(p1);
+			//p1.setOnFinished(e->ch.gr[gx-1][gy].change_value(false));
+			//--------------------------------------------------------------------!!
+			//ch.gr[gx-1][gy].getChildren().add(an1);
+			//ch.gr[gx-1][gy].getChildren().add(new Group(s));
 			/*Bounds b1=this.r.getBoundsInParent();
 			Bounds b2=ch.gr[gx-1][gy].r.getBoundsInParent();
 			double x1=b1.getMinX()+b1.getWidth()/2;
 			double y1=b1.getMinY()+b1.getHeight()/2;
 			double x2=b2.getMinX()+b2.getWidth()/2;
 			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			double x1=490+50*gx;
+			/*double x1=490+50*gx;
 			double x2=490+50*(gx-1);
 			double y1=150+50*gy;
-			double y2=150+50*gy;
+			double y2=150+50*gy;*/
 			//System.out.println(r.getX()+" "+r.getY()+" "+ch.gr[gx-1][gy].r.getX()+" "+ch.gr[gx-1][gy].r.getY());
-			Line l=new Line(x1,y1,x2,y2);
+			//Line l=new Line(x1,y1,x2,y2);
 			//Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
-			PathTransition pt=new PathTransition();
+			/*PathTransition pt=new PathTransition();
 			pt.setNode(s);
 			pt.setPath(l);
 			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));
+			pt.setDuration(Duration.millis(1000));*/
 			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(1);
-			l.setVisible(false);
-			pt.play();
-			this.getChildren().add(s);
+			//pt.setCycleCount(1);
+			//l.setVisible(false);
+			//pt.play();
+			//this.getChildren().add(s);
 			//ch.gr[gx-1][gy].getChildren().add(s);
 			/*final PathTransition p1=new PathTransition();
 			p1.setDuration(Duration.seconds(10.0));
@@ -615,12 +713,46 @@ class cell extends StackPane{
 			ps.getChildren().add(s);
 			Path p1=new Path();*/
 			//p1.getElements().addAll(new MoveTo((gx-1)*50+90,gy*50+60),new VLineTo(100));
-			ch.gr[gx-1][gy].change_value(false);
+			//-----------------------------ch.gr[gx-1][gy].change_value(false);
+			//ch.gr[gx][gy].getChildren().remove(an1);
+			/*try{
+				Thread.sleep(1000);
+				}catch(Exception e){}*/
 			//this.getChildren().remove(s);
 		}
-		if ((gx+1<=5)&&(gy>=0)){
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
 			Sphere s=new Sphere(10);
 			set_color(s);
+			double x2=x1+50;
+			double y2=y1;
+			//s.setTranslateX(x1);
+			//s.setTranslateY(y1);
+			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//s.setTranslateZ(1000);
+			//-------------------------------------------!!
+			Line l1=new Line(x1,y1,x2,y2);
+			l1.setStroke(Color.CYAN);
+			PathTransition p1=new PathTransition();
+			p1.setPath(l1);
+			p1.setNode(s);
+			p1.setInterpolator(Interpolator.LINEAR);
+			p1.setDuration(Duration.seconds(1));
+			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			p1.setCycleCount(1);
+			
+			//p1.setOnFinished(e->ch.gr[gx+1][gy].change_value(false));
+			//p1.play();
+			l1.setVisible(false);
+			Group an1=new Group();
+			an1.getChildren().add(s);
+			an1.getChildren().add(l1);
+			ch.gr[gx][gy].getChildren().add(an1);
+			p1.setOnFinished(e->clear_sphere(an1));
+			p.getChildren().add(p1);
+			//p1.setOnFinished(e->ch.gr[gx+1][gy].change_value(false));
+			//-----------------------------------------------!!
+			//Sphere s=new Sphere(10);
+			//set_color(s);
 			//s.setTranslateZ(1000);
 			/*Bounds b1=this.r.getBoundsInLocal();
 			Bounds b2=ch.gr[gx+1][gy].r.getBoundsInLocal();
@@ -628,7 +760,7 @@ class cell extends StackPane{
 			double y1=b1.getMinY()+b1.getHeight()/2;
 			double x2=b2.getMinX()+b2.getWidth()/2;
 			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			double x1=490+50*gx;
+			/*double x1=490+50*gx;
 			double x2=490+50*(gx+1);
 			double y1=150+50*gy;
 			double y2=150+50*gy;
@@ -636,24 +768,24 @@ class cell extends StackPane{
 			Line l=new Line(x1,y1,x2,y2);
 			l.setStroke(Color.WHITE);
 			l.setFill(Color.WHITE);
-			l.setTranslateZ(1000);
+			l.setTranslateZ(1000);*/
 			//Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
 			//----------------------------------
-			PathTransition pt=new PathTransition();
+			/*PathTransition pt=new PathTransition();
 			pt.setNode(s);
 			pt.setPath(l);
 			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(10000));
+			pt.setDuration(Duration.millis(10000));*/
 			//----------------------------------
 			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//-----------------------------------
-			pt.setCycleCount(1);
+			/*pt.setCycleCount(1);
 			l.setVisible(false);
-			pt.play();
+			pt.play();*/
 			//----------------------------------
-			this.getChildren().add(s);
+			//this.getChildren().add(s);
 			//ch.gr[gx+1][gy].getChildren().add(s);
 			//final PathTransition p1=new PathTransition();
 			//p1.setDuration(Duration.seconds(10.0));
@@ -669,36 +801,70 @@ class cell extends StackPane{
 			//p1.setAutoReverse(true);
 			//p1.play();
 			//new ParallelTransition(p1).play();
-			ch.gr[gx+1][gy].change_value(false);
+			//--------------------------ch.gr[gx+1][gy].change_value(false);
+			//ch.gr[gx][gy].getChildren().remove(an1);
+			/*try{
+				Thread.sleep(1000);
+				}catch(Exception e){}*/
 			//this.getChildren().remove(s);
 		}
 		if ((gx>=0)&&(gy-1>=0)){
 			Sphere s=new Sphere(10);
 			set_color(s);
+			double x2=x1;
+			double y2=y1-50;
+			//s.setTranslateX(x1);
+			//s.setTranslateY(y1);
+			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//s.setTranslateZ(1000);
+			//-------------------------------------------!!
+			Line l1=new Line(x1,y1,x2,y2);
+			l1.setStroke(Color.PURPLE);
+			PathTransition p1=new PathTransition();
+			p1.setPath(l1);
+			p1.setNode(s);
+			p1.setInterpolator(Interpolator.LINEAR);
+			p1.setDuration(Duration.seconds(1));
+			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			p1.setCycleCount(1);
+			
+			
+			//p1.play();
+			l1.setVisible(false);
+			Group an1=new Group();
+			an1.getChildren().add(s);
+			an1.getChildren().add(l1);
+			ch.gr[gx][gy].getChildren().add(an1);
+			p1.setOnFinished(e->clear_sphere(an1));
+			p.getChildren().add(p1);
+			//p1.setOnFinished(e->ch.gr[gx][gy-1].change_value(false));
+			//-------------------------------------------!!
+			//Sphere s=new Sphere(10);
+			//set_color(s);
 			/*Bounds b1=this.r.getBoundsInLocal();
 			Bounds b2=ch.gr[gx][gy-1].r.getBoundsInLocal();
 			double x1=b1.getMinX()+b1.getWidth()/2;
 			double y1=b1.getMinY()+b1.getHeight()/2;
 			double x2=b2.getMinX()+b2.getWidth()/2;
 			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			double x1=490+50*gx;
+			/*double x1=490+50*gx;
 			double x2=490+50*(gx);
 			double y1=150+50*gy;
 			double y2=150+50*(gy-1);
-			Line l=new Line(x1,y1,x2,y2);
+			Line l=new Line(x1,y1,x2,y2);*/
 			//Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
-			PathTransition pt=new PathTransition();
+			/*PathTransition pt=new PathTransition();
 			pt.setNode(s);
 			pt.setPath(l);
 			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));
+			pt.setDuration(Duration.millis(1000));*/
 			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(1);
+			/*pt.setCycleCount(1);
 			l.setVisible(false);
 			pt.play();
-			this.getChildren().add(s);
+			this.getChildren().add(s);*/
 			//ch.gr[gx][gy-1].getChildren().add(s);
 			//final PathTransition p1=new PathTransition();
 			//p1.setDuration(Duration.seconds(10.0));
@@ -714,36 +880,69 @@ class cell extends StackPane{
 			//p1.setAutoReverse(true);
 			//new ParallelTransition(p1).play();
 			//p1.play();
-			ch.gr[gx][gy-1].change_value(false);
+			//-----------------------ch.gr[gx][gy-1].change_value(false);
+			//ch.gr[gx][gy].getChildren().remove(an1);
+			/*try{
+				Thread.sleep(1000);
+				}catch(Exception e){}*/
 			//this.getChildren().remove(s);
 		}
-		if ((gx>=0)&&(gy+1<=8)){
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
 			Sphere s=new Sphere(10);
 			set_color(s);
+			double x2=x1;
+			double y2=y1+50;
+			//s.setTranslateX(x1);
+			//s.setTranslateY(y1);
+			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//s.setTranslateZ(1000);
+			//-----------------------------------!!
+			Line l1=new Line(x1,y1,x2,y2);
+			l1.setStroke(Color.YELLOW);
+			PathTransition p1=new PathTransition();
+			p1.setPath(l1);
+			p1.setNode(s);
+			p1.setInterpolator(Interpolator.LINEAR);
+			p1.setDuration(Duration.seconds(1));
+			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			p1.setCycleCount(1);
+			//p1.setOnFinished(e->ch.gr[gx][gy+1].change_value(false));
+			p1.play();
+			l1.setVisible(false);
+			Group an1=new Group();
+			an1.getChildren().add(s);
+			an1.getChildren().add(l1);
+			ch.gr[gx][gy].getChildren().add(an1);
+			p1.setOnFinished(e->clear_sphere(an1));
+			p.getChildren().add(p1);
+			//p1.setOnFinished(e->ch.gr[gx][gy+1].change_value(false));
+			//---------------------------------------!!
+			/*Sphere s=new Sphere(10);
+			set_color(s);*/
 			/*Bounds b1=this.r.getBoundsInLocal();
 			Bounds b2=ch.gr[gx][gy+1].r.getBoundsInLocal();
 			double x1=b1.getMinX()+b1.getWidth()/2;
 			double y1=b1.getMinY()+b1.getHeight()/2;
 			double x2=b2.getMinX()+b2.getWidth()/2;
 			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			double x1=490+50*gx;
+			/*double x1=490+50*gx;
 			double x2=490+50*(gx);
 			double y1=150+50*gy;
 			double y2=150+50*(gy+1);
-			Line l=new Line(x1,y1,x2,y2);
+			Line l=new Line(x1,y1,x2,y2);*/
 			//Ellipse crc_path=new Ellipse(3,4);
 			//Circle crc2_path=new Circle(20);
 			//Circle crc3_path=new Circle(20);
-			PathTransition pt=new PathTransition();
+			/*PathTransition pt=new PathTransition();
 			pt.setNode(s);
 			pt.setPath(l);
 			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));
+			pt.setDuration(Duration.millis(1000));*/
 			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(1);
+			/*pt.setCycleCount(1);
 			l.setVisible(false);
 			pt.play();
-			this.getChildren().add(s);
+			this.getChildren().add(s);*/
 			//ch.gr[gx][gy+1].getChildren().add(s);
 			//final PathTransition p1=new PathTransition();
 			//p1.setDuration(Duration.seconds(10.0));
@@ -759,10 +958,47 @@ class cell extends StackPane{
 			//p1.setAutoReverse(true);
 			//p1.play();
 			//new ParallelTransition(p1).play();
-			ch.gr[gx][gy+1].change_value(false);
+			//-----------------ch.gr[gx][gy+1].change_value(false);
+			//ch.gr[gx][gy].getChildren().remove(an1);
+			/*try{
+				Thread.sleep(1000);
+				}catch(Exception e){}*/
 			//this.getChildren().remove(s);
 		}
 		//a=null;
+		//p.play();
+		p.setOnFinished(e->if_for_change_value());
+		ParallelTransition p2=new ParallelTransition(p);
+		System.out.println(ch.turn+" -");
+		//if (toggle==true)p2.setOnFinished(e->ch.increment_turn());
+		p2.play();
+		System.out.println(ch.turn+" -");
+		/*if ((gx-1>=0)&&(gy>=0)){
+			ch.gr[gx-1][gy].change_value(false);
+		}
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
+			ch.gr[gx+1][gy].change_value(false);
+		}
+		if ((gx>=0)&&(gy-1>=0)){
+			ch.gr[gx][gy-1].change_value(false);
+		}
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
+			ch.gr[gx][gy+1].change_value(false);
+		}*/
+	}
+	public void if_for_change_value(){
+		if ((gx-1>=0)&&(gy>=0)){
+			ch.gr[gx-1][gy].change_value(false);
+		}
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
+			ch.gr[gx+1][gy].change_value(false);
+		}
+		if ((gx>=0)&&(gy-1>=0)){
+			ch.gr[gx][gy-1].change_value(false);
+		}
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
+			ch.gr[gx][gy+1].change_value(false);
+		}
 	}
 	public boolean change_value(boolean toggle){
 		System.out.println(gx+" "+gy);
@@ -771,7 +1007,7 @@ class cell extends StackPane{
 			return false;
 		}
 		else {
-			burst_the_cell();
+			burst_the_cell(toggle);
 			return true;
 		}
 	}
@@ -856,12 +1092,20 @@ public class chain2 extends Application{
 		alive[index]=false;
 		}
 	}
+	public void increment_turn(){
+		System.out.println(turn+" --");
+		turn=(turn+1)%num_players;
+		while(alive[turn]==false){
+			turn=(turn+1)%num_players;
+		}
+		System.out.println(turn+" --");
+	}
 	class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
 		public void handle(MouseEvent m){
 			//System.out.println("cell click");
 			cell temp=(cell)m.getSource();
-			System.out.println(m.getScreenX()+" "+m.getScreenY());
+			System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
 			System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
 			if (temp.get_value()==0){
@@ -870,7 +1114,20 @@ public class chain2 extends Application{
 				temp.a1=a;
 				temp.value_plus();
 				temp.getChildren().add(temp.a1.get_atom());
+				if (((temp.gx==0)&&(temp.gy==0))||((temp.gx==0)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==0))){
+					System.out.println("I rotate");
+					RotateTransition rt=new RotateTransition();
+					rt.setNode(temp.a1.crc);
+					rt.setAxis(Rotate.Y_AXIS);
+					rt.setByAngle(360);
+					rt.setDuration(Duration.millis(500));
+					rt.setCycleCount(Animation.INDEFINITE);
+					rt.setInterpolator(Interpolator.LINEAR);
+					rt.play();
+				}
 				temp.molatom=a.molatom;
+				temp.molatom.setLayoutX(25);
+				temp.molatom.setLayoutY(25);
 				//while(alive[turn-1]==false){
 				
 				if (num_turn>num_players){
@@ -891,20 +1148,24 @@ public class chain2 extends Application{
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
 				}
+				increment_turn();
 				/*do{
 					turn=(turn+1)%num_players;
 					}
 					while(alive[turn]==false);*/
-				turn=(turn+1)%num_players;
+				//!!!!--------------------------
+				/*turn=(turn+1)%num_players;
 				while(alive[turn]==false){
 					turn=(turn+1)%num_players;
-				}
+				}*/
+				//!!!!!----------------------------
 					//num_turn++;
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
 				num_turn++;
 				temp.getChildren().remove(temp.a1.get_atom());
+				System.out.println(turn+" :)");
 				b=temp.change_value(true);
-				
+				System.out.println(turn+" :)");
 				//evaluation of number of atoms should be done after cells have burst
 				if (num_turn>num_players){
 					for (int i=0;i<num_players;i++){
@@ -924,14 +1185,17 @@ public class chain2 extends Application{
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
 				}
+				increment_turn();
 				/*do{
 					turn=(turn+1)%num_players;
 					}
 					while(alive[turn]==false);*/
-				turn=(turn+1)%num_players;
+				//!!!----------------------------------
+				/*turn=(turn+1)%num_players;
 				while(alive[turn]==false){
 					turn=(turn+1)%num_players;
-				}
+				}*/
+				//!!----------------------------------
 					//num_turn++;
 			}
 			int ct=0;
@@ -944,8 +1208,8 @@ public class chain2 extends Application{
 			}
 			if (ct==1){
 				System.out.println("Player "+(flag+1)+" won");
-				Platform.exit();
-				System.exit(0);
+				//Platform.exit();
+				//System.exit(0);
 			}
 			//if (temp.get_value()!=0)temp.getChildren().remove(temp.a.get_atom());
 			//boolean b=temp.change_value(true);//!!!!!!!!!!!!
