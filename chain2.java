@@ -86,13 +86,13 @@ class atom{
 	chain2 ch;
 	public Sphere crc;
 	public Group molatom;
-	public atom(chain2 ch){
+	public atom(chain2 ch,boolean color_sasta){
 		num=1;
 		this.ch=ch;
 		player_index=ch.turn;
 		crc=new Sphere();
 		crc.setRadius(10);
-		change_color(crc);
+		change_color(crc,color_sasta);
 		molatom=new Group();
 		molatom.getChildren().add(crc);
 	}
@@ -102,9 +102,10 @@ class atom{
 	public int get_player_num(){
 		return player_index;
 	}
-	public void change_color(Sphere crc){
-		System.out.println("hi :)");
+	public void change_color(Sphere crc,boolean color_sasta){
+		//System.out.println("hi :)");
 		player_index=ch.turn;
+		if (color_sasta==true)player_index=ch.prev_turn;
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -132,14 +133,14 @@ class atom{
 		crc.setRadius(10);
 		//-------------------------------------------------
 		//!!! This part needs to change when players will be eliminated
-		if (ch.turn==0)crc.setMaterial(redm);
-		if (ch.turn==1)crc.setMaterial(greenm);
-		if (ch.turn==2)crc.setMaterial(bluem);
-		if (ch.turn==3)crc.setMaterial(pinkm);
-		if (ch.turn==4)crc.setMaterial(yellowm);
-		if (ch.turn==5)crc.setMaterial(cyanm);
-		if (ch.turn==6)crc.setMaterial(purplem);
-		if (ch.turn==7)crc.setMaterial(whitem);
+		if (player_index==0)crc.setMaterial(redm);
+		if (player_index==1)crc.setMaterial(greenm);
+		if (player_index==2)crc.setMaterial(bluem);
+		if (player_index==3)crc.setMaterial(pinkm);
+		if (player_index==4)crc.setMaterial(yellowm);
+		if (player_index==5)crc.setMaterial(cyanm);
+		if (player_index==6)crc.setMaterial(purplem);
+		if (player_index==7)crc.setMaterial(whitem);
 		//-------------------------------------------------
 		
 	}
@@ -147,12 +148,12 @@ class atom{
 class atom2 extends atom{
 	public Sphere crc2;
 	//public Group diatom;
-	public atom2(chain2 ch){
-		super(ch);
+	public atom2(chain2 ch,boolean color_sasta){
+		super(ch,color_sasta);
 		num=2;
 		crc2=new Sphere();
 		crc2.setRadius(10);
-		change_color(crc2);
+		change_color(crc2,color_sasta);
 		crc2.setTranslateX(15);
 		//diatom=new Group();
 		//diatom.getChildren().add(crc);
@@ -163,19 +164,19 @@ class atom2 extends atom{
 		rotate.setPivotY(225);
 		molatom.getTransforms().addAll(rotate);*/
 	}
-	public void change_color(){
-		super.change_color(crc);
-		super.change_color(crc2);
+	public void change_color(boolean color_sasta){
+		super.change_color(crc,color_sasta);
+		super.change_color(crc2,color_sasta);
 	}
 }
 class atom3 extends atom2{
 	public Sphere crc3;
-	public atom3(chain2 ch){
-		super(ch);
+	public atom3(chain2 ch,boolean color_sasta){
+		super(ch,color_sasta);
 		num=3;
 		crc3=new Sphere();
 		crc3.setRadius(10);
-		change_color(crc3);
+		change_color(crc3,color_sasta);
 		crc3.setTranslateX(8);
 		crc3.setTranslateY(15);
 		molatom.getChildren().add(crc3);
@@ -185,12 +186,13 @@ class atom3 extends atom2{
 		rotate.setPivotY(225);
 		molatom.getTransforms().addAll(rotate);*/
 	}
-	public void change_color(){
-		super.change_color(crc);
-		super.change_color(crc2);
-		super.change_color(crc3);
+	public void change_color(boolean color_sasta){
+		super.change_color(crc,color_sasta);
+		super.change_color(crc2,color_sasta);
+		super.change_color(crc3,color_sasta);
 	}
 }
+
 class cell extends Pane{
 	private Rectangle r;
 	private chain2 ch;
@@ -259,12 +261,12 @@ class cell extends Pane{
 	}
 	public void increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
-			a1=new atom(ch);
-			System.out.println(a1.get_player_num()+"[]");
+			a1=new atom(ch,true);
+			//System.out.println(a1.get_player_num()+"[]");
 			value++;
 			molatom=a1.molatom;
 			if (((gx==0)&&(gy==0))||((gx==0)&&(gy==ch.hor-1))||((gx==ch.ver-1)&&(gy==ch.hor-1))||((gx==ch.ver-1)&&(gy==0))){
-				System.out.println("I rotate");
+				//System.out.println("I rotate");
 				RotateTransition rt=new RotateTransition();
 				rt.setNode(a1.crc);
 				rt.setAxis(Rotate.Y_AXIS);
@@ -280,7 +282,7 @@ class cell extends Pane{
 		}
 		else if ((value==1)&&(ch.turn==a1.get_player_num())){
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch);
+			a2=new atom2(ch,false);
 			molatom=a2.molatom;
 			value++;
 			//this.getChildren().add(a2.molatom);
@@ -342,8 +344,8 @@ class cell extends Pane{
 		else if ((value==1)&&(toggle==false)){
 			//this.getChildren().remove(a2.molatom);
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch);
-			a2.change_color();
+			a2=new atom2(ch,true);
+			a2.change_color(true);
 			molatom=a2.molatom;
 			value++;
 			//this.getChildren().add(a2.molatom);
@@ -399,7 +401,7 @@ class cell extends Pane{
 		}
 		else if ((value==2)&&(ch.turn==a2.get_player_num())){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch);
+			a3=new atom3(ch,false);
 			molatom=a3.molatom;
 			value++;
 			//this.getChildren().add(a3.molatom);
@@ -492,8 +494,8 @@ class cell extends Pane{
 		}
 		else if ((value==2)&&(toggle==false)){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch);
-			a3.change_color();
+			a3=new atom3(ch,true);
+			a3.change_color(true);
 			molatom=a3.molatom;
 			value++;
 			//this.getChildren().add(molatom);
@@ -566,7 +568,7 @@ class cell extends Pane{
 			//pt.play();
 			//pt2.play();
 			//pt3.play();
-			//StackPane r1=new StackPane();
+			//StackPane r1=new StackPane();.
 			//r1.getChildren().add(a3.crc);
 			//r1.getChildren().add(a3.crc2);
 			//r1.getChildren().add(a3.crc3);
@@ -584,8 +586,10 @@ class cell extends Pane{
 		light.setTranslateZ(-1000);
 		this.getChildren().add(light);*/
 	}
-	public void set_color(Sphere crc){
-		System.out.println("hi :(");
+	public void set_color(Sphere crc,boolean color_sasta){
+		int temp=ch.turn;
+		if (color_sasta==true)temp=ch.prev_turn;
+		//System.out.println("hi :(");
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -613,14 +617,14 @@ class cell extends Pane{
 		crc.setRadius(10);
 		//---------------------------------------------------
 		//!!!this part needs to change because when players are eliminated this will not be function properly
-		if (ch.turn==0)crc.setMaterial(redm);
-		if (ch.turn==1)crc.setMaterial(greenm);
-		if (ch.turn==2)crc.setMaterial(bluem);
-		if (ch.turn==3)crc.setMaterial(pinkm);
-		if (ch.turn==4)crc.setMaterial(yellowm);
-		if (ch.turn==5)crc.setMaterial(cyanm);
-		if (ch.turn==6)crc.setMaterial(purplem);
-		if (ch.turn==7)crc.setMaterial(whitem);
+		if (temp==0)crc.setMaterial(redm);
+		if (temp==1)crc.setMaterial(greenm);
+		if (temp==2)crc.setMaterial(bluem);
+		if (temp==3)crc.setMaterial(pinkm);
+		if (temp==4)crc.setMaterial(yellowm);
+		if (temp==5)crc.setMaterial(cyanm);
+		if (temp==6)crc.setMaterial(purplem);
+		if (temp==7)crc.setMaterial(whitem);
 		//----------------------------------------------------
 		
 	}
@@ -629,17 +633,18 @@ class cell extends Pane{
 	}
 	public void burst_the_cell(boolean toggle){
 		value=0;
-		System.out.println("cell burst");
+		//System.out.println("cell burst");
 		this.getChildren().remove(molatom);
 		double x1=r.getLayoutX()+25;
 		double y1=r.getLayoutY()+25;
 		ParallelTransition p=new ParallelTransition();
 		if ((gx-1>=0)&&(gy>=0)){
 			Sphere s=new Sphere(10);
-			set_color(s);
+			if (toggle==true)set_color(s,false);
+			else set_color(s,true);
 			double x2=x1-50;
 			double y2=y1;
-			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
 			//s.setTranslateX(x1);
 			//s.setTranslateY(y1);
 			//s.setTranslateZ(1000);
@@ -722,12 +727,13 @@ class cell extends Pane{
 		}
 		if ((gx+1<=ch.hor-1)&&(gy>=0)){
 			Sphere s=new Sphere(10);
-			set_color(s);
+			if (toggle==true)set_color(s,false);
+			else set_color(s,true);
 			double x2=x1+50;
 			double y2=y1;
 			//s.setTranslateX(x1);
 			//s.setTranslateY(y1);
-			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
 			//s.setTranslateZ(1000);
 			//-------------------------------------------!!
 			Line l1=new Line(x1,y1,x2,y2);
@@ -810,12 +816,13 @@ class cell extends Pane{
 		}
 		if ((gx>=0)&&(gy-1>=0)){
 			Sphere s=new Sphere(10);
-			set_color(s);
+			if (toggle==true)set_color(s,false);
+			else set_color(s,true);
 			double x2=x1;
 			double y2=y1-50;
 			//s.setTranslateX(x1);
 			//s.setTranslateY(y1);
-			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
 			//s.setTranslateZ(1000);
 			//-------------------------------------------!!
 			Line l1=new Line(x1,y1,x2,y2);
@@ -827,8 +834,6 @@ class cell extends Pane{
 			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
-			
-			
 			//p1.play();
 			l1.setVisible(false);
 			Group an1=new Group();
@@ -889,12 +894,13 @@ class cell extends Pane{
 		}
 		if ((gx>=0)&&(gy+1<=ch.ver-1)){
 			Sphere s=new Sphere(10);
-			set_color(s);
+			if (toggle==true)set_color(s,false);
+			else set_color(s,true);
 			double x2=x1;
 			double y2=y1+50;
 			//s.setTranslateX(x1);
 			//s.setTranslateY(y1);
-			System.out.println(x1+" "+y1+" "+x2+" "+y2);
+			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
 			//s.setTranslateZ(1000);
 			//-----------------------------------!!
 			Line l1=new Line(x1,y1,x2,y2);
@@ -938,7 +944,7 @@ class cell extends Pane{
 			pt.setPath(l);
 			pt.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(1000));*/
-			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			//pt.setOrientation(PathTransitiwon.OrientationType.ORTHOGONAL_TO_TANGENT);
 			/*pt.setCycleCount(1);
 			l.setVisible(false);
 			pt.play();
@@ -968,11 +974,12 @@ class cell extends Pane{
 		//a=null;
 		//p.play();
 		p.setOnFinished(e->if_for_change_value());
+		//if_for_change_value();
 		ParallelTransition p2=new ParallelTransition(p);
-		System.out.println(ch.turn+" -");
+		//System.out.println(ch.turn+" -");
 		//if (toggle==true)p2.setOnFinished(e->ch.increment_turn());
 		p2.play();
-		System.out.println(ch.turn+" -");
+		//System.out.println(ch.turn+" -");
 		/*if ((gx-1>=0)&&(gy>=0)){
 			ch.gr[gx-1][gy].change_value(false);
 		}
@@ -1001,7 +1008,7 @@ class cell extends Pane{
 		}
 	}
 	public boolean change_value(boolean toggle){
-		System.out.println(gx+" "+gy);
+		//System.out.println(gx+" "+gy);
 		if (value<threshold){
 			increase_value(toggle);
 			return false;
@@ -1067,6 +1074,7 @@ class grid{
 }
 public class chain2 extends Application{
 	public static int turn=0;
+	public static int prev_turn=0;
 	public int num_turn=0;
 	public cell[][] gr;
 	public Group root;
@@ -1077,6 +1085,21 @@ public class chain2 extends Application{
 	public int[] red={0,255,0,150,120,10,255,255};
 	public int[] green={255,0,0,20,255,255,10,255};
 	public int[] blue={0,0,255,190,10,255,255,255};
+	public chain2(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
+		this.hor=hor;
+		this.ver=ver;
+		this.num_players=num_players;
+		this.red=red;
+		this.green=green;
+		this.blue=blue;
+		this.alive=new boolean[num_players];
+		for (int i=0;i<num_players;i++){
+			alive[i]=true;
+		}
+		this.turn=0;
+		this.num_turn=0;
+		this.root=new Group();
+	}
 	public boolean[] alive;
 	{
 		alive=new boolean[num_players];
@@ -1093,29 +1116,30 @@ public class chain2 extends Application{
 		}
 	}
 	public void increment_turn(){
-		System.out.println(turn+" --");
+		//System.out.println(turn+" --");
+		prev_turn=turn;
 		turn=(turn+1)%num_players;
 		while(alive[turn]==false){
 			turn=(turn+1)%num_players;
 		}
-		System.out.println(turn+" --");
+		//System.out.println(turn+" --");
 	}
 	class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
 		public void handle(MouseEvent m){
 			//System.out.println("cell click");
 			cell temp=(cell)m.getSource();
-			System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
-			System.out.println(temp.gx+" "+temp.gy);
+			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
+			//System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
 			if (temp.get_value()==0){
 				num_turn++;
-				atom a=new atom(chain2.this);
+				atom a=new atom(chain2.this,false);
 				temp.a1=a;
 				temp.value_plus();
 				temp.getChildren().add(temp.a1.get_atom());
 				if (((temp.gx==0)&&(temp.gy==0))||((temp.gx==0)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==0))){
-					System.out.println("I rotate");
+					//System.out.println("I rotate");
 					RotateTransition rt=new RotateTransition();
 					rt.setNode(temp.a1.crc);
 					rt.setAxis(Rotate.Y_AXIS);
@@ -1142,7 +1166,7 @@ public class chain2 extends Application{
 						}
 						}
 					}
-					System.out.println();
+					//System.out.println();
 					for (int i=0;i<num_players;i++){
 						System.out.print(all_players[i].num_atom+" ");
 						if (all_players[i].num_atom==0)alive[i]=false;
@@ -1163,11 +1187,11 @@ public class chain2 extends Application{
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
 				num_turn++;
 				temp.getChildren().remove(temp.a1.get_atom());
-				System.out.println(turn+" :)");
-				b=temp.change_value(true);
-				System.out.println(turn+" :)");
+				//System.out.println(turn+" :)");
+				temp.change_value(true);
+				//System.out.println(turn+" :)");
 				//evaluation of number of atoms should be done after cells have burst
-				if (num_turn>num_players){
+				/*if (num_turn>num_players){
 					for (int i=0;i<num_players;i++){
 						all_players[i].num_atom=0;
 					}
@@ -1175,16 +1199,18 @@ public class chain2 extends Application{
 						for (int j=0;j<ver;j++){
 							int pl=gr[i][j].get_player_index();
 							if (gr[i][j].get_value()>0){
-							all_players[pl].num_atom++;
+								//System.out.println(gr[i][j].get_value()+" "+gr[i][j].get_player_index());
+								System.out.println(i+" "+j+" "+gr[i][j].get_value());
+								all_players[pl].num_atom++;
 							}
 						}
 					}
-					System.out.println();
+					System.out.println("****");
 					for (int i=0;i<num_players;i++){
-						System.out.print(all_players[i].num_atom+" ");
+						//System.out.print(all_players[i].num_atom+" ");
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
-				}
+				}*/
 				increment_turn();
 				/*do{
 					turn=(turn+1)%num_players;
@@ -1200,14 +1226,35 @@ public class chain2 extends Application{
 			}
 			int ct=0;
 			int flag=-1;
+			if (num_turn>num_players){
+				for (int i=0;i<num_players;i++){
+					all_players[i].num_atom=0;
+				}
+				for (int i=0;i<hor;i++){
+					for (int j=0;j<ver;j++){
+						int pl=gr[i][j].get_player_index();
+						if (gr[i][j].get_value()>0){
+							//System.out.println(gr[i][j].get_value()+" "+gr[i][j].get_player_index());
+							System.out.println(i+" "+j+" "+gr[i][j].get_value());
+							all_players[pl].num_atom++;
+						}
+					}
+				}
+				System.out.println("****");
+				for (int i=0;i<num_players;i++){
+					//System.out.print(all_players[i].num_atom+" ");
+					if (all_players[i].num_atom==0)alive[i]=false;
+				}
+			}
 			for (int i=0;i<num_players;i++){
+				//System.out.println(alive[i]);
 				if (alive[i]==true){
 					ct++;
 					flag=i;
 				}
 			}
 			if (ct==1){
-				System.out.println("Player "+(flag+1)+" won");
+				//System.out.println("Player "+(flag+1)+" won");
 				//Platform.exit();
 				//System.exit(0);
 			}
@@ -1259,7 +1306,7 @@ public class chain2 extends Application{
 				}*/
 			//}
 			//turn=(turn+1)%8;
-			System.out.println("click identified");
+			//System.out.println("click identified");
 			for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					Rectangle r1=gr[i][j].get_rectangle();
