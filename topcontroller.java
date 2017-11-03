@@ -38,13 +38,15 @@ public class topcontroller extends AnchorPane
 	@FXML
 	private ComboBox<String> options;
 	
+	 
 	
 	ObservableList<String> lst =FXCollections.observableArrayList("New Game","Settings","Back");
 	@FXML
 	private void initialize() throws IOException
 	{
 		 
-		options.setItems(lst);		 
+		options.setItems(lst);
+		 
 		  
 	}
 	
@@ -59,6 +61,33 @@ public class topcontroller extends AnchorPane
 			// AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
 			 s1controller obj=new s1controller();
 			 obj.play1();
+		 }
+		 
+		 if (a.equals("Settings"))
+		 {
+			 AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
+			 Main.mainLayout.getChildren().setAll(a1);
+		 }
+		 
+		 if (a.equals("Back"))
+		 {
+			 AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
+			 Main.mainLayout.getChildren().setAll(a1);
+		 }
+		 
+	}
+	
+	@FXML
+	private void options1() throws IOException
+	{
+		 
+		 String a=options.getSelectionModel().getSelectedItem();
+		 //System.out.println(a);
+		 if (a.equals("New Game"))
+		 {
+			// AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
+			 s1controller obj=new s1controller();
+			 obj.play2();
 		 }
 		 
 		 if (a.equals("Settings"))

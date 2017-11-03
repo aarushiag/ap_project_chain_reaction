@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="subroots6" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s2controller">
+<AnchorPane fx:id="subroots6" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s6controller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -24,9 +24,9 @@
             <Button alignment="BOTTOM_LEFT" layoutX="13.0" layoutY="127.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="302.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 4's Orb Color" />
             <Button alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="190.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="302.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 4's Orb Color" />
             <Button fx:id="Backs6" layoutX="282.0" layoutY="528.0" mnemonicParsing="false" onAction="#backs6" prefHeight="42.0" prefWidth="110.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Back" />
-            <TextField layoutX="305.0" layoutY="221.0" prefHeight="31.0" prefWidth="95.0" />
-            <TextField layoutX="305.0" layoutY="158.0" prefHeight="31.0" prefWidth="95.0" />
-            <TextField layoutX="305.0" layoutY="91.0" prefHeight="31.0" prefWidth="95.0" />
+            <TextField fx:id="blues6" layoutX="305.0" layoutY="221.0" onAction="#blues6" prefHeight="31.0" prefWidth="95.0" />
+            <TextField fx:id="greens6" layoutX="305.0" layoutY="158.0" onAction="#greens6" prefHeight="31.0" prefWidth="95.0" />
+            <TextField fx:id="reds6" layoutX="305.0" layoutY="91.0" onAction="#reds6" prefHeight="31.0" prefWidth="95.0" />
          </children>
       </Pane>
    </children>

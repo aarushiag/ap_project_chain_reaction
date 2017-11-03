@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="top" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.topcontroller">
+<AnchorPane fx:id="top" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.topcontroller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: Black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -21,7 +21,7 @@
                </image>
             </ImageView>
             <Button fx:id="Undo" layoutX="204.0" layoutY="20.0" mnemonicParsing="false" style="-fx-background-color: Grey; -fx-text-fill: White;" text="Undo" />
-            <ComboBox fx:id="options" layoutX="263.0" layoutY="20.0" onAction="#options" prefHeight="31.0" prefWidth="117.0" promptText="Select" />
+            <ComboBox fx:id="options" layoutX="263.0" layoutY="20.0" onAction="#options1" prefHeight="31.0" prefWidth="117.0" promptText="Select" />
          </children>
       </Pane>
    </children>

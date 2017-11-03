@@ -1,6 +1,7 @@
 package hello.pages;
 
  
+ 
 import java.io.IOException;
 
 import hello.Main;
@@ -10,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
@@ -22,67 +24,27 @@ import hello.pages.s1controller;
 public class s2controller extends AnchorPane
 {
 	
+	public static int[] red=  {255,0,0,255,255,0,100,255};
+	public static int[] green={0,255,0,255,0,255,100,255};
+	public static int[] blue= {0,0,255,0,255,255,100,255};	
 	 
-	 
 	
 	
-	
-	 
+ 
 	@FXML
-	private AnchorPane subroots2;
-	
-	@FXML
-	private AnchorPane subroots3;
-	
-	@FXML
-	private AnchorPane subroots4;
-	
-	@FXML
-	private AnchorPane subroots5;
-	
-	@FXML
-	private AnchorPane subroots6;
-	
-	@FXML
-	private AnchorPane subroots7;
-	
-	@FXML
-	private AnchorPane subroots8;
-	
-	@FXML
-	private AnchorPane subroots9;
-	
-	@FXML
-	private AnchorPane subroots10;
-	
+	private AnchorPane subroots2;	
+ 
 	@FXML
 	private AnchorPane subroots11;
 	 
 	 
 	
 	@FXML
-	private Button Backs2;
-	
-	@FXML
-	private Button Backs3;
-	@FXML
-	private Button Backs4;
-	@FXML
-	private Button Backs5;
-	@FXML
-	private Button Backs6;
-	@FXML
-	private Button Backs7;
-	@FXML
-	private Button Backs8;
-	@FXML
-	private Button Backs9;
-	@FXML
-	private Button Backs10;
-	 
+	private Button Backs2;	 
 	
 	@FXML
 	private Button Backs11;
+	
 	
 	@FXML
 	private Button Player1;
@@ -108,11 +70,16 @@ public class s2controller extends AnchorPane
 	@FXML
 	private Button Player8;
 	
+	
+	 
+	
+
+	
+
+ 
+ 
  
 	
-	
- 
- 
 	@FXML
 	private void backs11() throws IOException
 	{
@@ -127,62 +94,7 @@ public class s2controller extends AnchorPane
 		subroots2.getChildren().setAll(a1);
 	}
 	
-	@FXML
-	private void backs3() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots3.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs4() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots4.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs5() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots5.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs6() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots6.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs7() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots7.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs8() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots8.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs9() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots9.getChildren().setAll(a1);
-	}
-	
-	@FXML
-	private void backs10() throws IOException
-	{
-		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
-		subroots10.getChildren().setAll(a1);
-	}
-	
+ 
  
 	
 	@FXML
@@ -227,6 +139,7 @@ public class s2controller extends AnchorPane
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s8.fxml"));
 		subroots2.getChildren().setAll(a1);
 	}
+	
 	
 
 	@FXML

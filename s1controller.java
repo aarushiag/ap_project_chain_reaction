@@ -4,6 +4,8 @@ package hello.pages;
 import java.io.IOException;
 
 import hello.Main;
+
+import hello.pages.s2controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +25,7 @@ public class s1controller extends AnchorPane
 	 
 	ObservableList<String> lst =FXCollections.observableArrayList("2 Player Game","3 Player Game","4 Player Game","5 Player Game","6 Player Game","7 Player Game","8 Player Game");
 	static String init="2 Player Game";
-	
+	int num=0;
 	
 	 
 	@FXML
@@ -80,7 +82,10 @@ public class s1controller extends AnchorPane
 	private void todo() throws IOException
 	{
 		  
-		 init=nplayers.getSelectionModel().getSelectedItem(); 
+		 init=nplayers.getSelectionModel().getSelectedItem();
+		 Main obj=new Main();
+		 num=nplayers.getSelectionModel().getSelectedIndex();
+		  
 		
 		 
 	}
@@ -90,9 +95,21 @@ public class s1controller extends AnchorPane
 	{
 		 
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 	 
-		
+		s2controller obj1=new s2controller();
+	
 		Main obj=new Main();
-		obj.play1(a1);
+		obj.play1(a1,num,obj1.red,obj1.green,obj1.blue,6,9);
+	}
+	
+	@FXML
+	public  void play2() throws IOException
+	{
+		 
+		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 	 
+		s2controller obj1=new s2controller();
+	
+		Main obj=new Main();
+		obj.play1(a1,num,obj1.red,obj1.green,obj1.blue,10,15);
 	}
 	
 	
