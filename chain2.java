@@ -1085,7 +1085,22 @@ public class chain2 extends Application{
 	public int[] red={0,255,0,150,120,10,255,255};
 	public int[] green={255,0,0,20,255,255,10,255};
 	public int[] blue={0,0,255,190,10,255,255,255};
-	public chain2(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
+	/*public chain2(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
+		this.hor=hor;
+		this.ver=ver;
+		this.num_players=num_players;
+		this.red=red;
+		this.green=green;
+		this.blue=blue;
+		this.alive=new boolean[num_players];
+		for (int i=0;i<num_players;i++){
+			alive[i]=true;
+		}
+		this.turn=0;
+		this.num_turn=0;
+		this.root=new Group();
+	}*/
+	public void set_new_game(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
 		this.hor=hor;
 		this.ver=ver;
 		this.num_players=num_players;
