@@ -33,6 +33,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import java.util.*;
 //import java.awt.Font;
 //---------------------------------
 //ISSUES
@@ -86,9 +87,13 @@ class atom{
 	chain2 ch;
 	public Sphere crc;
 	public Group molatom;
-	public atom(chain2 ch,boolean color_sasta){
+	public int gx;
+	public int gy;
+	public atom(chain2 ch,boolean color_sasta,int gx,int gy){
 		num=1;
 		this.ch=ch;
+		this.gx=gx;
+		this.gy=gy;
 		player_index=ch.turn;
 		crc=new Sphere();
 		crc.setRadius(10);
@@ -106,6 +111,8 @@ class atom{
 		//System.out.println("hi :)");
 		player_index=ch.turn;
 		if (color_sasta==true)player_index=ch.prev_turn;
+		player_index=ch.gr1[gx][gy].player_index;
+		System.out.println("hi :) "+player_index);
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -148,8 +155,8 @@ class atom{
 class atom2 extends atom{
 	public Sphere crc2;
 	//public Group diatom;
-	public atom2(chain2 ch,boolean color_sasta){
-		super(ch,color_sasta);
+	public atom2(chain2 ch,boolean color_sasta,int gx,int gy){
+		super(ch,color_sasta,gx,gy);
 		num=2;
 		crc2=new Sphere();
 		crc2.setRadius(10);
@@ -171,8 +178,8 @@ class atom2 extends atom{
 }
 class atom3 extends atom2{
 	public Sphere crc3;
-	public atom3(chain2 ch,boolean color_sasta){
-		super(ch,color_sasta);
+	public atom3(chain2 ch,boolean color_sasta,int gx,int gy){
+		super(ch,color_sasta,gx,gy);
 		num=3;
 		crc3=new Sphere();
 		crc3.setRadius(10);
@@ -192,7 +199,6 @@ class atom3 extends atom2{
 		super.change_color(crc3,color_sasta);
 	}
 }
-
 class cell extends Pane{
 	private Rectangle r;
 	private chain2 ch;
@@ -259,9 +265,27 @@ class cell extends Pane{
 	public void value_plus(){
 		value++;
 	}
+	public void compute_increase_value(boolean toggle){
+		if ((value==0)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==1)&&(ch.turn==a1.get_player_num())){
+			value++;
+		}
+		else if ((value==1)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==2)&&(ch.turn==a2.get_player_num())){
+			value++;
+		}
+		else if ((value==2)&&(toggle==false)){
+			value++;
+		}
+		
+	}
 	public void increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
-			a1=new atom(ch,true);
+			a1=new atom(ch,true,gx,gy);
 			//System.out.println(a1.get_player_num()+"[]");
 			value++;
 			molatom=a1.molatom;
@@ -282,7 +306,7 @@ class cell extends Pane{
 		}
 		else if ((value==1)&&(ch.turn==a1.get_player_num())){
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch,false);
+			a2=new atom2(ch,false,gx,gy);
 			molatom=a2.molatom;
 			value++;
 			//this.getChildren().add(a2.molatom);
@@ -344,7 +368,7 @@ class cell extends Pane{
 		else if ((value==1)&&(toggle==false)){
 			//this.getChildren().remove(a2.molatom);
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch,true);
+			a2=new atom2(ch,true,gx,gy);
 			a2.change_color(true);
 			molatom=a2.molatom;
 			value++;
@@ -401,7 +425,7 @@ class cell extends Pane{
 		}
 		else if ((value==2)&&(ch.turn==a2.get_player_num())){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch,false);
+			a3=new atom3(ch,false,gx,gy);
 			molatom=a3.molatom;
 			value++;
 			//this.getChildren().add(a3.molatom);
@@ -494,7 +518,7 @@ class cell extends Pane{
 		}
 		else if ((value==2)&&(toggle==false)){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch,true);
+			a3=new atom3(ch,true,gx,gy);
 			a3.change_color(true);
 			molatom=a3.molatom;
 			value++;
@@ -589,7 +613,8 @@ class cell extends Pane{
 	public void set_color(Sphere crc,boolean color_sasta){
 		int temp=ch.turn;
 		if (color_sasta==true)temp=ch.prev_turn;
-		//System.out.println("hi :(");
+		temp=ch.gr1[gx][gy].player_index;
+		System.out.println("hi :( "+temp+" "+gx+" "+gy);
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -1007,6 +1032,16 @@ class cell extends Pane{
 			ch.gr[gx][gy+1].change_value(false);
 		}
 	}
+	public boolean compute_change_value(boolean toggle){
+		if (value<threshold){
+			increase_value(toggle);
+			return false;
+		}
+		else{
+			burst_the_cell(toggle);
+			return true;
+		}
+	}
 	public boolean change_value(boolean toggle){
 		//System.out.println(gx+" "+gy);
 		if (value<threshold){
@@ -1034,49 +1069,95 @@ class cell extends Pane{
 		});
 	}*/
 }
-class grid{
-	private cell[][] now_grid;
-	private Rectangle r;
-	public grid(cell[][] now_grid){
-		this.now_grid=now_grid;
-		r=new Rectangle();
-		r.setHeight(550);
-		r.setWidth(500);
-		r.setFill(Color.TRANSPARENT);
+class compute_cell{
+	public int value;
+	public int player_index;
+	public chain2 ch;
+	public int gx;
+	public int gy;
+	public int threshold;
+	public compute_cell(chain2 ch,int gx,int gy){
+		value=0;
+		player_index=-1;
+		this.ch=ch;
+		this.gy=gy;
+		this.gx=gx;
+		if ((gx==0)&&(gy==0))threshold=1;
+		else if ((gx==ch.hor-1)&&(gy==0))threshold=1;
+		else if ((gx==0)&&(gy==ch.ver-1))threshold=1;
+		else if ((gx==ch.hor-1)&&(gy==ch.ver-1))threshold=1;
+		else if (gx==0)threshold=2;
+		else if (gy==0)threshold=2;
+		else if (gx==ch.hor-1)threshold=2;
+		else if (gy==ch.ver-1)threshold=2;
+		else threshold=3;
 	}
-	public Rectangle get_rectangle(){
-		return r;
+	public void if_for_change_value(){
+		if ((gx-1>=0)&&(gy>=0)){
+			ch.gr1[gx-1][gy].compute_change_value(false);
+		}
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
+			ch.gr1[gx+1][gy].compute_change_value(false);
+		}
+		if ((gx>=0)&&(gy-1>=0)){
+			ch.gr1[gx][gy-1].compute_change_value(false);
+		}
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
+			ch.gr1[gx][gy+1].compute_change_value(false);
+		}
 	}
-	
-	/*public void change_color_of_grid(int turn){
-		r.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent t){
-				System.out.println("click identified");
-				for (int i=0;i<6;i++){
-					for (int j=0;j<9;j++){
-						Rectangle r1=now_grid[i][j].get_rectangle();
-						if (turn==0)r1.setStroke(Color.RED);
-						if (turn==1)r1.setStroke(Color.GREEN);
-						if (turn==2)r1.setStroke(Color.BLUE);
-						if (turn==3)r1.setStroke(Color.PINK);
-						if (turn==4)r1.setStroke(Color.YELLOW);
-						if (turn==5)r1.setStroke(Color.CYAN);
-						if (turn==6)r1.setStroke(Color.MEDIUMPURPLE);
-						if (turn==7)r1.setStroke(Color.SNOW);
-					}
-				}
-				
-			}
-		});
-	}*/
-	
+	public boolean compute_change_value(boolean toggle){
+		if (value<threshold){
+			compute_increase_value(toggle);
+			return false;
+		}
+		else{
+			compute_burst_the_cell(toggle);
+			return true;
+		}
+	}
+	public void compute_increase_value(boolean toggle){
+		if ((value==0)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==1)&&(ch.turn==ch.gr[gx][gy].get_player_index())){
+			value++;
+		}
+		else if ((value==1)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==2)&&(ch.turn==ch.gr[gx][gy].get_player_index())){
+			value++;
+		}
+		else if ((value==2)&&(toggle==false)){
+			value++;
+		}
+		
+	}
+	public void compute_burst_the_cell(boolean toggle){
+		value=0;
+		//System.out.println("I burst "+gx+" "+gy);
+		if ((gx-1>=0)&&(gy>=0)){
+			ch.gr1[gx-1][gy].player_index=player_index;
+		}
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
+			ch.gr1[gx+1][gy].player_index=player_index;
+		}
+		if ((gx>=0)&&(gy-1>=0)){
+			ch.gr1[gx][gy-1].player_index=player_index;
+		}
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
+			ch.gr1[gx][gy+1].player_index=player_index;
+		}
+		if_for_change_value();
+	}
 }
 public class chain2 extends Application{
 	public static int turn=0;
 	public static int prev_turn=0;
 	public int num_turn=0;
 	public cell[][] gr;
+	public compute_cell[][] gr1;
 	public Group root;
 	public int num_players=4;
 	public player[] all_players;
@@ -1144,14 +1225,17 @@ public class chain2 extends Application{
 		public void handle(MouseEvent m){
 			//System.out.println("cell click");
 			cell temp=(cell)m.getSource();
+			compute_cell compute_temp=gr1[temp.gx][temp.gy];
+			compute_temp.player_index=turn;
 			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
 			//System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
 			if (temp.get_value()==0){
 				num_turn++;
-				atom a=new atom(chain2.this,false);
+				atom a=new atom(chain2.this,false,temp.gx,temp.gy);
 				temp.a1=a;
 				temp.value_plus();
+				compute_temp.value++;
 				temp.getChildren().add(temp.a1.get_atom());
 				if (((temp.gx==0)&&(temp.gy==0))||((temp.gx==0)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==0))){
 					//System.out.println("I rotate");
@@ -1167,17 +1251,38 @@ public class chain2 extends Application{
 				temp.molatom=a.molatom;
 				temp.molatom.setLayoutX(25);
 				temp.molatom.setLayoutY(25);
-				//while(alive[turn-1]==false){
-				
 				if (num_turn>num_players){
 					for (int i=0;i<num_players;i++){
 						all_players[i].num_atom=0;
 					}
 					for (int i=0;i<hor;i++){
 						for (int j=0;j<ver;j++){
+							int pl=gr1[i][j].player_index;
+							if (gr1[i][j].value>0){
+								System.out.print((pl+1)+" ");
+								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
+								all_players[pl].num_atom+=gr1[i][j].value;
+							}else System.out.print("0 ");
+						}
+						System.out.println();
+					}
+					System.out.println("****");
+					for (int i=0;i<num_players;i++){
+						System.out.print(all_players[i].num_atom+" ");
+						if (all_players[i].num_atom==0)alive[i]=false;
+					}
+				}
+				//while(alive[turn-1]==false){
+				
+				/*if (num_turn>num_players){
+					for (int i=0;i<num_players;i++){
+						all_players[i].num_atom=0;
+					}
+					for (int i=0;i<hor;i++){
+						for (int j=0;j<ver;j++){
 							int pl=gr[i][j].get_player_index();
-							if (gr[i][j].get_value()>0){
-							all_players[pl].num_atom++;
+							if (gr1[i][j].value>0){
+							all_players[pl].num_atom+=gr1[i][j].value;
 						}
 						}
 					}
@@ -1186,7 +1291,7 @@ public class chain2 extends Application{
 						System.out.print(all_players[i].num_atom+" ");
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
-				}
+				}*/
 				increment_turn();
 				/*do{
 					turn=(turn+1)%num_players;
@@ -1203,7 +1308,29 @@ public class chain2 extends Application{
 				num_turn++;
 				temp.getChildren().remove(temp.a1.get_atom());
 				//System.out.println(turn+" :)");
+				compute_temp.compute_change_value(true);
 				temp.change_value(true);
+				if (num_turn>num_players){
+					for (int i=0;i<num_players;i++){
+						all_players[i].num_atom=0;
+					}
+					for (int i=0;i<hor;i++){
+						for (int j=0;j<ver;j++){
+							int pl=gr1[i][j].player_index;
+							if (gr1[i][j].value>0){
+								System.out.print((pl+1)+" ");
+								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
+								all_players[pl].num_atom+=gr1[i][j].value;
+							}else System.out.print("0 ");
+						}
+						System.out.println();
+					}
+					System.out.println("****");
+					for (int i=0;i<num_players;i++){
+						System.out.print(all_players[i].num_atom+" ");
+						if (all_players[i].num_atom==0)alive[i]=false;
+					}
+				}
 				//System.out.println(turn+" :)");
 				//evaluation of number of atoms should be done after cells have burst
 				/*if (num_turn>num_players){
@@ -1241,26 +1368,9 @@ public class chain2 extends Application{
 			}
 			int ct=0;
 			int flag=-1;
-			if (num_turn>num_players){
-				for (int i=0;i<num_players;i++){
-					all_players[i].num_atom=0;
-				}
-				for (int i=0;i<hor;i++){
-					for (int j=0;j<ver;j++){
-						int pl=gr[i][j].get_player_index();
-						if (gr[i][j].get_value()>0){
-							//System.out.println(gr[i][j].get_value()+" "+gr[i][j].get_player_index());
-							System.out.println(i+" "+j+" "+gr[i][j].get_value());
-							all_players[pl].num_atom++;
-						}
-					}
-				}
-				System.out.println("****");
-				for (int i=0;i<num_players;i++){
-					//System.out.print(all_players[i].num_atom+" ");
-					if (all_players[i].num_atom==0)alive[i]=false;
-				}
-			}
+			System.out.println(turn);
+			
+			System.out.println();
 			for (int i=0;i<num_players;i++){
 				//System.out.println(alive[i]);
 				if (alive[i]==true){
@@ -1269,7 +1379,7 @@ public class chain2 extends Application{
 				}
 			}
 			if (ct==1){
-				//System.out.println("Player "+(flag+1)+" won");
+				System.out.println("Player "+(flag+1)+" won");
 				//Platform.exit();
 				//System.exit(0);
 			}
@@ -1382,9 +1492,11 @@ public class chain2 extends Application{
 		hor=6;
 		ver=9;
 		gr=new cell[hor][ver];
+		gr1=new compute_cell[hor][ver];
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
 				cell c=new cell(this,i,j,i*50+90,j*50+60,50,50);
+				gr1[i][j]=new compute_cell(this,i,j);
 				root.getChildren().add(c);
 				gr[i][j]=c;
 				c.setOnMouseClicked(new cell_click_event());
@@ -1403,7 +1515,7 @@ public class chain2 extends Application{
 				//c.setOnMouseClicked(cell_clicked());
 			}
 		}
-		grid g=new grid(gr);
+		//grid g=new grid(gr);
 		//root.getChildren().add(g.get_rectangle());
 		/*Rectangle r=g.get_rectangle();
 		r.setOnMouseClicked(new EventHandler<MouseEvent>(){
