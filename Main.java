@@ -680,6 +680,7 @@ class cell extends Pane implements Serializable{
 		value=0;
 		//System.out.println("cell burst");
 		this.getChildren().remove(molatom);
+		
 		double x1=r.getLayoutX()+25;
 		double y1=r.getLayoutY()+25;
 		ParallelTransition p=new ParallelTransition();
@@ -1310,7 +1311,7 @@ public class Main extends Application implements Serializable
 		FXMLLoader loader =new FXMLLoader();
 		loader.setLocation(Main.class.getResource("pages/s1.fxml"));
 		mainLayout=loader.load();		
-		scene=new Scene(mainLayout);
+		scene=new Scene(mainLayout,600,850);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	    
@@ -1735,28 +1736,56 @@ public class Main extends Application implements Serializable
 		gr=new cell[hor][ver];
 		inner_gr=new cell[hor][ver];
 		arr=new ArrayList<>();
-		for (int i=0;i<hor+1;i++){
-			for (int j=0;j<ver+1;j++){
-				Line c=new Line(i*50+50, j*50+70,i*(46)+62,j*46+88);
-				c.setStroke(Color.rgb(red[0],green[0],blue[0]));
-				arr.add(c);
-				root.getChildren().add(c);
-				 
 		 
-			}
+		for (int i=0;i<hor+1;i++)
+		{
+				for (int j=0;j<ver+1;j++)
+				{	
+					Line c=null;
+					if(hor==6 && ver==9)
+					{
+						c=new Line(i*50+150, j*50+150,i*(46)+162,j*46+168);
+					}
+					else
+					{
+						c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
+					}
+					c.setStroke(Color.rgb(red[0],green[0],blue[0]));
+					arr.add(c);
+					root.getChildren().add(c);
+					 
+			 
+				}
 		}
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
-				cell c=new cell(this,i,j,i*(46)+62,j*46+88,46,46);
+				cell c=null;
+				if(hor==6 && ver==9)
+				{c=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
+				else
+				{
+					c=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
+				}
 				root.getChildren().add(c);
 				inner_gr[i][j]=c;
-		 
+			 
 			}
 		}
 		
+		
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
-				cell c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				cell c=null;
+			if (hor==6 && ver==9)
+				{
+					c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+				}
+				
+				else
+				{
+					//System.out.println("abc");
+					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				}
 				//gr1[i][j]=new compute_cell(this,i,j);
 				root.getChildren().add(c);
 				gr[i][j]=c;
@@ -1812,12 +1841,25 @@ public class Main extends Application implements Serializable
 				all_players[i]=new player(i,red[i],green[i],blue[i]);
 			}
 		}
-		 
+		
+		
 		inner_gr=new cell[hor][ver];
+		 
 		arr=new ArrayList<>();
+		
+		 
 		for (int i=0;i<hor+1;i++){
-			for (int j=0;j<ver+1;j++){
-				Line c=new Line(i*50+50, j*50+70,i*(46)+62,j*46+88);
+			for (int j=0;j<ver+1;j++)
+			{	
+				Line c=null;
+				if(hor==6 && ver==9)
+				{
+					c=new Line(i*50+150, j*50+150,i*(46)+162,j*46+168);
+				}
+				else
+				{
+					c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
+				}
 				c.setStroke(Color.rgb(red[0],green[0],blue[0]));
 				arr.add(c);
 				root.getChildren().add(c);
@@ -1825,29 +1867,23 @@ public class Main extends Application implements Serializable
 		 
 			}
 		}
+		 
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
-				cell c=new cell(this,i,j,i*(46)+62,j*46+88,46,46);
+				cell c=null;
+				if(hor==6 && ver==9)
+				{c=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
+				else
+				{
+					c=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
+				}
 				root.getChildren().add(c);
 				inner_gr[i][j]=c;
-				//c.setOnMouseClicked(new cell_click_event());
-				/*c.setOnMouseClicked(new EventHandler<MouseEvent>(){
-					@Override
-					public void handle(MouseEvent t){
-						boolean b=c.change_value();
-						if (b==true){
-							if ((i-1>=0)&&(j>=0))Event.fireEvent(gr[i-1][j], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i+1<=5)&&(j>=0))Event.fireEvent(gr[i+1][j], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i>=0)&&(j-1>=0))Event.fireEvent(gr[i][j-1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i>=0)&&(j+1<=8))Event.fireEvent(gr[i][j+1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-						}
-					}
-				});*/
-				//c.setOnMouseClicked(cell_clicked());
+			 
 			}
 		}
+		 
 		
-
 		gr=new cell[hor][ver];
 		gr1=new compute_cell[hor][ver];
 		grid=new grid[hor][ver];
@@ -1873,7 +1909,17 @@ public class Main extends Application implements Serializable
 		
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
-				cell c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				cell c=null;
+			if (hor==6 && ver==9)
+				{
+					c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+				}
+				
+				else
+				{
+					//System.out.println("abc");
+					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				}
 				gr1[i][j]=new compute_cell(this,i,j);
 				root.getChildren().add(c);
 				gr[i][j]=c;
