@@ -11,7 +11,13 @@ import javafx.animation.Timeline;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.RotateTransition;
 
+import java.io.FileInputStream;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.animation.Animation;
@@ -26,9 +32,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+
 //import javafx.event.EventListener;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Line ;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Rectangle;
@@ -37,12 +44,15 @@ import javafx.scene.control.Button;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+ 
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+//import java.awt.Font;
+  
 //import java.awt.Font;
 //---------------------------------
 //ISSUES
@@ -63,7 +73,7 @@ import javafx.scene.input.MouseEvent;
 //5.allow change in size of grid
 //6.allow elimination of players
 //---------------------------------
-class player{
+class player implements Serializable{
 	int index;
 	int num_atom;
 	int num_cell;
@@ -90,15 +100,19 @@ class player{
 		return blue;
 	}
 }
-class atom{
+class atom implements Serializable{
 	int num;
 	int player_index;
 	Main ch;
 	public Sphere crc;
 	public Group molatom;
-	public atom(Main ch,boolean color_sasta){
+	public int gx;
+	public int gy;
+	public atom(Main ch,boolean color_sasta,int gx,int gy){
 		num=1;
 		this.ch=ch;
+		this.gx=gx;
+		this.gy=gy;
 		player_index=ch.turn;
 		crc=new Sphere();
 		crc.setRadius(10);
@@ -116,6 +130,8 @@ class atom{
 		//System.out.println("hi :)");
 		player_index=ch.turn;
 		if (color_sasta==true)player_index=ch.prev_turn;
+		player_index=ch.gr1[gx][gy].player_index;
+		System.out.println("hi :) "+player_index);
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -155,11 +171,11 @@ class atom{
 		
 	}
 }
-class atom2 extends atom{
+class atom2 extends atom implements Serializable{
 	public Sphere crc2;
 	//public Group diatom;
-	public atom2(Main ch,boolean color_sasta){
-		super(ch,color_sasta);
+	public atom2(Main ch,boolean color_sasta,int gx,int gy){
+		super(ch,color_sasta,gx,gy);
 		num=2;
 		crc2=new Sphere();
 		crc2.setRadius(10);
@@ -179,10 +195,10 @@ class atom2 extends atom{
 		super.change_color(crc2,color_sasta);
 	}
 }
-class atom3 extends atom2{
+class atom3 extends atom2 implements Serializable{
 	public Sphere crc3;
-	public atom3(Main ch,boolean color_sasta){
-		super(ch,color_sasta);
+	public atom3(Main ch,boolean color_sasta,int gx,int gy){
+		super(ch,color_sasta,gx,gy);
 		num=3;
 		crc3=new Sphere();
 		crc3.setRadius(10);
@@ -202,8 +218,7 @@ class atom3 extends atom2{
 		super.change_color(crc3,color_sasta);
 	}
 }
-
-class cell extends Pane{
+class cell extends Pane implements Serializable{
 	private Rectangle r;
 	private Main ch;
 	//private Label l;
@@ -269,9 +284,27 @@ class cell extends Pane{
 	public void value_plus(){
 		value++;
 	}
+	public void compute_increase_value(boolean toggle){
+		if ((value==0)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==1)&&(ch.turn==a1.get_player_num())){
+			value++;
+		}
+		else if ((value==1)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==2)&&(ch.turn==a2.get_player_num())){
+			value++;
+		}
+		else if ((value==2)&&(toggle==false)){
+			value++;
+		}
+		
+	}
 	public void increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
-			a1=new atom(ch,true);
+			a1=new atom(ch,true,gx,gy);
 			//System.out.println(a1.get_player_num()+"[]");
 			value++;
 			molatom=a1.molatom;
@@ -292,7 +325,7 @@ class cell extends Pane{
 		}
 		else if ((value==1)&&(ch.turn==a1.get_player_num())){
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch,false);
+			a2=new atom2(ch,false,gx,gy);
 			molatom=a2.molatom;
 			value++;
 			//this.getChildren().add(a2.molatom);
@@ -312,6 +345,7 @@ class cell extends Pane{
 			pt2.setNode(a2.crc2);
 			pt2.setPath(crc2_path);
 			pt2.setInterpolator(Interpolator.LINEAR);
+			
 			pt2.setDuration(Duration.millis(10000));
 			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt2.setCycleCount(Timeline.INDEFINITE);*/
@@ -354,7 +388,7 @@ class cell extends Pane{
 		else if ((value==1)&&(toggle==false)){
 			//this.getChildren().remove(a2.molatom);
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch,true);
+			a2=new atom2(ch,true,gx,gy);
 			a2.change_color(true);
 			molatom=a2.molatom;
 			value++;
@@ -411,7 +445,7 @@ class cell extends Pane{
 		}
 		else if ((value==2)&&(ch.turn==a2.get_player_num())){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch,false);
+			a3=new atom3(ch,false,gx,gy);
 			molatom=a3.molatom;
 			value++;
 			//this.getChildren().add(a3.molatom);
@@ -504,7 +538,7 @@ class cell extends Pane{
 		}
 		else if ((value==2)&&(toggle==false)){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch,true);
+			a3=new atom3(ch,true,gx,gy);
 			a3.change_color(true);
 			molatom=a3.molatom;
 			value++;
@@ -599,7 +633,8 @@ class cell extends Pane{
 	public void set_color(Sphere crc,boolean color_sasta){
 		int temp=ch.turn;
 		if (color_sasta==true)temp=ch.prev_turn;
-		//System.out.println("hi :(");
+		temp=ch.gr1[gx][gy].player_index;
+		System.out.println("hi :( "+temp+" "+gx+" "+gy);
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -1017,6 +1052,16 @@ class cell extends Pane{
 			ch.gr[gx][gy+1].change_value(false);
 		}
 	}
+	public boolean compute_change_value(boolean toggle){
+		if (value<threshold){
+			increase_value(toggle);
+			return false;
+		}
+		else{
+			burst_the_cell(toggle);
+			return true;
+		}
+	}
 	public boolean change_value(boolean toggle){
 		//System.out.println(gx+" "+gy);
 		if (value<threshold){
@@ -1044,67 +1089,162 @@ class cell extends Pane{
 		});
 	}*/
 }
-class grid{
-	private cell[][] now_grid;
-	private Rectangle r;
-	public grid(cell[][] now_grid){
-		this.now_grid=now_grid;
-		r=new Rectangle();
-		r.setHeight(550);
-		r.setWidth(500);
-		r.setFill(Color.TRANSPARENT);
+class compute_cell implements Serializable{
+	public int value;
+	public int player_index;
+	public transient Main ch;
+	public int gx;
+	public int gy;
+	public int threshold;
+	public compute_cell(Main ch,int gx,int gy){
+		value=0;
+		player_index=-1;
+		this.ch=ch;
+		this.gy=gy;
+		this.gx=gx;
+		if ((gx==0)&&(gy==0))threshold=1;
+		else if ((gx==ch.hor-1)&&(gy==0))threshold=1;
+		else if ((gx==0)&&(gy==ch.ver-1))threshold=1;
+		else if ((gx==ch.hor-1)&&(gy==ch.ver-1))threshold=1;
+		else if (gx==0)threshold=2;
+		else if (gy==0)threshold=2;
+		else if (gx==ch.hor-1)threshold=2;
+		else if (gy==ch.ver-1)threshold=2;
+		else threshold=3;
 	}
-	public Rectangle get_rectangle(){
-		return r;
+	public void if_for_change_value(){
+		if ((gx-1>=0)&&(gy>=0)){
+			ch.gr1[gx-1][gy].compute_change_value(false);
+		}
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
+			ch.gr1[gx+1][gy].compute_change_value(false);
+		}
+		if ((gx>=0)&&(gy-1>=0)){
+			ch.gr1[gx][gy-1].compute_change_value(false);
+		}
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
+			ch.gr1[gx][gy+1].compute_change_value(false);
+		}
 	}
+	public boolean compute_change_value(boolean toggle){
+		if (value<threshold){
+			compute_increase_value(toggle);
+			return false;
+		}
+		else{
+			compute_burst_the_cell(toggle);
+			return true;
+		}
+	}
+	public void compute_increase_value(boolean toggle){
+		if ((value==0)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==1)&&(ch.turn==ch.gr[gx][gy].get_player_index())){
+			value++;
+		}
+		else if ((value==1)&&(toggle==false)){
+			value++;
+		}
+		else if ((value==2)&&(ch.turn==ch.gr[gx][gy].get_player_index())){
+			value++;
+		}
+		else if ((value==2)&&(toggle==false)){
+			value++;
+		}
+		
+	}
+	public void compute_burst_the_cell(boolean toggle){
+		value=0;
+		//System.out.println("I burst "+gx+" "+gy);
+		if ((gx-1>=0)&&(gy>=0)){
+			ch.gr1[gx-1][gy].player_index=player_index;
+		}
+		if ((gx+1<=ch.hor-1)&&(gy>=0)){
+			ch.gr1[gx+1][gy].player_index=player_index;
+		}
+		if ((gx>=0)&&(gy-1>=0)){
+			ch.gr1[gx][gy-1].player_index=player_index;
+		}
+		if ((gx>=0)&&(gy+1<=ch.ver-1)){
+			ch.gr1[gx][gy+1].player_index=player_index;
+		}
+		if_for_change_value();
+	}
+}
+class grid implements Serializable
+{
 	
-	/*public void change_color_of_grid(int turn){
-		r.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent t){
-				System.out.println("click identified");
-				for (int i=0;i<6;i++){
-					for (int j=0;j<9;j++){
-						Rectangle r1=now_grid[i][j].get_rectangle();
-						if (turn==0)r1.setStroke(Color.RED);
-						if (turn==1)r1.setStroke(Color.GREEN);
-						if (turn==2)r1.setStroke(Color.BLUE);
-						if (turn==3)r1.setStroke(Color.PINK);
-						if (turn==4)r1.setStroke(Color.YELLOW);
-						if (turn==5)r1.setStroke(Color.CYAN);
-						if (turn==6)r1.setStroke(Color.MEDIUMPURPLE);
-						if (turn==7)r1.setStroke(Color.SNOW);
-					}
-				}
-				
-			}
-		});
-	}*/
+int player_index;
+int value;
+public  grid(int a,int b)
+{
+	this.player_index=a;
+	this.value=b;}
+
+}
+class to_serialize implements Serializable
+{
+	grid[][] gr1;
+	int turn;
+	int prev_turn;
+	int red[];
+	int green[];
+	int blue[];
+	int hor;
+	int ver;
+	int num_players;
+	
+	public int num_turn=0;
+	public transient cell[][] gr;
+	//public cell[][] inner_gr;
+	public  compute_cell[][] norm;
+	 
+	public player[] all_players;
+	 
+	public boolean[] alive;
+ 
+	
+	public to_serialize(boolean[] alive,int num_turn,cell[][] gr,compute_cell[][] norm,player[] all_players,grid[][] gr1,int turn,int prev_turn,int num_players,int[] red,int []green,int[] blue,int hor,int ver)
+	{
+		this.gr1=gr1;
+		this.turn=turn;
+		this.prev_turn=prev_turn;
+		this.green=green;
+		this.red=red;
+		this.blue=blue;this.ver=ver;
+		this.hor=hor;
+		this.num_players=num_players;
+		this.num_turn=num_turn;
+		this.gr=gr;
+		this.norm=norm;
+		this.all_players=all_players;
+		this.alive=alive;
+	}
 	
 }
-public class Main extends Application 
+public class Main extends Application implements Serializable
 {	
 	
 	private Stage primaryStage;
 	public static AnchorPane mainLayout;
-	private Scene scene;
-	
-	 
-	public static int prev_turn=0;
+	private Scene scene;	 
 	public static int turn=0;
+	public static int prev_turn=0;
 	public int num_turn=0;
 	public cell[][] gr;
 	public cell[][] inner_gr;
-	public ArrayList<Line> arr;
+	public  compute_cell[][] gr1;
 	public Group root;
 	public int num_players=2;
 	public player[] all_players;
-	public int hor;
-	public int ver;
-
-	public int[] red=  {255,0,0,255,255,0,100,255};
-	public int[] green={0,255,0,255,0,255,100,255};
-	public int[] blue= {0,0,255,0,255,255,100,255};	
+	public static  int hor;
+	public static int ver;
+	public static grid[][] grid;
+	ArrayList<Line> arr;
+	public static int[] red=  {255,0,0,255,255,0,100,255};
+	public static int[] green={0,255,0,255,0,255,100,255};
+	public static int[] blue= {0,0,255,0,255,255,100,255};	
 	
  
 	public void set_colours(int red[],int green[],int blue[]) 
@@ -1115,40 +1255,41 @@ public class Main extends Application
 	}
 	
 	@Override
-	public void start(Stage primaryStage) throws IOException {
+	public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
 		this.primaryStage=primaryStage;
 		this.primaryStage.setTitle("Chain Reaction Game");
 		showMainView();
 	     
-		
+		to_serialize obj= deserialize("1");
+		red=obj.red;
+		green=obj.green;
+		blue=obj.blue;
+	}
+	public void set_new_game(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
+		this.hor=hor;
+		this.ver=ver;
+		this.num_players=num_players;
+		this.red=red;
+		this.green=green;
+		this.blue=blue;
+		this.alive=new boolean[num_players];
+		for (int i=0;i<num_players;i++){
+			alive[i]=true;
+		}
+		this.turn=0;
+		this.num_turn=0;
+		this.root=new Group();
 	}
 	public boolean[] alive;
-//	public void set_new_game(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
-//		this.hor=hor;
-//		this.ver=ver;
-//		this.num_players=num_players;
-//		this.red=red;
-//		this.green=green;
-//		this.blue=blue;
-//		this.alive=new boolean[num_players];
+//	{
+//		alive=new boolean[num_players];
+//		all_players=new player[num_players];
+//		
 //		for (int i=0;i<num_players;i++){
 //			alive[i]=true;
-//		}
-//		this.turn=0;
-//		this.num_turn=0;
-//		this.root=new Group();
-//		
-//		{
-//			alive=new boolean[num_players];
-//			all_players=new player[num_players];
-//			
-//			for (int i=0;i<num_players;i++){
-//				alive[i]=true;
-//				all_players[i]=new player(i,red[i],green[i],blue[i]);
-//			}
+//			all_players[i]=new player(i,red[i],green[i],blue[i]);
 //		}
 //	}
-
 	public void kill_player(int index){
 		if (index<num_players){
 		alive[index]=false;
@@ -1158,6 +1299,7 @@ public class Main extends Application
 		//System.out.println(turn+" --");
 		prev_turn=turn;
 		turn=(turn+1)%num_players;
+		//System.out.println(alive);
 		while(alive[turn]==false){
 			turn=(turn+1)%num_players;
 		}
@@ -1180,14 +1322,19 @@ public class Main extends Application
 		public void handle(MouseEvent m){
 			//System.out.println("cell click");
 			cell temp=(cell)m.getSource();
+			//System.out.println(gr1);
+			//System.out.println(temp.gy);
+			compute_cell compute_temp=gr1[temp.gx][temp.gy];
+			compute_temp.player_index=turn;
 			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
 			//System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
 			if (temp.get_value()==0){
 				num_turn++;
-				atom a=new atom(Main.this,false);
+				atom a=new atom(Main.this,false,temp.gx,temp.gy);
 				temp.a1=a;
 				temp.value_plus();
+				compute_temp.value++;
 				temp.getChildren().add(temp.a1.get_atom());
 				if (((temp.gx==0)&&(temp.gy==0))||((temp.gx==0)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==0))){
 					//System.out.println("I rotate");
@@ -1203,17 +1350,39 @@ public class Main extends Application
 				temp.molatom=a.molatom;
 				temp.molatom.setLayoutX(25);
 				temp.molatom.setLayoutY(25);
-				//while(alive[turn-1]==false){
-				
 				if (num_turn>num_players){
 					for (int i=0;i<num_players;i++){
 						all_players[i].num_atom=0;
 					}
 					for (int i=0;i<hor;i++){
 						for (int j=0;j<ver;j++){
+							int pl=gr1[i][j].player_index;
+							if (gr1[i][j].value>0){
+								System.out.print((pl+1)+" ");
+								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
+								all_players[pl].num_atom+=gr1[i][j].value;
+							}else System.out.print("0 ");
+						}
+						System.out.println();
+					}
+					System.out.println("****");
+					
+					for (int i=0;i<num_players;i++){
+						System.out.print(all_players[i].num_atom+" ");
+						if (all_players[i].num_atom==0)alive[i]=false;
+					}
+				}
+				//while(alive[turn-1]==false){
+				
+				/*if (num_turn>num_players){
+					for (int i=0;i<num_players;i++){
+						all_players[i].num_atom=0;
+					}
+					for (int i=0;i<hor;i++){
+						for (int j=0;j<ver;j++){
 							int pl=gr[i][j].get_player_index();
-							if (gr[i][j].get_value()>0){
-							all_players[pl].num_atom++;
+							if (gr1[i][j].value>0){
+							all_players[pl].num_atom+=gr1[i][j].value;
 						}
 						}
 					}
@@ -1222,7 +1391,7 @@ public class Main extends Application
 						System.out.print(all_players[i].num_atom+" ");
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
-				}
+				}*/
 				increment_turn();
 				/*do{
 					turn=(turn+1)%num_players;
@@ -1239,7 +1408,29 @@ public class Main extends Application
 				num_turn++;
 				temp.getChildren().remove(temp.a1.get_atom());
 				//System.out.println(turn+" :)");
+				compute_temp.compute_change_value(true);
 				temp.change_value(true);
+				if (num_turn>num_players){
+					for (int i=0;i<num_players;i++){
+						all_players[i].num_atom=0;
+					}
+					for (int i=0;i<hor;i++){
+						for (int j=0;j<ver;j++){
+							int pl=gr1[i][j].player_index;
+							if (gr1[i][j].value>0){
+								System.out.print((pl+1)+" ");
+								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
+								all_players[pl].num_atom+=gr1[i][j].value;
+							}else System.out.print("0 ");
+						}
+						System.out.println();
+					}
+					System.out.println("****");
+					for (int i=0;i<num_players;i++){
+						System.out.print(all_players[i].num_atom+" ");
+						if (all_players[i].num_atom==0)alive[i]=false;
+					}
+				}
 				//System.out.println(turn+" :)");
 				//evaluation of number of atoms should be done after cells have burst
 				/*if (num_turn>num_players){
@@ -1277,26 +1468,9 @@ public class Main extends Application
 			}
 			int ct=0;
 			int flag=-1;
-			if (num_turn>num_players){
-				for (int i=0;i<num_players;i++){
-					all_players[i].num_atom=0;
-				}
-				for (int i=0;i<hor;i++){
-					for (int j=0;j<ver;j++){
-						int pl=gr[i][j].get_player_index();
-						if (gr[i][j].get_value()>0){
-							//System.out.println(gr[i][j].get_value()+" "+gr[i][j].get_player_index());
-							System.out.println(i+" "+j+" "+gr[i][j].get_value());
-							all_players[pl].num_atom++;
-						}
-					}
-				}
-				System.out.println("****");
-				for (int i=0;i<num_players;i++){
-					//System.out.print(all_players[i].num_atom+" ");
-					if (all_players[i].num_atom==0)alive[i]=false;
-				}
-			}
+			System.out.println(turn);
+			
+			System.out.println();
 			for (int i=0;i<num_players;i++){
 				//System.out.println(alive[i]);
 				if (alive[i]==true){
@@ -1305,7 +1479,7 @@ public class Main extends Application
 				}
 			}
 			if (ct==1){
-				//System.out.println("Player "+(flag+1)+" won");
+				System.out.println("Player "+(flag+1)+" won");
 				//Platform.exit();
 				//System.exit(0);
 			}
@@ -1346,7 +1520,7 @@ public class Main extends Application
 			if (turn==5)crc.setMaterial(cyanm);
 			if (turn==6)crc.setMaterial(purplem);
 			if (turn==7)crc.setMaterial(whitem);*/
-			//atom a=new atom(Main.this);
+			//atom a=new atom(chain2.this);
 			//if (b==false)temp.getChildren().add(temp.a.get_atom());
 			//if (b==true){
 				//turn=(turn+1)%8;
@@ -1455,7 +1629,154 @@ public class Main extends Application
 					//----------------------------------------
 				}
 			}
+		
+			
+			for(int k=0;k<hor;k++)
+			{
+				for(int l=0;l<ver;l++)
+				{
+					//System.out.println(grid);
+					grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
+					  
+					//System.out.print(gr1[k][l].player_index+1);
+					// .getClass(System.out.println("abc"+gr1);
+					to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+				  	try {
+						serialize(obj,"1");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				System.out.println("");
+			}
+			
 		}
+	}
+	
+	public	 void	serialize(to_serialize gr1,String name) throws	IOException	
+	{	
+		ObjectOutputStream out	=	null;	
+		try	
+		{	
+				out	=	new	ObjectOutputStream	(	
+				new FileOutputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
+				out.writeObject(gr1);	
+		}	
+		finally	
+		{	
+				out.close();	
+		
+		}			 
+									
+	}
+	
+	public	to_serialize deserialize(String name)		
+			throws	IOException,	ClassNotFoundException  
+			{	
+			ObjectInputStream	in	=	null;	
+			try	
+			{	
+				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
+				to_serialize gr1	=(to_serialize)in.readObject();					
+				return gr1;
+			}
+			catch(Exception e)
+			{
+				to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+				 
+				return obj;
+				
+			}	
+			finally
+			{  // System.out.println("Raj");
+			    if(in!=null)
+				in.close();	
+				//System.out.print("KKK");
+			}			
+										
+			}				
+	public void resumeGame(AnchorPane a1) throws ClassNotFoundException, IOException
+	{
+		mainLayout.getChildren().setAll(a1);
+		Group root=new Group();
+		to_serialize gr2=deserialize("1");
+		grid[][] grid=gr2.gr1;
+		
+		turn=gr2.turn;
+		prev_turn=gr2.prev_turn;
+		num_players=gr2.num_players;
+		hor=gr2.hor;
+		ver=gr2.ver;
+		red=gr2.red;
+		green=gr2.green;
+		blue=gr2.blue;
+		this.grid=gr2.gr1;
+		gr1=gr2.norm;
+		
+		 //System.out.println(gr1);
+		all_players=gr2.all_players;
+		num_turn=gr2.num_turn;
+		alive=gr2.alive;
+		
+		for (int i=0;i<gr2.hor;i++){
+			for (int j=0;j<gr2.ver;j++){
+				int pl=grid[i][j].value;
+				 
+					 
+				System.out.print(pl+" ");
+			}
+			System.out.println("");
+		}
+		System.out.println("****");
+		
+		
+		gr=new cell[hor][ver];
+		inner_gr=new cell[hor][ver];
+		arr=new ArrayList<>();
+		for (int i=0;i<hor+1;i++){
+			for (int j=0;j<ver+1;j++){
+				Line c=new Line(i*50+50, j*50+70,i*(46)+62,j*46+88);
+				c.setStroke(Color.rgb(red[0],green[0],blue[0]));
+				arr.add(c);
+				root.getChildren().add(c);
+				 
+		 
+			}
+		}
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=new cell(this,i,j,i*(46)+62,j*46+88,46,46);
+				root.getChildren().add(c);
+				inner_gr[i][j]=c;
+		 
+			}
+		}
+		
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				//gr1[i][j]=new compute_cell(this,i,j);
+				root.getChildren().add(c);
+				gr[i][j]=c;
+				c.setOnMouseClicked(new cell_click_event());
+				
+			 
+			}
+		}
+		
+		
+		for(int i=0;i<hor;i++)
+		{
+			for(int j=0;j<ver;j++)
+			{
+				///YOU HAVE TO CODE HERE CHAUHAN
+			}
+		}
+		
+		mainLayout.getChildren().add(root);
+ 
 	}
     
 	public void play1(AnchorPane a1,int n,int red[],int green[],int blue[],int hor,int ver) throws IOException
@@ -1466,6 +1787,7 @@ public class Main extends Application
 		num_players=n+2;
 		this.hor=hor;
 		this.ver=ver;
+	
 		//System.out.println(num_players);
 		
 		this.red=red;
@@ -1477,6 +1799,7 @@ public class Main extends Application
 			alive[i]=true;
 		}
 		this.turn=0;
+		this.prev_turn=0;
 		this.num_turn=0;
 		this.root=new Group();
 		
@@ -1526,25 +1849,37 @@ public class Main extends Application
 		
 
 		gr=new cell[hor][ver];
+		gr1=new compute_cell[hor][ver];
+		grid=new grid[hor][ver];
+
+		for(int k=0;k<hor;k++)
+		{
+			for(int l=0;l<ver;l++)
+			{
+				grid[k][l]=new grid(0,0);
+				  
+				 
+				to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);;
+			  	try {
+					serialize(obj,"1");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println("");
+		}
+		
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
 				cell c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				gr1[i][j]=new compute_cell(this,i,j);
 				root.getChildren().add(c);
 				gr[i][j]=c;
 				c.setOnMouseClicked(new cell_click_event());
-				/*c.setOnMouseClicked(new EventHandler<MouseEvent>(){
-					@Override
-					public void handle(MouseEvent t){
-						boolean b=c.change_value();
-						if (b==true){
-							if ((i-1>=0)&&(j>=0))Event.fireEvent(gr[i-1][j], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i+1<=5)&&(j>=0))Event.fireEvent(gr[i+1][j], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i>=0)&&(j-1>=0))Event.fireEvent(gr[i][j-1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i>=0)&&(j+1<=8))Event.fireEvent(gr[i][j+1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-						}
-					}
-				});*/
-				//c.setOnMouseClicked(cell_clicked());
+				
+			 
 			}
 		}
 	 
