@@ -20,6 +20,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -1246,7 +1248,8 @@ public class Main extends Application implements Serializable
 	public static int[] red=  {255,0,0,255,255,0,100,255};
 	public static int[] green={0,255,0,255,0,255,100,255};
 	public static int[] blue= {0,0,255,0,255,255,100,255};	
-	
+	public int status;
+	public int winner;
  
 	public void set_colours(int red[],int green[],int blue[]) 
 	{
@@ -1262,9 +1265,13 @@ public class Main extends Application implements Serializable
 		showMainView();
 	     
 		to_serialize obj= deserialize("1");
+		if(obj.red!=null)
+		{
 		red=obj.red;
 		green=obj.green;
 		blue=obj.blue;
+		}
+		 
 	}
 	public void set_new_game(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
 		this.hor=hor;
@@ -1321,7 +1328,29 @@ public class Main extends Application implements Serializable
 	class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
 		public void handle(MouseEvent m){
+			if(status==1)
+			{
+				int input= JOptionPane.showOptionDialog(null, "Wohoo! Player"+(winner)+"won!!","Game Status",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
+			    
+				if(input==0)
+				{
+					 
+					try {
+						AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
+						mainLayout.getChildren().setAll(a1);
+						to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,null,null,null,0,0);
+						serialize(obj, "1");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				 
+			}
 			//System.out.println("cell click");
+			else
+			{
 			cell temp=(cell)m.getSource();
 			//System.out.println(gr1);
 			//System.out.println(temp.gy);
@@ -1481,6 +1510,8 @@ public class Main extends Application implements Serializable
 			}
 			if (ct==1){
 				System.out.println("Player "+(flag+1)+" won");
+				status=1;
+				winner=flag+1;
 				//Platform.exit();
 				//System.exit(0);
 			}
@@ -1654,6 +1685,8 @@ public class Main extends Application implements Serializable
 			}
 			
 		}
+			
+		}
 	}
 	
 	public	 void	serialize(to_serialize gr1,String name) throws	IOException	
@@ -1685,8 +1718,8 @@ public class Main extends Application implements Serializable
 			}
 			catch(Exception e)
 			{
-				to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
-				 
+				to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,null,null,null,0,0);
+			
 				return obj;
 				
 			}	
@@ -1703,6 +1736,25 @@ public class Main extends Application implements Serializable
 		mainLayout.getChildren().setAll(a1);
 		Group root=new Group();
 		to_serialize gr2=deserialize("1");
+		
+		if(gr2.red==null)
+		{
+			int input= JOptionPane.showOptionDialog(null, "Sorry!No previously saved game.","Game Status",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
+		    
+			if(input==0)
+			{
+				 
+				try {
+					AnchorPane a=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
+					mainLayout.getChildren().setAll(a);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		else
+		{
 		grid[][] grid=gr2.gr1;
 		
 		turn=gr2.turn;
@@ -1771,7 +1823,7 @@ public class Main extends Application implements Serializable
 			 
 			}
 		}
-		
+	
 		
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
@@ -1805,6 +1857,7 @@ public class Main extends Application implements Serializable
 		}
 		
 		mainLayout.getChildren().add(root);
+		}
  
 	}
     

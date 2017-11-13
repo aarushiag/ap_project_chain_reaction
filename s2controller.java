@@ -24,9 +24,9 @@ import hello.pages.s1controller;
 public class s2controller extends AnchorPane
 {
 	
-	public static int[] red=  {255,0,0,255,255,0,100,255};
-	public static int[] green={0,255,0,255,0,255,100,255};
-	public static int[] blue= {0,0,255,0,255,255,100,255};	
+	public static int[] red=  Main.red;
+	public static int[] green=Main.green;
+	public static int[] blue= Main.blue;	
 	 
 	
 	

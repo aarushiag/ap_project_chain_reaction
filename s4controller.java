@@ -40,35 +40,47 @@ public class s4controller
 		blues4.setText(Integer.toString(blue4));
 	}
 	
-	@FXML
-	private void reds4() throws IOException
-	{
-		//System.out.println("abc");
-		//System.out.println(reds4.getText());
-		int a=Integer.parseInt(reds4.getText());		 
-		s2controller.red[1]=a;
-		red4=a;
-	}
-	
-	@FXML
-	private void greens4() throws IOException
-	{
-		int a=Integer.parseInt(greens4.getText());
-		s2controller.green[1]=a;
-		green4=a;
-	}
-	
-	@FXML
-	private void blues4() throws IOException
-	{
-		int a=Integer.parseInt(blues4.getText());
-		s2controller.blue[1]=a;
-		blue4=a;
-	}
+//	@FXML
+//	private void reds4() throws IOException
+//	{
+//		//System.out.println("abc");
+//		//System.out.println(reds4.getText());
+//		int a=Integer.parseInt(reds4.getText());		 
+//		s2controller.red[1]=a;
+//		red4=a;
+//	}
+//	
+//	@FXML
+//	private void greens4() throws IOException
+//	{
+//		int a=Integer.parseInt(greens4.getText());
+//		s2controller.green[1]=a;
+//		green4=a;
+//	}
+//	
+//	@FXML
+//	private void blues4() throws IOException
+//	{
+//		int a=Integer.parseInt(blues4.getText());
+//		s2controller.blue[1]=a;
+//		blue4=a;
+//	}
 	
 	@FXML
 	private void backs4() throws IOException
 	{
+		int a=Integer.parseInt(reds4.getText());		 
+		s2controller.red[1]=a;
+		red4=a;
+		
+		a=Integer.parseInt(greens4.getText());
+		s2controller.green[1]=a;
+		green4=a;
+		 
+	    a=Integer.parseInt(blues4.getText());
+		s2controller.blue[1]=a;
+		blue4=a;
+		
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
 		subroots4.getChildren().setAll(a1);
 	}

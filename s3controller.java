@@ -52,35 +52,24 @@ public class s3controller
 		blues3.setText(Integer.toString(blue3));
 	}
 	
-	@FXML
-	private void reds3() throws IOException
-	{
-		//System.out.println("abc");
-		//System.out.println(reds3.getText());
-		int a=Integer.parseInt(reds3.getText());		 
-		s2controller.red[0]=a;
-		red3=a;
-	}
-	
-	@FXML
-	private void greens3() throws IOException
-	{
-		int a=Integer.parseInt(greens3.getText());
-		s2controller.green[0]=a;
-		green3=a;
-	}
-	
-	@FXML
-	private void blues3() throws IOException
-	{
-		int a=Integer.parseInt(blues3.getText());
-		s2controller.blue[0]=a;
-		blue3=a;
-	}
+
+
 	
 	@FXML
 	private void backs3() throws IOException
 	{
+		int a=Integer.parseInt(reds3.getText());		 
+		s2controller.red[0]=a;
+		red3=a;
+		
+		a=Integer.parseInt(greens3.getText());
+		s2controller.green[0]=a;
+		green3=a;
+		
+		a=Integer.parseInt(blues3.getText());
+		s2controller.blue[0]=a;
+		blue3=a;
+		
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
 		subroots3.getChildren().setAll(a1);
 	}

@@ -8,20 +8,20 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="subroots11" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s2controller">
+<AnchorPane fx:id="subroots11" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s2controller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Line endX="290.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
-            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 18;" text="Chain Reaction Preferences" />
+            <Line endX="500.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
+            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 20;" text="Chain Reaction Preferences" />
             <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../unnamed.jpeg" />
                </image>
             </ImageView>
-            <Label alignment="TOP_LEFT" layoutX="37.0" layoutY="129.0" prefHeight="76.0" prefWidth="323.0" style="-fx-text-fill: white;" text="The objective of chain reaction is to take control of the board by eliminating opponent's orbs." wrapText="true" />
-            <Label alignment="TOP_LEFT" layoutX="37.0" layoutY="182.0" prefHeight="234.0" prefWidth="338.0" style="-fx-text-fill: white;" text="Players take it in turns to place their orbs in acell.Once a cell has reached critical number oforbs,they explode into the surrounding cellsadding an extra orb and claiming the cell for the player.Players may only place their orbs in a blank cellor a cell that contains orbs of their own colour.Assoon as a player loses all his orbs is out of the game." wrapText="true" />
-            <Button fx:id="Backs11" layoutX="239.0" layoutY="538.0" mnemonicParsing="false" onAction="#backs11" prefHeight="36.0" prefWidth="153.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Back to Main Page" />
+            <Label alignment="TOP_LEFT" layoutX="132.0" layoutY="122.0" prefHeight="76.0" prefWidth="323.0" style="-fx-text-fill: white;" text="The objective of chain reaction is to take control of the board by eliminating opponent's orbs." wrapText="true" />
+            <Label alignment="TOP_LEFT" layoutX="132.0" layoutY="198.0" prefHeight="234.0" prefWidth="338.0" style="-fx-text-fill: white;" text="Players take it in turns to place their orbs in acell.Once a cell has reached critical number oforbs,they explode into the surrounding cellsadding an extra orb and claiming the cell for the player.Players may only place their orbs in a blank cellor a cell that contains orbs of their own colour.Assoon as a player loses all his orbs is out of the game." wrapText="true" />
+            <Button fx:id="Backs11" layoutX="225.0" layoutY="432.0" mnemonicParsing="false" onAction="#backs11" prefHeight="36.0" prefWidth="153.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Back to Main Page" />
          </children>
       </Pane>
    </children>

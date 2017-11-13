@@ -25,6 +25,7 @@ public class s1controller extends AnchorPane
 	 
 	ObservableList<String> lst =FXCollections.observableArrayList("2 Player Game","3 Player Game","4 Player Game","5 Player Game","6 Player Game","7 Player Game","8 Player Game");
 	static String init="2 Player Game";
+	static 
 	int num=0;
 	
 	 
@@ -59,7 +60,17 @@ public class s1controller extends AnchorPane
 	}
 	
  
- 
+	@FXML
+	private void resumegame() throws IOException, ClassNotFoundException
+	
+	{
+		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 	 
+		s2controller obj1=new s2controller();
+	
+		Main obj=new Main();
+		obj.resumeGame(a1);
+	}
+	
 	
 	@FXML
 	public void settings() throws IOException

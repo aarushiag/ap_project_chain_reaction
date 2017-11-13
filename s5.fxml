@@ -9,25 +9,25 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="subroots5" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s5controller">
+<AnchorPane fx:id="subroots5" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s5controller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Line endX="290.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
-            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 18;" text="Chain Reaction Preferences" />
+            <Line endX="500.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
+            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 20;" text="Chain Reaction Preferences" />
             <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../unnamed.jpeg" />
                </image>
             </ImageView>
-            <Button alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="65.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="285.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Red&#10;Red Component of Player 3's Orb Color&#10;" />
-            <Button alignment="BOTTOM_LEFT" layoutX="13.0" layoutY="127.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="303.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 3's Orb Color" />
-            <Button alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="190.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="296.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 3's Orb Color" />
-            <Button fx:id="Backs5" layoutX="281.0" layoutY="528.0" mnemonicParsing="false" onAction="#backs5" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="Back" />
-            <TextField fx:id="blues5" layoutX="305.0" layoutY="221.0" onAction="#blues5" prefHeight="31.0" prefWidth="95.0" />
-            <TextField fx:id="greens5" layoutX="305.0" layoutY="162.0" onAction="#greens5" prefHeight="31.0" prefWidth="95.0" />
+            <Button alignment="BOTTOM_LEFT" layoutX="110.0" layoutY="122.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="285.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Red&#10;Red Component of Player 3's Orb Color&#10;" />
+            <Button alignment="BOTTOM_LEFT" layoutX="100.0" layoutY="190.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="303.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 3's Orb Color" />
+            <Button alignment="BOTTOM_LEFT" layoutX="104.0" layoutY="268.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="296.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 3's Orb Color" />
+            <Button fx:id="Backs5" layoutX="284.0" layoutY="381.0" mnemonicParsing="false" onAction="#backs5" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="OK" />
+            <TextField fx:id="blues5" layoutX="447.0" layoutY="299.0" prefHeight="31.0" prefWidth="95.0" />
+            <TextField fx:id="greens5" layoutX="447.0" layoutY="221.0" prefHeight="31.0" prefWidth="95.0" />
+            <TextField fx:id="reds5" layoutX="447.0" layoutY="153.0" prefHeight="31.0" prefWidth="95.0" />
          </children>
       </Pane>
-      <TextField fx:id="reds5" layoutX="305.0" layoutY="106.0" onAction="#reds5" prefHeight="31.0" prefWidth="95.0" />
    </children>
 </AnchorPane>

@@ -40,35 +40,47 @@ public class s9controller
 		blues9.setText(Integer.toString(blue9));
 	}
 	
-	@FXML
-	private void reds9() throws IOException
-	{
-		//System.out.println("abc");
-		//System.out.println(reds9.getText());
-		int a=Integer.parseInt(reds9.getText());		 
-		s2controller.red[6]=a;
-		red9=a;
-	}
-	
-	@FXML
-	private void greens9() throws IOException
-	{
-		int a=Integer.parseInt(greens9.getText());
-		s2controller.green[6]=a;
-		green9=a;
-	}
-	
-	@FXML
-	private void blues9() throws IOException
-	{
-		int a=Integer.parseInt(blues9.getText());
-		s2controller.blue[6]=a;
-		blue9=a;
-	}
-	
+//	@FXML
+//	private void reds9() throws IOException
+//	{
+//		//System.out.println("abc");
+//		//System.out.println(reds9.getText());
+//		int a=Integer.parseInt(reds9.getText());		 
+//		s2controller.red[6]=a;
+//		red9=a;
+//	}
+//	
+//	@FXML
+//	private void greens9() throws IOException
+//	{
+//		int a=Integer.parseInt(greens9.getText());
+//		s2controller.green[6]=a;
+//		green9=a;
+//	}
+//	
+//	@FXML
+//	private void blues9() throws IOException
+//	{
+//		int a=Integer.parseInt(blues9.getText());
+//		s2controller.blue[6]=a;
+//		blue9=a;
+//	}
+//	
 	@FXML
 	private void backs9() throws IOException
 	{
+		int a=Integer.parseInt(reds9.getText());		 
+		s2controller.red[6]=a;
+		red9=a;
+		
+		a=Integer.parseInt(greens9.getText());
+		s2controller.green[6]=a;
+		green9=a;
+		
+		a=Integer.parseInt(blues9.getText());
+		s2controller.blue[6]=a;
+		blue9=a;
+		
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s2.fxml"));
 		subroots9.getChildren().setAll(a1);
 	}
