@@ -1341,7 +1341,8 @@ public class chain2 extends Application{
 					gr[i][j].get_rectangle().setStroke(Color.rgb(red[prev_turn],green[prev_turn],blue[prev_turn]));
 				}
 			}
-			if (num_turn>num_players){
+			num_turn--;
+			if (num_turn>=num_players){
 			for (int i=0;i<num_players;i++){
 				all_players[i].num_atom=0;
 			}
