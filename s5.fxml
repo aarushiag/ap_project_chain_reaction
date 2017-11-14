@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="subroots5" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s5controller">
+<AnchorPane fx:id="subroots5" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s5controller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -21,8 +21,8 @@
                </image>
             </ImageView>
             <Button alignment="BOTTOM_LEFT" layoutX="110.0" layoutY="122.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="285.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Red&#10;Red Component of Player 3's Orb Color&#10;" />
-            <Button alignment="BOTTOM_LEFT" layoutX="100.0" layoutY="190.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="303.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 3's Orb Color" />
-            <Button alignment="BOTTOM_LEFT" layoutX="104.0" layoutY="268.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="296.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 3's Orb Color" />
+            <Button alignment="BOTTOM_LEFT" layoutX="110.0" layoutY="190.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="303.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 3's Orb Color" />
+            <Button alignment="BOTTOM_LEFT" layoutX="110.0" layoutY="268.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="296.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 3's Orb Color" />
             <Button fx:id="Backs5" layoutX="284.0" layoutY="381.0" mnemonicParsing="false" onAction="#backs5" prefHeight="42.0" prefWidth="111.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="OK" />
             <TextField fx:id="blues5" layoutX="447.0" layoutY="299.0" prefHeight="31.0" prefWidth="95.0" />
             <TextField fx:id="greens5" layoutX="447.0" layoutY="221.0" prefHeight="31.0" prefWidth="95.0" />

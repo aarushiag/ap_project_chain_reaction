@@ -98,28 +98,28 @@ public class s2controller extends AnchorPane
  
 	
 	@FXML
-	private void player1() throws IOException
+	public void player1() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s3.fxml"));
 		subroots2.getChildren().setAll(a1);
 	}
 	
 	@FXML
-	private void player2() throws IOException
+	public void player2() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s4.fxml"));
 		subroots2.getChildren().setAll(a1);
 	}
 	
 	@FXML
-	private void player3() throws IOException
+	public void player3() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s5.fxml"));
 		subroots2.getChildren().setAll(a1);
 	}
 	
 	@FXML
-	private void player4() throws IOException
+	public void player4() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s6.fxml"));
 		subroots2.getChildren().setAll(a1);
@@ -127,14 +127,14 @@ public class s2controller extends AnchorPane
 //	
 	
 	@FXML
-	private void player5() throws IOException
+	public void player5() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s7.fxml"));
 		subroots2.getChildren().setAll(a1);
 	}
 	
 	@FXML
-	private void player6() throws IOException
+	public void player6() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s8.fxml"));
 		subroots2.getChildren().setAll(a1);
@@ -143,14 +143,14 @@ public class s2controller extends AnchorPane
 	
 
 	@FXML
-	private void player7() throws IOException
+	public void player7() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s9.fxml"));
 		subroots2.getChildren().setAll(a1);
 	}
 	
 	@FXML
-	private void player8() throws IOException
+	public void player8() throws IOException
 	{
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s10.fxml"));
 		subroots2.getChildren().setAll(a1);

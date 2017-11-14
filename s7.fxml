@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="subroots7" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s7controller">
+<AnchorPane fx:id="subroots7" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.s7controller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -22,7 +22,7 @@
             </ImageView>
             <Button alignment="BOTTOM_LEFT" layoutX="119.0" layoutY="81.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="291.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Red&#10;Red Component of Player 5's Orb Color&#10;" />
             <Button alignment="BOTTOM_LEFT" layoutX="119.0" layoutY="143.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="300.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Green&#10;Green Component of Player 5's Orb Color" />
-            <Button alignment="BOTTOM_LEFT" layoutX="124.0" layoutY="213.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="291.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 5's Orb Color" />
+            <Button alignment="BOTTOM_LEFT" layoutX="119.0" layoutY="213.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="291.0" style="-fx-border-color: black black grey black; -fx-background-color: black; -fx-text-fill: white;" text="Blue&#10;Blue Component of Player 5's Orb Color" />
             <Button fx:id="Backs7" layoutX="226.0" layoutY="337.0" mnemonicParsing="false" onAction="#backs7" prefHeight="42.0" prefWidth="107.0" style="-fx-background-color: grey; -fx-text-fill: white;" text="OK" />
             <TextField fx:id="blues7" layoutX="445.0" layoutY="244.0" prefHeight="31.0" prefWidth="95.0" />
             <TextField fx:id="greens7" layoutX="445.0" layoutY="174.0" prefHeight="31.0" prefWidth="95.0" />

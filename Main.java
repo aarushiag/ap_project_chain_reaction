@@ -11,6 +11,8 @@ import javafx.animation.Timeline;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.RotateTransition;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.io.FileInputStream;
 
 import java.io.FileOutputStream;
@@ -20,7 +22,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -1239,7 +1244,7 @@ public class Main extends Application implements Serializable
 	public cell[][] inner_gr;
 	public  compute_cell[][] gr1;
 	public Group root;
-	public int num_players=2;
+	public static int num_players=2;
 	public player[] all_players;
 	public static  int hor;
 	public static int ver;
@@ -1251,13 +1256,27 @@ public class Main extends Application implements Serializable
 	public int status;
 	public int winner;
  
+	public static void give_obj() throws IOException
+	{
+		
+		to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,num_players,red,green,blue,0,0);
+		serialize(obj, "1");
+		//System.out.println("abc");
+	}
+	
+	public static int give_num_player() throws ClassNotFoundException, IOException
+	{
+
+		to_serialize obj= deserialize("1");
+		return obj.num_players;
+		
+	}
 	public void set_colours(int red[],int green[],int blue[]) 
 	{
 		this.red=red;
 		this.green=green;
 		this.blue=blue;
 	}
-	
 	@Override
 	public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
 		this.primaryStage=primaryStage;
@@ -1270,6 +1289,11 @@ public class Main extends Application implements Serializable
 		red=obj.red;
 		green=obj.green;
 		blue=obj.blue;
+		}
+		if(obj.num_players!=0)
+		{
+			num_players=obj.num_players;
+			//System.out.println(num_players);
 		}
 		 
 	}
@@ -1330,7 +1354,14 @@ public class Main extends Application implements Serializable
 		public void handle(MouseEvent m){
 			if(status==1)
 			{
-				int input= JOptionPane.showOptionDialog(null, "Wohoo! Player"+(winner)+"won!!","Game Status",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
+				JLabel label = new JLabel("Player "+(winner)+" won!!");
+				label.setFont(new Font("Arial", Font.BOLD, 18));
+				//UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("ARIAL",Font.PLAIN,23)));
+//				JLabel label1 = new JLabel("Wohoo! Player "+(winner)+" won!!");
+//				label.setFont(new Font("Arial", Font.BOLD, 20));
+				
+				UIManager.put("OptionPane.minimumSize",new Dimension(500,100)); 
+				int input= JOptionPane.showOptionDialog(null, label,"Congratulations",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
 			    
 				if(input==0)
 				{
@@ -1338,7 +1369,7 @@ public class Main extends Application implements Serializable
 					try {
 						AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
 						mainLayout.getChildren().setAll(a1);
-						to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,null,null,null,0,0);
+						to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,red,green,blue,0,0);
 						serialize(obj, "1");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -1689,8 +1720,9 @@ public class Main extends Application implements Serializable
 		}
 	}
 	
-	public	 void	serialize(to_serialize gr1,String name) throws	IOException	
+	public	 static void	serialize(to_serialize gr1,String name) throws	IOException	
 	{	
+		//System.out.println("abc");
 		ObjectOutputStream out	=	null;	
 		try	
 		{	
@@ -1706,9 +1738,10 @@ public class Main extends Application implements Serializable
 									
 	}
 	
-	public	to_serialize deserialize(String name)		
+	public	static to_serialize deserialize(String name)		
 			throws	IOException,	ClassNotFoundException  
 			{	
+		//System.out.println("def");
 			ObjectInputStream	in	=	null;	
 			try	
 			{	
@@ -1731,15 +1764,36 @@ public class Main extends Application implements Serializable
 			}			
 										
 			}				
-	public void resumeGame(AnchorPane a1) throws ClassNotFoundException, IOException
+	public void resumeGame() throws ClassNotFoundException, IOException
 	{
-		mainLayout.getChildren().setAll(a1);
-		Group root=new Group();
+		//to_serialize obj=Main.deserialize("1");
+		//AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 	 
+//		s2controller obj1=new s2controller();
+//		mainLayout.getChildren().setAll(a1);
+	//	Group root=new Group();
 		to_serialize gr2=deserialize("1");
+		Group root=null;
 		
-		if(gr2.red==null)
+		if(gr2.hor==6)
 		{
-			int input= JOptionPane.showOptionDialog(null, "Sorry!No previously saved game.","Game Status",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
+			AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 
+			mainLayout.getChildren().setAll(a1);
+			root=new Group();
+		}
+		
+		else if(gr2.hor==10)
+		{
+			AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 
+			mainLayout.getChildren().setAll(a1);
+			root=new Group();
+		}
+		
+		if(gr2.gr1==null)
+		{
+			JLabel label = new JLabel("Sorry! No previously saved game.");
+			label.setFont(new Font("Arial", Font.BOLD, 18));
+			UIManager.put("OptionPane.minimumSize",new Dimension(500,100)); 
+			int input= JOptionPane.showOptionDialog(null,label,"Game Status",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
 		    
 			if(input==0)
 			{
@@ -1941,6 +1995,9 @@ public class Main extends Application implements Serializable
 		gr1=new compute_cell[hor][ver];
 		grid=new grid[hor][ver];
 
+//		System.out.println(grid);
+//		System.out.println(gr);
+//		System.out.println(gr1);
 		for(int k=0;k<hor;k++)
 		{
 			for(int l=0;l<ver;l++)

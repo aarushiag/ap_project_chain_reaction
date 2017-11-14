@@ -9,19 +9,19 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="top" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.topcontroller">
+<AnchorPane fx:id="top" prefHeight="845.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hello.pages.topcontroller">
    <children>
       <Pane layoutX="-5.0" prefHeight="570.0" prefWidth="392.0" style="-fx-background-color: Black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Line endX="500.0" layoutX="101.0" layoutY="64.0" startX="-100.0" stroke="#00f2ff" />
-            <Label layoutX="75.0" layoutY="14.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 20;" text="Chain Reaction" />
-            <ImageView fitHeight="50.0" fitWidth="54.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+            <Line endX="500.0" layoutX="100.0" layoutY="83.0" startX="-100.0" stroke="#00f2ff" />
+            <Label layoutX="75.0" layoutY="20.0" prefHeight="42.0" prefWidth="246.0" style="-fx-text-fill: white; -fx-font-size: 20;" text="Chain Reaction" />
+            <ImageView fitHeight="59.0" fitWidth="55.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../unnamed.jpeg" />
                </image>
             </ImageView>
-            <Button fx:id="Undo" layoutX="328.0" layoutY="20.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="92.0" style="-fx-background-color: Grey; -fx-text-fill: White;" text="Undo" />
-            <ComboBox fx:id="options" layoutX="451.0" layoutY="20.0" onAction="#options" prefHeight="31.0" prefWidth="117.0" promptText="Select" />
+            <Button fx:id="Undo" layoutX="327.0" layoutY="26.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="92.0" style="-fx-background-color: Grey; -fx-text-fill: White;" text="Undo" />
+            <ComboBox fx:id="options" layoutX="457.0" layoutY="26.0" onAction="#options" prefHeight="31.0" prefWidth="117.0" promptText="Select" />
          </children>
       </Pane>
    </children>
