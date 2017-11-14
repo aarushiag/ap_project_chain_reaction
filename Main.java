@@ -1,4 +1,8 @@
-package chain_test1;
+package hello;
+
+//made by Aarushi Agarwal (2016216) and Arushi Chauhan(2016019)
+//import java.nio.file.Path;
+
 //import java.nio.file.Path;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.MoveTo;
@@ -6,6 +10,23 @@ import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.RotateTransition;
+
+import java.awt.Dimension;
+import java.awt.Font;
+import java.io.FileInputStream;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
+
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -15,12 +36,13 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+
 //import javafx.event.EventListener;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line ;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Rectangle;
@@ -29,12 +51,15 @@ import javafx.scene.control.Button;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+ 
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import java.util.*;
+//import java.awt.Font;
+  
 //import java.awt.Font;
 //---------------------------------
 //ISSUES
@@ -55,10 +80,10 @@ import java.util.*;
 //5.allow change in size of grid
 //6.allow elimination of players
 //---------------------------------
-class player{
+class player implements Serializable{
 	int index;
 	int num_atom;
-	int num_cell1;
+	int num_cell;
 	boolean alive=true;
 	int red;
 	int green;
@@ -82,15 +107,15 @@ class player{
 		return blue;
 	}
 }
-class atom{
+class atom implements Serializable{
 	int num;
 	int player_index;
-	chain2 ch;
+	Main ch;
 	public Sphere crc;
 	public Group molatom;
 	public int gx;
 	public int gy;
-	public atom(chain2 ch,boolean color_sasta,int gx,int gy){
+	public atom(Main ch,boolean color_sasta,int gx,int gy){
 		num=1;
 		this.ch=ch;
 		this.gx=gx;
@@ -111,9 +136,9 @@ class atom{
 	public void change_color(Sphere crc,boolean color_sasta){
 		//System.out.println("hi :)");
 		player_index=ch.turn;
-		if (color_sasta==true)player_index=ch.gr2[gx][gy].player_index;
-		else player_index=ch.gr1[gx][gy].player_index;
-		//System.out.println("hi :) "+player_index);
+		if (color_sasta==true)player_index=ch.prev_turn;
+		player_index=ch.gr1[gx][gy].player_index;
+		System.out.println("hi :) "+player_index);
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -153,10 +178,10 @@ class atom{
 		
 	}
 }
-class atom2 extends atom{
+class atom2 extends atom implements Serializable{
 	public Sphere crc2;
 	//public Group diatom;
-	public atom2(chain2 ch,boolean color_sasta,int gx,int gy){
+	public atom2(Main ch,boolean color_sasta,int gx,int gy){
 		super(ch,color_sasta,gx,gy);
 		num=2;
 		crc2=new Sphere();
@@ -177,9 +202,9 @@ class atom2 extends atom{
 		super.change_color(crc2,color_sasta);
 	}
 }
-class atom3 extends atom2{
+class atom3 extends atom2 implements Serializable{
 	public Sphere crc3;
-	public atom3(chain2 ch,boolean color_sasta,int gx,int gy){
+	public atom3(Main ch,boolean color_sasta,int gx,int gy){
 		super(ch,color_sasta,gx,gy);
 		num=3;
 		crc3=new Sphere();
@@ -200,11 +225,11 @@ class atom3 extends atom2{
 		super.change_color(crc3,color_sasta);
 	}
 }
-class cell1 extends Pane{
+class cell extends Pane implements Serializable{
 	private Rectangle r;
-	private chain2 ch;
+	private Main ch;
 	//private Label l;
-	public int value;
+	private int value;
 	public int gx;
 	public int gy;
 	public int x;
@@ -216,12 +241,12 @@ class cell1 extends Pane{
 	public Group animate;
 	private int threshold;
 	//public int player_index;
-	public cell1(chain2 ch,int gx,int gy,int x,int y,int width,int height){
+	public cell(Main ch,int gx,int gy,int x,int y,int width,int height){
 		r=new Rectangle(width,height);
 		r.setStroke(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		r.setFill(Color.TRANSPARENT);
 		//Label l=new Label(new String("0"));
-		//this.setOnMouseClicked(new cell1_click_event());
+		//this.setOnMouseClicked(new cell_click_event());
 		this.ch=ch;
 		value=0;
 		this.gx=gx;
@@ -244,10 +269,10 @@ class cell1 extends Pane{
 		getChildren().addAll(r);
 		//System.out.println(r.getX()+" "+r.getY());
 	}
-	/*class cell1_click_event implements EventHandler<MouseEvent>{
+	/*class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
 		public void handle(MouseEvent m){
-			System.out.println("cell1 click");
+			System.out.println("cell click");
 			if (ch.turn!=10)r.setFill(Color.BROWN);
 		}
 	}*/
@@ -286,7 +311,7 @@ class cell1 extends Pane{
 	}
 	public void increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
-			a1=new atom(ch,false,gx,gy);
+			a1=new atom(ch,true,gx,gy);
 			//System.out.println(a1.get_player_num()+"[]");
 			value++;
 			molatom=a1.molatom;
@@ -313,34 +338,21 @@ class cell1 extends Pane{
 			//this.getChildren().add(a2.molatom);
 			//RotateTransition rt=new RotateTransition();
 			//RotateTransition rt2=new RotateTransition();
-			//Ellipse crc_path=new Ellipse(3,7);
+			Ellipse crc_path=new Ellipse(3,7);
 			//Circle crc2_path=new Circle(20);
-			/*PathTransition pt=new PathTransition();
+			PathTransition pt=new PathTransition();
 			pt.setNode(a2.crc);
 			pt.setPath(crc_path);
 			pt.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(3000));
 			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);*/
-			PathTransition p1=new PathTransition();
-			p1.setPath(new Circle(10));
-			p1.setNode(a2.crc);
-			p1.setDuration(Duration.millis(2000));
-			p1.setCycleCount(Timeline.INDEFINITE);
-			p1.setInterpolator(Interpolator.LINEAR);
-			PathTransition p2=new PathTransition();
-			p2.setPath(new Circle(1.5));
-			p2.setNode(a2.crc2);
-			p2.setDuration(Duration.millis(2000));
-			p2.setCycleCount(Timeline.INDEFINITE);
-			p2.setInterpolator(Interpolator.LINEAR);
-			p1.play();
-			p2.play();
+			pt.setCycleCount(Timeline.INDEFINITE);
 			/*PathTransition pt2=new PathTransition();
 			pt2.setNode(a2.crc2);
 			pt2.setPath(crc2_path);
 			pt2.setInterpolator(Interpolator.LINEAR);
+			
 			pt2.setDuration(Duration.millis(10000));
 			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt2.setCycleCount(Timeline.INDEFINITE);*/
@@ -358,16 +370,16 @@ class cell1 extends Pane{
 			//rt2.setInterpolator(Interpolator.LINEAR);
 			//rt.play();
 			//rt2.play();
-			//crc_path.setVisible(false);
+			crc_path.setVisible(false);
 			//crc2_path.setVisible(false);
-			//pt.play();
+			pt.play();
 			//pt2.play();
 			//StackPane r1=new StackPane();
 			//this.getChildren().add(a2.crc2);
 			//StackPane r2=new StackPane();
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(25);
-			molatom.setLayoutY(25);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(23);
 			//r2.getChildren().add(a2.crc2);
 			//this.getChildren().add(crc_path);
 			//r2.getChildren().add(crc2_path);
@@ -383,8 +395,8 @@ class cell1 extends Pane{
 		else if ((value==1)&&(toggle==false)){
 			//this.getChildren().remove(a2.molatom);
 			this.getChildren().remove(molatom);
-			a2=new atom2(ch,false,gx,gy);
-			a2.change_color(false);
+			a2=new atom2(ch,true,gx,gy);
+			a2.change_color(true);
 			molatom=a2.molatom;
 			value++;
 			//this.getChildren().add(a2.molatom);
@@ -404,7 +416,7 @@ class cell1 extends Pane{
 			//rt2.setInterpolator(Interpolator.LINEAR);
 			//rt.play();
 			//rt2.play();
-			/*Ellipse crc_path=new Ellipse(3,7);
+			Ellipse crc_path=new Ellipse(3,7);
 			//Circle crc2_path=new Circle(20);
 			PathTransition pt=new PathTransition();
 			pt.setNode(a2.crc);
@@ -413,21 +425,7 @@ class cell1 extends Pane{
 			pt.setDuration(Duration.millis(3000));
 			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);*/
-			PathTransition p1=new PathTransition();
-			p1.setPath(new Circle(10));
-			p1.setNode(a2.crc);
-			p1.setDuration(Duration.millis(2000));
-			p1.setCycleCount(Timeline.INDEFINITE);
-			p1.setInterpolator(Interpolator.LINEAR);
-			PathTransition p2=new PathTransition();
-			p2.setPath(new Circle(1.5));
-			p2.setNode(a2.crc2);
-			p2.setDuration(Duration.millis(2000));
-			p2.setCycleCount(Timeline.INDEFINITE);
-			p2.setInterpolator(Interpolator.LINEAR);
-			p1.play();
-			p2.play();
+			pt.setCycleCount(Timeline.INDEFINITE);
 			/*PathTransition pt2=new PathTransition();
 			pt2.setNode(a2.crc2);
 			pt2.setPath(crc2_path);
@@ -437,14 +435,14 @@ class cell1 extends Pane{
 			pt2.setCycleCount(Timeline.INDEFINITE);
 			crc_path.setVisible(false);
 			crc2_path.setVisible(false);*/
-			//pt.play();
-			//crc_path.setVisible(false);
+			pt.play();
+			crc_path.setVisible(false);
 			//pt2.play();
 			//StackPane r1=new StackPane();
 			//this.getChildren().add(a2.crc2);
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(25);
-			molatom.setLayoutY(25);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(23);
 			//r1.getChildren().add(a2.crc2);
 			//this.getChildren().add(crc_path);
 			//r1.getChildren().add(crc2_path);
@@ -482,7 +480,7 @@ class cell1 extends Pane{
 			rt.play();
 			rt2.play();
 			rt3.play();*/
-			/*Ellipse crc_path=new Ellipse(3,4);
+			Ellipse crc_path=new Ellipse(3,4);
 			Ellipse crc_path2=new Ellipse(5,7);
 			crc_path2.setCenterX(15);
 			crc_path2.setCenterY(5);
@@ -504,15 +502,7 @@ class cell1 extends Pane{
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
-			pt2.setCycleCount(Timeline.INDEFINITE);*/
-			RotateTransition r2=new RotateTransition();
-			r2.setNode(molatom);
-			r2.setAxis(Rotate.Z_AXIS);
-			r2.setDuration(Duration.millis(2000));
-			r2.setCycleCount(Timeline.INDEFINITE);
-			r2.setInterpolator(Interpolator.LINEAR);
-			r2.setToAngle(360);
-			r2.play();
+			pt2.setCycleCount(Timeline.INDEFINITE);
 			//PathTransition pt2=new PathTransition();
 			//pt2.setNode(a3.crc2);
 			//pt2.setPath(crc2_path);
@@ -527,13 +517,13 @@ class cell1 extends Pane{
 			//pt3.setDuration(Duration.millis(10000));
 			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//pt3.setCycleCount(Timeline.INDEFINITE);
-			//crc_path.setVisible(false);
-			//crc_path2.setVisible(false);
+			crc_path.setVisible(false);
+			crc_path2.setVisible(false);
 			//crc2_path.setVisible(false);
 			//crc3_path.setVisible(false);
 			//pt.play();
-			//ParallelTransition p=new ParallelTransition(pt,pt2);
-			//p.play();
+			ParallelTransition p=new ParallelTransition(pt,pt2);
+			p.play();
 			//pt2.play();
 			//pt3.play();
 			//StackPane r1=new StackPane();
@@ -544,8 +534,8 @@ class cell1 extends Pane{
 			//r1.getChildren().add(crc2_path);
 			//r1.getChildren().add(crc3_path);
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(17);
-			molatom.setLayoutY(17);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(15);
 			//if (toggle==true)ch.turn=(ch.turn+1)%8;
 			/*if (toggle==false){
 				System.out.println("neighbour burst");
@@ -555,8 +545,8 @@ class cell1 extends Pane{
 		}
 		else if ((value==2)&&(toggle==false)){
 			this.getChildren().remove(molatom);
-			a3=new atom3(ch,false,gx,gy);
-			a3.change_color(false);
+			a3=new atom3(ch,true,gx,gy);
+			a3.change_color(true);
 			molatom=a3.molatom;
 			value++;
 			//this.getChildren().add(molatom);
@@ -584,7 +574,7 @@ class cell1 extends Pane{
 			rt.play();
 			rt2.play();
 			rt3.play();*/
-			/*Ellipse crc_path=new Ellipse(3,4);
+			Ellipse crc_path=new Ellipse(3,4);
 			Ellipse crc_path2=new Ellipse(5,7);
 			crc_path2.setCenterX(15);
 			crc_path2.setCenterY(5);
@@ -606,15 +596,7 @@ class cell1 extends Pane{
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
-			pt2.setCycleCount(Timeline.INDEFINITE);*/
-			RotateTransition r2=new RotateTransition();
-			r2.setNode(molatom);
-			r2.setAxis(Rotate.Z_AXIS);
-			r2.setDuration(Duration.millis(2000));
-			r2.setCycleCount(Timeline.INDEFINITE);
-			r2.setInterpolator(Interpolator.LINEAR);
-			r2.setToAngle(360);
-			r2.play();
+			pt2.setCycleCount(Timeline.INDEFINITE);
 			//PathTransition pt2=new PathTransition();
 			//pt2.setNode(a3.crc2);
 			//pt2.setPath(crc2_path);
@@ -629,11 +611,11 @@ class cell1 extends Pane{
 			//pt3.setDuration(Duration.millis(10000));
 			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//pt3.setCycleCount(Timeline.INDEFINITE);
-			//crc_path.setVisible(false);
-			//crc_path2.setVisible(false);
+			crc_path.setVisible(false);
+			crc_path2.setVisible(false);
 			//crc3_path.setVisible(false);
-			//ParallelTransition p=new ParallelTransition(pt,pt2);
-			//p.play();
+			ParallelTransition p=new ParallelTransition(pt,pt2);
+			p.play();
 			//pt.play();
 			//pt2.play();
 			//pt3.play();
@@ -645,8 +627,8 @@ class cell1 extends Pane{
 			//r1.getChildren().add(crc2_path);
 			//r1.getChildren().add(crc3_path);
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(17);
-			molatom.setLayoutY(17);
+			molatom.setLayoutX(15);
+			molatom.setLayoutY(15);
 			
 		}
 		/*PointLight light=new PointLight(Color.WHITE);
@@ -657,8 +639,8 @@ class cell1 extends Pane{
 	}
 	public void set_color(Sphere crc,boolean color_sasta){
 		int temp=ch.turn;
-		if (color_sasta==true)temp=ch.gr2[gx][gy].player_index;
-		else temp=ch.gr1[gx][gy].player_index;
+		if (color_sasta==true)temp=ch.prev_turn;
+		temp=ch.gr1[gx][gy].player_index;
 		System.out.println("hi :( "+temp+" "+gx+" "+gy);
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
@@ -701,17 +683,18 @@ class cell1 extends Pane{
 	public void clear_sphere(Group s){
 		getChildren().remove(s);
 	}
-	public void burst_the_cell1(boolean toggle){
+	public void burst_the_cell(boolean toggle){
 		value=0;
-		//System.out.println("cell1 burst");
+		//System.out.println("cell burst");
 		this.getChildren().remove(molatom);
+		
 		double x1=r.getLayoutX()+25;
 		double y1=r.getLayoutY()+25;
 		ParallelTransition p=new ParallelTransition();
 		if ((gx-1>=0)&&(gy>=0)){
 			Sphere s=new Sphere(10);
 			if (toggle==true)set_color(s,false);
-			else set_color(s,false);
+			else set_color(s,true);
 			double x2=x1-50;
 			double y2=y1;
 			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
@@ -725,7 +708,7 @@ class cell1 extends Pane{
 			p1.setPath(l1);
 			p1.setNode(s);
 			p1.setInterpolator(Interpolator.LINEAR);
-			p1.setDuration(Duration.seconds(0.7));
+			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
 			
@@ -798,7 +781,7 @@ class cell1 extends Pane{
 		if ((gx+1<=ch.hor-1)&&(gy>=0)){
 			Sphere s=new Sphere(10);
 			if (toggle==true)set_color(s,false);
-			else set_color(s,false);
+			else set_color(s,true);
 			double x2=x1+50;
 			double y2=y1;
 			//s.setTranslateX(x1);
@@ -812,7 +795,7 @@ class cell1 extends Pane{
 			p1.setPath(l1);
 			p1.setNode(s);
 			p1.setInterpolator(Interpolator.LINEAR);
-			p1.setDuration(Duration.seconds(0.7));
+			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
 			
@@ -887,7 +870,7 @@ class cell1 extends Pane{
 		if ((gx>=0)&&(gy-1>=0)){
 			Sphere s=new Sphere(10);
 			if (toggle==true)set_color(s,false);
-			else set_color(s,false);
+			else set_color(s,true);
 			double x2=x1;
 			double y2=y1-50;
 			//s.setTranslateX(x1);
@@ -901,7 +884,7 @@ class cell1 extends Pane{
 			p1.setPath(l1);
 			p1.setNode(s);
 			p1.setInterpolator(Interpolator.LINEAR);
-			p1.setDuration(Duration.seconds(0.7));
+			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
 			//p1.play();
@@ -965,7 +948,7 @@ class cell1 extends Pane{
 		if ((gx>=0)&&(gy+1<=ch.ver-1)){
 			Sphere s=new Sphere(10);
 			if (toggle==true)set_color(s,false);
-			else set_color(s,false);
+			else set_color(s,true);
 			double x2=x1;
 			double y2=y1+50;
 			//s.setTranslateX(x1);
@@ -979,7 +962,7 @@ class cell1 extends Pane{
 			p1.setPath(l1);
 			p1.setNode(s);
 			p1.setInterpolator(Interpolator.LINEAR);
-			p1.setDuration(Duration.seconds(0.7));
+			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
 			//p1.setOnFinished(e->ch.gr[gx][gy+1].change_value(false));
@@ -1083,7 +1066,7 @@ class cell1 extends Pane{
 			return false;
 		}
 		else{
-			burst_the_cell1(toggle);
+			burst_the_cell(toggle);
 			return true;
 		}
 	}
@@ -1094,7 +1077,7 @@ class cell1 extends Pane{
 			return false;
 		}
 		else {
-			burst_the_cell1(toggle);
+			burst_the_cell(toggle);
 			return true;
 		}
 	}
@@ -1114,14 +1097,14 @@ class cell1 extends Pane{
 		});
 	}*/
 }
-class compute_cell1{
+class compute_cell implements Serializable{
 	public int value;
 	public int player_index;
-	public chain2 ch;
+	public transient Main ch;
 	public int gx;
 	public int gy;
 	public int threshold;
-	public compute_cell1(chain2 ch,int gx,int gy){
+	public compute_cell(Main ch,int gx,int gy){
 		value=0;
 		player_index=-1;
 		this.ch=ch;
@@ -1157,86 +1140,163 @@ class compute_cell1{
 			return false;
 		}
 		else{
-			compute_burst_the_cell1(toggle);
+			compute_burst_the_cell(toggle);
 			return true;
 		}
 	}
 	public void compute_increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
-			//ch.gr2[gx][gy].value=0;
 			value++;
 		}
 		else if ((value==1)&&(ch.turn==ch.gr[gx][gy].get_player_index())){
-			//System.out.println("yy");
-			//ch.gr2[gx][gy].value=1;
 			value++;
 		}
 		else if ((value==1)&&(toggle==false)){
-			//ch.gr2[gx][gy].value=1;
 			value++;
 		}
 		else if ((value==2)&&(ch.turn==ch.gr[gx][gy].get_player_index())){
-			//ch.gr2[gx][gy].value=2;
 			value++;
 		}
 		else if ((value==2)&&(toggle==false)){
-			//ch.gr2[gx][gy].value=2;
 			value++;
 		}
 		
 	}
-	public void compute_burst_the_cell1(boolean toggle){
+	public void compute_burst_the_cell(boolean toggle){
 		value=0;
 		//System.out.println("I burst "+gx+" "+gy);
 		if ((gx-1>=0)&&(gy>=0)){
-			//ch.gr2[gx-1][gy].player_index=ch.gr1[gx-1][gy].player_index;
 			ch.gr1[gx-1][gy].player_index=player_index;
 		}
 		if ((gx+1<=ch.hor-1)&&(gy>=0)){
-			//ch.gr2[gx+1][gy].player_index=ch.gr1[gx+1][gy].player_index;
 			ch.gr1[gx+1][gy].player_index=player_index;
 		}
 		if ((gx>=0)&&(gy-1>=0)){
-			//ch.gr2[gx][gy-1].player_index=ch.gr1[gx][gy-1].player_index;
 			ch.gr1[gx][gy-1].player_index=player_index;
 		}
 		if ((gx>=0)&&(gy+1<=ch.ver-1)){
-			//ch.gr2[gx][gy+1].player_index=ch.gr1[gx][gy+1].player_index;
 			ch.gr1[gx][gy+1].player_index=player_index;
 		}
 		if_for_change_value();
 	}
 }
-public class chain2 extends Application{
+class grid implements Serializable
+{
+	
+int player_index;
+int value;
+public  grid(int a,int b)
+{
+	this.player_index=a;
+	this.value=b;}
+
+}
+class to_serialize implements Serializable
+{
+	grid[][] gr1;
+	int turn;
+	int prev_turn;
+	int red[];
+	int green[];
+	int blue[];
+	int hor;
+	int ver;
+	int num_players;
+	
+	public int num_turn=0;
+	public transient cell[][] gr;
+	//public cell[][] inner_gr;
+	public  compute_cell[][] norm;
+	 
+	public player[] all_players;
+	 
+	public boolean[] alive;
+ 
+	
+	public to_serialize(boolean[] alive,int num_turn,cell[][] gr,compute_cell[][] norm,player[] all_players,grid[][] gr1,int turn,int prev_turn,int num_players,int[] red,int []green,int[] blue,int hor,int ver)
+	{
+		this.gr1=gr1;
+		this.turn=turn;
+		this.prev_turn=prev_turn;
+		this.green=green;
+		this.red=red;
+		this.blue=blue;this.ver=ver;
+		this.hor=hor;
+		this.num_players=num_players;
+		this.num_turn=num_turn;
+		this.gr=gr;
+		this.norm=norm;
+		this.all_players=all_players;
+		this.alive=alive;
+	}
+	
+}
+public class Main extends Application implements Serializable
+{	
+	
+	private Stage primaryStage;
+	public static AnchorPane mainLayout;
+	private Scene scene;	 
 	public static int turn=0;
 	public static int prev_turn=0;
 	public int num_turn=0;
-	public cell1[][] gr;
-	public compute_cell1[][] gr1;
-	public compute_cell1[][] gr2;
+	public cell[][] gr;
+	public cell[][] inner_gr;
+	public  compute_cell[][] gr1;
 	public Group root;
-	public int num_players=4;
+	public static int num_players=2;
 	public player[] all_players;
-	public int hor;
-	public int ver;
-	public int[] red={0,255,0,150,120,10,255,255};
-	public int[] green={255,0,0,20,255,255,10,255};
-	public int[] blue={0,0,255,190,10,255,255,255};
-	/*public chain2(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
-		this.hor=hor;
-		this.ver=ver;
-		this.num_players=num_players;
+	public static  int hor;
+	public static int ver;
+	public static grid[][] grid;
+	ArrayList<Line> arr;
+	public static int[] red=  {255,0,0,255,255,0,100,255};
+	public static int[] green={0,255,0,255,0,255,100,255};
+	public static int[] blue= {0,0,255,0,255,255,100,255};	
+	public int status;
+	public int winner;
+ 
+	public static void give_obj() throws IOException
+	{
+		
+		to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,num_players,red,green,blue,0,0);
+		serialize(obj, "1");
+		//System.out.println("abc");
+	}
+	
+	public static int give_num_player() throws ClassNotFoundException, IOException
+	{
+
+		to_serialize obj= deserialize("1");
+		return obj.num_players;
+		
+	}
+	public void set_colours(int red[],int green[],int blue[]) 
+	{
 		this.red=red;
 		this.green=green;
 		this.blue=blue;
-		this.alive=new boolean[num_players];
-		for (int i=0;i<num_players;i++){
-			alive[i]=true;
+	}
+	@Override
+	public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
+		this.primaryStage=primaryStage;
+		this.primaryStage.setTitle("Chain Reaction Game");
+		showMainView();
+	     
+		to_serialize obj= deserialize("1");
+		if(obj.red!=null)
+		{
+		red=obj.red;
+		green=obj.green;
+		blue=obj.blue;
 		}
-		this.turn=0;
-		this.num_turn=0;
-		this.root=new Group();
-	}*/
+		if(obj.num_players!=0)
+		{
+			num_players=obj.num_players;
+			//System.out.println(num_players);
+		}
+		 
+	}
 	public void set_new_game(int hor,int ver,int num_players,int[] red,int[] green,int[] blue){
 		this.hor=hor;
 		this.ver=ver;
@@ -1253,15 +1313,15 @@ public class chain2 extends Application{
 		this.root=new Group();
 	}
 	public boolean[] alive;
-	{
-		alive=new boolean[num_players];
-		all_players=new player[num_players];
-		
-		for (int i=0;i<num_players;i++){
-			alive[i]=true;
-			all_players[i]=new player(i,red[i],green[i],blue[i]);
-		}
-	}
+//	{
+//		alive=new boolean[num_players];
+//		all_players=new player[num_players];
+//		
+//		for (int i=0;i<num_players;i++){
+//			alive[i]=true;
+//			all_players[i]=new player(i,red[i],green[i],blue[i]);
+//		}
+//	}
 	public void kill_player(int index){
 		if (index<num_players){
 		alive[index]=false;
@@ -1271,126 +1331,70 @@ public class chain2 extends Application{
 		//System.out.println(turn+" --");
 		prev_turn=turn;
 		turn=(turn+1)%num_players;
+		//System.out.println(alive);
 		while(alive[turn]==false){
 			turn=(turn+1)%num_players;
 		}
 		//System.out.println(turn+" --");
 	}
-	class undo_button implements EventHandler<MouseEvent>{
-		@Override
-		public void handle(MouseEvent m){
-			for (int i=0;i<hor;i++){
-				for (int j=0;j<ver;j++){
-					gr[i][j].getChildren().remove(gr[i][j].molatom);
-					//System.out.print(gr2[i][j].value+" h1");
-					if (gr2[i][j].value==1){
-						atom a=new atom(chain2.this,true,i,j);
-						gr[i][j].a1=a;
-						gr[i][j].getChildren().add(gr[i][j].a1.get_atom());
-						gr[i][j].molatom=a.molatom;
-						gr[i][j].molatom.setLayoutX(25);
-						gr[i][j].molatom.setLayoutY(25);
-					}
-					else if (gr2[i][j].value==2){
-						atom2 a2=new atom2(chain2.this,true,i,j);
-						gr[i][j].molatom=a2.molatom;
-						PathTransition p1=new PathTransition();
-						p1.setPath(new Circle(10));
-						p1.setNode(a2.crc);
-						p1.setDuration(Duration.millis(2000));
-						p1.setCycleCount(Timeline.INDEFINITE);
-						p1.setInterpolator(Interpolator.LINEAR);
-						PathTransition p2=new PathTransition();
-						p2.setPath(new Circle(1.5));
-						p2.setNode(a2.crc2);
-						p2.setDuration(Duration.millis(2000));
-						p2.setCycleCount(Timeline.INDEFINITE);
-						p2.setInterpolator(Interpolator.LINEAR);
-						p1.play();
-						p2.play();
-						gr[i][j].getChildren().add(gr[i][j].molatom);
-						gr[i][j].molatom.setLayoutX(25);
-						gr[i][j].molatom.setLayoutY(25);
-						
-					}
-					else if (gr2[i][j].value==3){
-						atom3 a3=new atom3(chain2.this,true,i,j);
-						gr[i][j].molatom=a3.molatom;
-						RotateTransition r2=new RotateTransition();
-						r2.setNode(a3.molatom);
-						r2.setAxis(Rotate.Z_AXIS);
-						r2.setDuration(Duration.millis(2000));
-						r2.setCycleCount(Timeline.INDEFINITE);
-						r2.setInterpolator(Interpolator.LINEAR);
-						r2.setToAngle(360);
-						r2.play();
-						gr[i][j].getChildren().add(gr[i][j].molatom);
-						gr[i][j].molatom.setLayoutX(17);
-						gr[i][j].molatom.setLayoutY(17);
-						
-					}
-					gr1[i][j].value=gr2[i][j].value;
-					gr1[i][j].player_index=gr2[i][j].player_index;
-					gr[i][j].value=gr2[i][j].value;
-				}
-				System.out.println();
-			}
-			turn=prev_turn;
-			for(int i=0;i<hor;i++){
-				for(int j=0;j<ver;j++){
-					gr[i][j].get_rectangle().setStroke(Color.rgb(red[prev_turn],green[prev_turn],blue[prev_turn]));
-				}
-			}
-			num_turn--;
-			if (num_turn>=num_players){
-			for (int i=0;i<num_players;i++){
-				all_players[i].num_atom=0;
-			}
-			for (int i=0;i<hor;i++){
-				for (int j=0;j<ver;j++){
-					int pl=gr1[i][j].player_index;
-					if (gr1[i][j].value>0){
-						//System.out.print((pl+1)+" ");
-						System.out.println(i+" "+j+" "+gr1[i][j].value);
-						all_players[pl].num_atom+=gr1[i][j].value;
-					}
-				}
-			}
-			for (int i=0;i<num_players;i++){
-				if (all_players[i].num_atom==0)alive[i]=false;
-				else alive[i]=true;
-			}
-			}
-			
-		}
-		
-		//if (new_turn==0)new_turn=num_players-1;
+	private void showMainView() throws IOException
+	{
+		FXMLLoader loader =new FXMLLoader();
+		loader.setLocation(Main.class.getResource("pages/s1.fxml"));
+		mainLayout=loader.load();		
+		scene=new Scene(mainLayout,600,850);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	    
 	}
-	class cell1_click_event implements EventHandler<MouseEvent>{
+	
+
+	class cell_click_event implements EventHandler<MouseEvent>{
 		@Override
 		public void handle(MouseEvent m){
-			//System.out.println("cell1 click");
-			cell1 temp=(cell1)m.getSource();
-			compute_cell1 compute_temp=gr1[temp.gx][temp.gy];
-			compute_cell1 compute_temp_undo=gr2[temp.gx][temp.gy];
+			if(status==1)
+			{
+				JLabel label = new JLabel("Player "+(winner)+" won!!");
+				label.setFont(new Font("Arial", Font.BOLD, 18));
+				//UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("ARIAL",Font.PLAIN,23)));
+//				JLabel label1 = new JLabel("Wohoo! Player "+(winner)+" won!!");
+//				label.setFont(new Font("Arial", Font.BOLD, 20));
+				
+				UIManager.put("OptionPane.minimumSize",new Dimension(500,100)); 
+				int input= JOptionPane.showOptionDialog(null, label,"Congratulations",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
+			    
+				if(input==0)
+				{
+					 
+					try {
+						AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
+						mainLayout.getChildren().setAll(a1);
+						to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,red,green,blue,0,0);
+						serialize(obj, "1");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				 
+			}
+			//System.out.println("cell click");
+			else
+			{
+			cell temp=(cell)m.getSource();
+			//System.out.println(gr1);
+			//System.out.println(temp.gy);
+			compute_cell compute_temp=gr1[temp.gx][temp.gy];
 			compute_temp.player_index=turn;
 			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
 			//System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
-			for (int i=0;i<hor;i++){
-				for (int j=0;j<ver;j++){
-					if (gr1[i][j].value>0)System.out.println("***"+i+" "+j+" "+gr1[i][j].value+"***");
-					gr2[i][j].value=gr1[i][j].value;
-					gr2[i][j].player_index=gr1[i][j].player_index;
-				}
-			}
-			//if (temp.get_value()==0){
-			if (compute_temp.value==0){	
+			if (temp.get_value()==0){
 				num_turn++;
-				atom a=new atom(chain2.this,false,temp.gx,temp.gy);
+				atom a=new atom(Main.this,false,temp.gx,temp.gy);
 				temp.a1=a;
 				temp.value_plus();
-				//compute_temp_undo.value=compute_temp.value;
 				compute_temp.value++;
 				temp.getChildren().add(temp.a1.get_atom());
 				if (((temp.gx==0)&&(temp.gy==0))||((temp.gx==0)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==0))){
@@ -1415,16 +1419,17 @@ public class chain2 extends Application{
 						for (int j=0;j<ver;j++){
 							int pl=gr1[i][j].player_index;
 							if (gr1[i][j].value>0){
-								//System.out.print((pl+1)+" ");
-								System.out.println(i+" "+j+" "+gr1[i][j].value);
+								System.out.print((pl+1)+" ");
+								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
 								all_players[pl].num_atom+=gr1[i][j].value;
 							}else System.out.print("0 ");
 						}
 						System.out.println();
 					}
-					//System.out.println("****");
+					System.out.println("****");
+					
 					for (int i=0;i<num_players;i++){
-						//System.out.print(all_players[i].num_atom+" ");
+						System.out.print(all_players[i].num_atom+" ");
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
 				}
@@ -1461,7 +1466,6 @@ public class chain2 extends Application{
 				//!!!!!----------------------------
 					//num_turn++;
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
-			
 				num_turn++;
 				temp.getChildren().remove(temp.a1.get_atom());
 				//System.out.println(turn+" :)");
@@ -1475,21 +1479,21 @@ public class chain2 extends Application{
 						for (int j=0;j<ver;j++){
 							int pl=gr1[i][j].player_index;
 							if (gr1[i][j].value>0){
-								//System.out.print((pl+1)+" ");
+								System.out.print((pl+1)+" ");
 								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
 								all_players[pl].num_atom+=gr1[i][j].value;
-							}//else System.out.print("0 ");
+							}else System.out.print("0 ");
 						}
-						//System.out.println();
+						System.out.println();
 					}
-					//System.out.println("****");
+					System.out.println("****");
 					for (int i=0;i<num_players;i++){
-						//System.out.print(all_players[i].num_atom+" ");
+						System.out.print(all_players[i].num_atom+" ");
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
 				}
 				//System.out.println(turn+" :)");
-				//evaluation of number of atoms should be done after cell1s have burst
+				//evaluation of number of atoms should be done after cells have burst
 				/*if (num_turn>num_players){
 					for (int i=0;i<num_players;i++){
 						all_players[i].num_atom=0;
@@ -1511,7 +1515,6 @@ public class chain2 extends Application{
 					}
 				}*/
 				increment_turn();
-				
 				/*do{
 					turn=(turn+1)%num_players;
 					}
@@ -1538,6 +1541,8 @@ public class chain2 extends Application{
 			}
 			if (ct==1){
 				System.out.println("Player "+(flag+1)+" won");
+				status=1;
+				winner=flag+1;
 				//Platform.exit();
 				//System.exit(0);
 			}
@@ -1584,127 +1589,466 @@ public class chain2 extends Application{
 				//turn=(turn+1)%8;
 				/*
 				if ((temp.gx-1>=0)&&(temp.gy>=0)){
-					cell1 temp2=gr[temp.gx-1][temp.gy];
+					cell temp2=gr[temp.gx-1][temp.gy];
 					temp2.change_value();
 				}*/
 			//}
 			//turn=(turn+1)%8;
 			//System.out.println("click identified");
+			System.out.println("click identified");
 			for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					Rectangle r1=gr[i][j].get_rectangle();
+					Rectangle r2=inner_gr[i][j].get_rectangle();
+					
 					//----------------------------------------
 					//!!! Needs to change according to number of players remaining in the game
-					if (turn==0)r1.setStroke(Color.rgb(red[0],green[0],blue[0]));
-					if (turn==1)r1.setStroke(Color.rgb(red[1],green[1],blue[1]));
-					if (turn==2)r1.setStroke(Color.rgb(red[2],green[2],blue[2]));
-					if (turn==3)r1.setStroke(Color.rgb(red[3],green[3],blue[3]));
-					if (turn==4)r1.setStroke(Color.rgb(red[4],green[4],blue[4]));
-					if (turn==5)r1.setStroke(Color.rgb(red[5],green[5],blue[5]));
-					if (turn==6)r1.setStroke(Color.rgb(red[6],green[6],blue[6]));
-					if (turn==7)r1.setStroke(Color.rgb(red[7],green[7],blue[7]));
+					if (turn==0)
+					{r1.setStroke(Color.rgb(red[0],green[0],blue[0]));
+					r2.setStroke(Color.rgb(red[0],green[0],blue[0]));
+					for (int k=0;k<hor+1;k++){
+						for (int l=0;l<ver+1;l++){
+							Line c= arr.get(k*(ver+1)+l);
+							c.setStroke(Color.rgb(red[0],green[0],blue[0]));		 
+							}
+					}
+					}
+					if (turn==1)
+						{r1.setStroke(Color.rgb(red[1],green[1],blue[1]));
+						r2.setStroke(Color.rgb(red[1],green[1],blue[1]));
+						for (int k=0;k<hor+1;k++){
+							for (int l=0;l<ver+1;l++){
+								Line c= arr.get(k*(ver+1)+l);
+								c.setStroke(Color.rgb(red[1],green[1],blue[1]));		 
+								}
+						}						
+						}
+					if (turn==2)
+					{
+						r1.setStroke(Color.rgb(red[2],green[2],blue[2]));
+						r2.setStroke(Color.rgb(red[2],green[2],blue[2]));
+						for (int k=0;k<hor+1;k++){
+							for (int l=0;l<ver+1;l++){
+								Line c= arr.get(k*(ver+1)+l);
+								c.setStroke(Color.rgb(red[2],green[2],blue[2]));		 
+								}
+						}	
+					}
+					if (turn==3)
+					{
+						r1.setStroke(Color.rgb(red[3],green[3],blue[3]));
+						r2.setStroke(Color.rgb(red[3],green[3],blue[3]));
+						for (int k=0;k<hor+1;k++){
+							for (int l=0;l<ver+1;l++){
+								Line c= arr.get(k*(ver+1)+l);
+								c.setStroke(Color.rgb(red[3],green[3],blue[3]));		 
+								}
+						}	
+					}
+					if (turn==4)
+					{
+						 r1.setStroke(Color.rgb(red[4],green[4],blue[4]));
+						 r2.setStroke(Color.rgb(red[4],green[4],blue[4]));
+							for (int k=0;k<hor+1;k++){
+								for (int l=0;l<ver+1;l++){
+									Line c= arr.get(k*(ver+1)+l);
+									c.setStroke(Color.rgb(red[4],green[4],blue[4]));		 
+									}
+							}	
+					}
+					if (turn==5)
+					{
+						r1.setStroke(Color.rgb(red[5],green[5],blue[5]));
+						r2.setStroke(Color.rgb(red[5],green[5],blue[5]));
+						for (int k=0;k<hor+1;k++){
+							for (int l=0;l<ver+1;l++){
+								Line c= arr.get(k*(ver+1)+l);
+								c.setStroke(Color.rgb(red[5],green[5],blue[5]));		 
+								}
+						}	
+					}
+					if (turn==6)
+					{
+						r1.setStroke(Color.rgb(red[6],green[6],blue[6]));
+						r2.setStroke(Color.rgb(red[6],green[6],blue[6]));
+						for (int k=0;k<hor+1;k++){
+							for (int l=0;l<ver+1;l++){
+								Line c= arr.get(k*(ver+1)+l);
+								c.setStroke(Color.rgb(red[6],green[6],blue[6]));		 
+								}
+						}	
+					}
+					if (turn==7)
+					{
+						r1.setStroke(Color.rgb(red[7],green[7],blue[7]));
+						r2.setStroke(Color.rgb(red[7],green[7],blue[7]));
+						for (int k=0;k<hor+1;k++){
+							for (int l=0;l<ver+1;l++){
+								Line c= arr.get(k*(ver+1)+l);
+								c.setStroke(Color.rgb(red[7],green[7],blue[7]));		 
+								}
+						}
+					}
 					//----------------------------------------
 				}
 			}
-		}
-	}
-
-	public static void main(String[] args){
-		launch(args);
-	}
-	@Override
-	public void start(Stage primaryStage){
-		primaryStage.setTitle("Chain Reaction");
-		root=new Group();
-		//Line line=new Line(0,45,520,45);
-		/*line.setFill(Color.AQUA);
-		line.setStroke(Color.AQUA);
-		Label l=new Label("Chain Reaction");
-		l.setTextFill(Color.WHITE);
-		//l.setFont(new Font("Arial",20));
-		l.setStyle("-fx-font: 24 arial;-fx-padding: 10;");
-		Button b=new Button("Undo");
-		//b.setMaxSize(30,200);
-		b.setStyle("-fx-background-color: #222222;-fx-font-size: 18; -fx-text-fill: #ffffff;-fx-border-color: #eeeeee;");
-		//b.setAlignment(Pos.TOP_RIGHT);
-		root.getChildren().add(line);
-		root.getChildren().add(l);
-		root.getChildren().add(b);*/
-		/*Rectangle[][] r=new Rectangle[9][6];
-		for (int i=0;i<1;i++){
-			for (int j=0;j<1;j++){
-				r[i][j]=new Rectangle();
-				r[i][j].setX(i+5);
-				r[i][j].setY(j+5);
-				r[i][j].setWidth(50);
-				r[i][j].setWidth(50);
-				root.getChildren().add(r[i][j]);
-			}
-		}*/
-		/*Rectangle r=new Rectangle();
-		r.setX(50);
-		r.setY(50);
-		r.setWidth(50);
-		r.setHeight(50);
-		root.getChildren().add(r);*/
-		hor=6;
-		ver=9;
-		gr=new cell1[hor][ver];
-		gr1=new compute_cell1[hor][ver];
-		gr2=new compute_cell1[hor][ver];
-		for (int i=0;i<hor;i++){
-			for (int j=0;j<ver;j++){
-				cell1 c=new cell1(this,i,j,i*50+90,j*50+60,50,50);
-				gr1[i][j]=new compute_cell1(this,i,j);
-				gr2[i][j]=new compute_cell1(this,i,j);
-				root.getChildren().add(c);
-				gr[i][j]=c;
-				c.setOnMouseClicked(new cell1_click_event());
-				/*c.setOnMouseClicked(new EventHandler<MouseEvent>(){
-					@Override
-					public void handle(MouseEvent t){
-						boolean b=c.change_value();
-						if (b==true){
-							if ((i-1>=0)&&(j>=0))Event.fireEvent(gr[i-1][j], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i+1<=5)&&(j>=0))Event.fireEvent(gr[i+1][j], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i>=0)&&(j-1>=0))Event.fireEvent(gr[i][j-1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-							if ((i>=0)&&(j+1<=8))Event.fireEvent(gr[i][j+1], new MouseEvent(MouseEvent.MOUSE_CLICKED, j, j, j, j, null, j, b, b, b, b, b, b, b, b, b, b, null));
-						}
-					}
-				});*/
-				//c.setOnMouseClicked(cell1_clicked());
-			}
-		}
-		//grid g=new grid(gr);
-		//root.getChildren().add(g.get_rectangle());
-		/*Rectangle r=g.get_rectangle();
-		r.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent t){
-				turn=(turn+1)%8;
-				System.out.println("click identified");
-				for (int i=0;i<6;i++){
-					for (int j=0;j<9;j++){
-						Rectangle r1=gr[i][j].get_rectangle();
-						if (turn==0)r1.setStroke(Color.RED);
-						if (turn==1)r1.setStroke(Color.GREEN);
-						if (turn==2)r1.setStroke(Color.BLUE);
-						if (turn==3)r1.setStroke(Color.PINK);
-						if (turn==4)r1.setStroke(Color.YELLOW);
-						if (turn==5)r1.setStroke(Color.CYAN);
-						if (turn==6)r1.setStroke(Color.MEDIUMPURPLE);
-						if (turn==7)r1.setStroke(Color.SNOW);
+		
+			
+			for(int k=0;k<hor;k++)
+			{
+				for(int l=0;l<ver;l++)
+				{
+					//System.out.println(grid);
+					grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
+					  
+					//System.out.print(gr1[k][l].player_index+1);
+					// .getClass(System.out.println("abc"+gr1);
+					to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+				  	try {
+						serialize(obj,"1");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
 				
+				System.out.println("");
 			}
-		});
-		root.getChildren().add(r);*/
-		Button btn=new Button("Undo");
-		btn.setOnMouseClicked(new undo_button());
-		root.getChildren().add(btn);
-		Scene scene=new Scene(root,500,550,Color.BLACK);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+			
+		}
+			
+		}
+	}
+	
+	public	 static void	serialize(to_serialize gr1,String name) throws	IOException	
+	{	
+		//System.out.println("abc");
+		ObjectOutputStream out	=	null;	
+		try	
+		{	
+				out	=	new	ObjectOutputStream	(	
+				new FileOutputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
+				out.writeObject(gr1);	
+		}	
+		finally	
+		{	
+				out.close();	
+		
+		}			 
+									
+	}
+	
+	public	static to_serialize deserialize(String name)		
+			throws	IOException,	ClassNotFoundException  
+			{	
+		//System.out.println("def");
+			ObjectInputStream	in	=	null;	
+			try	
+			{	
+				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
+				to_serialize gr1	=(to_serialize)in.readObject();					
+				return gr1;
+			}
+			catch(Exception e)
+			{
+				to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,null,null,null,0,0);
+			
+				return obj;
+				
+			}	
+			finally
+			{  // System.out.println("Raj");
+			    if(in!=null)
+				in.close();	
+				//System.out.print("KKK");
+			}			
+										
+			}				
+	public void resumeGame() throws ClassNotFoundException, IOException
+	{
+		//to_serialize obj=Main.deserialize("1");
+		//AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 	 
+//		s2controller obj1=new s2controller();
+//		mainLayout.getChildren().setAll(a1);
+	//	Group root=new Group();
+		to_serialize gr2=deserialize("1");
+		Group root=null;
+		
+		if(gr2.hor==6)
+		{
+			AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 
+			mainLayout.getChildren().setAll(a1);
+			root=new Group();
+		}
+		
+		else if(gr2.hor==10)
+		{
+			AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 
+			mainLayout.getChildren().setAll(a1);
+			root=new Group();
+		}
+		
+		if(gr2.gr1==null)
+		{
+			JLabel label = new JLabel("Sorry! No previously saved game.");
+			label.setFont(new Font("Arial", Font.BOLD, 18));
+			UIManager.put("OptionPane.minimumSize",new Dimension(500,100)); 
+			int input= JOptionPane.showOptionDialog(null,label,"Game Status",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
+		    
+			if(input==0)
+			{
+				 
+				try {
+					AnchorPane a=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
+					mainLayout.getChildren().setAll(a);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		else
+		{
+		grid[][] grid=gr2.gr1;
+		
+		turn=gr2.turn;
+		prev_turn=gr2.prev_turn;
+		num_players=gr2.num_players;
+		hor=gr2.hor;
+		ver=gr2.ver;
+		red=gr2.red;
+		green=gr2.green;
+		blue=gr2.blue;
+		this.grid=gr2.gr1;
+		gr1=gr2.norm;
+		
+		 //System.out.println(gr1);
+		all_players=gr2.all_players;
+		num_turn=gr2.num_turn;
+		alive=gr2.alive;
+		
+		for (int i=0;i<gr2.hor;i++){
+			for (int j=0;j<gr2.ver;j++){
+				int pl=grid[i][j].value;
+				 
+					 
+				System.out.print(pl+" ");
+			}
+			System.out.println("");
+		}
+		System.out.println("****");
+		
+		
+		gr=new cell[hor][ver];
+		inner_gr=new cell[hor][ver];
+		arr=new ArrayList<>();
+		 
+		for (int i=0;i<hor+1;i++)
+		{
+				for (int j=0;j<ver+1;j++)
+				{	
+					Line c=null;
+					if(hor==6 && ver==9)
+					{
+						c=new Line(i*50+150, j*50+150,i*(46)+162,j*46+168);
+					}
+					else
+					{
+						c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
+					}
+					c.setStroke(Color.rgb(red[0],green[0],blue[0]));
+					arr.add(c);
+					root.getChildren().add(c);
+					 
+			 
+				}
+		}
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+				if(hor==6 && ver==9)
+				{c=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
+				else
+				{
+					c=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
+				}
+				root.getChildren().add(c);
+				inner_gr[i][j]=c;
+			 
+			}
+		}
+	
+		
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+			if (hor==6 && ver==9)
+				{
+					c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+				}
+				
+				else
+				{
+					//System.out.println("abc");
+					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				}
+				//gr1[i][j]=new compute_cell(this,i,j);
+				root.getChildren().add(c);
+				gr[i][j]=c;
+				c.setOnMouseClicked(new cell_click_event());
+				
+			 
+			}
+		}
+		
+		
+		for(int i=0;i<hor;i++)
+		{
+			for(int j=0;j<ver;j++)
+			{
+				///YOU HAVE TO CODE HERE CHAUHAN
+			}
+		}
+		
+		mainLayout.getChildren().add(root);
+		}
+ 
+	}
+    
+	public void play1(AnchorPane a1,int n,int red[],int green[],int blue[],int hor,int ver) throws IOException
+	{
+		mainLayout.getChildren().setAll(a1);
+		Group root=new Group();
+		//System.out.println(n+2);
+		num_players=n+2;
+		this.hor=hor;
+		this.ver=ver;
+	
+		//System.out.println(num_players);
+		
+		this.red=red;
+		this.green=green;
+		this.blue=blue;
+		
+		this.alive=new boolean[num_players];
+		for (int i=0;i<num_players;i++){
+			alive[i]=true;
+		}
+		this.turn=0;
+		this.prev_turn=0;
+		this.num_turn=0;
+		this.root=new Group();
+		
+		{
+			alive=new boolean[num_players];
+			all_players=new player[num_players];
+			
+			for (int i=0;i<num_players;i++){
+				alive[i]=true;
+				all_players[i]=new player(i,red[i],green[i],blue[i]);
+			}
+		}
+		
+		
+		inner_gr=new cell[hor][ver];
+		 
+		arr=new ArrayList<>();
+		
+		 
+		for (int i=0;i<hor+1;i++){
+			for (int j=0;j<ver+1;j++)
+			{	
+				Line c=null;
+				if(hor==6 && ver==9)
+				{
+					c=new Line(i*50+150, j*50+150,i*(46)+162,j*46+168);
+				}
+				else
+				{
+					c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
+				}
+				c.setStroke(Color.rgb(red[0],green[0],blue[0]));
+				arr.add(c);
+				root.getChildren().add(c);
+				 
+		 
+			}
+		}
+		 
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+				if(hor==6 && ver==9)
+				{c=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
+				else
+				{
+					c=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
+				}
+				root.getChildren().add(c);
+				inner_gr[i][j]=c;
+			 
+			}
+		}
+		 
+		
+		gr=new cell[hor][ver];
+		gr1=new compute_cell[hor][ver];
+		grid=new grid[hor][ver];
+
+//		System.out.println(grid);
+//		System.out.println(gr);
+//		System.out.println(gr1);
+		for(int k=0;k<hor;k++)
+		{
+			for(int l=0;l<ver;l++)
+			{
+				grid[k][l]=new grid(0,0);
+				  
+				 
+				to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);;
+			  	try {
+					serialize(obj,"1");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println("");
+		}
+		
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+			if (hor==6 && ver==9)
+				{
+					c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+				}
+				
+				else
+				{
+					//System.out.println("abc");
+					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				}
+				gr1[i][j]=new compute_cell(this,i,j);
+				root.getChildren().add(c);
+				gr[i][j]=c;
+				c.setOnMouseClicked(new cell_click_event());
+				
+			 
+			}
+		}
+	 
+//		grid g=new grid(gr);
+	//	System.out.println(mainLayout);
+		mainLayout.getChildren().add(root);
+//		Scene scene=new Scene(root,500,550,Color.BLACK);
+//		primaryStage.setScene(scene);
+//		primaryStage.show();
+		
+	}
+	 
+	public static void main(String[] args) {
+		launch(args);
 	}
 }
