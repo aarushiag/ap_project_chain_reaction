@@ -246,7 +246,7 @@ class cell extends Pane implements Serializable{
 	//public int player_index;
 	public cell(Main ch,int gx,int gy,int x,int y,int width,int height){
 		r=new Rectangle(width,height);
-		r.setStroke(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
+		r.setStroke(Color.rgb(ch.red[ch.turn],ch.green[ch.turn],ch.blue[ch.turn]));
 		r.setFill(Color.TRANSPARENT);
 		//Label l=new Label(new String("0"));
 		//this.setOnMouseClicked(new cell_click_event());
@@ -2023,7 +2023,7 @@ public class Main extends Application implements Serializable
 					{
 						c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
 					}
-					c.setStroke(Color.rgb(red[0],green[0],blue[0]));
+					c.setStroke(Color.rgb(red[turn],green[turn],blue[turn]));
 					arr.add(c);
 					root.getChildren().add(c);
 					 
@@ -2202,7 +2202,7 @@ public class Main extends Application implements Serializable
 				{
 					c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
 				}
-				c.setStroke(Color.rgb(red[0],green[0],blue[0]));
+				c.setStroke(Color.rgb(red[turn],green[turn],blue[turn]));
 				arr.add(c);
 				root.getChildren().add(c);
 				 
