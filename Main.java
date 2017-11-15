@@ -10,11 +10,10 @@ import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.RotateTransition;
-
+import javafx.scene.shape.Circle;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.FileInputStream;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,6 +26,10 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+//import chain_test1.atom;
+//import chain_test1.atom2;
+//import chain_test1.atom3;
+//import chain_test1.chain2;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -229,7 +232,7 @@ class cell extends Pane implements Serializable{
 	private Rectangle r;
 	private Main ch;
 	//private Label l;
-	private int value;
+	public int value;
 	public int gx;
 	public int gy;
 	public int x;
@@ -280,6 +283,7 @@ class cell extends Pane implements Serializable{
 		return r;
 	}
 	public int get_player_index(){
+		System.out.println(a1+" "+a2+" "+a3);
 		if (value==1)return a1.player_index;
 		else if (value==2)return a2.player_index;
 		else if (value==3)return a3.player_index;
@@ -338,16 +342,30 @@ class cell extends Pane implements Serializable{
 			//this.getChildren().add(a2.molatom);
 			//RotateTransition rt=new RotateTransition();
 			//RotateTransition rt2=new RotateTransition();
-			Ellipse crc_path=new Ellipse(3,7);
+			//Ellipse crc_path=new Ellipse(3,7);
 			//Circle crc2_path=new Circle(20);
-			PathTransition pt=new PathTransition();
+			/*PathTransition pt=new PathTransition();
 			pt.setNode(a2.crc);
 			pt.setPath(crc_path);
 			pt.setInterpolator(Interpolator.LINEAR);
 			pt.setDuration(Duration.millis(3000));
 			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);
+			pt.setCycleCount(Timeline.INDEFINITE);*/
+			PathTransition p1=new PathTransition();
+			p1.setPath(new Circle(10));
+			p1.setNode(a2.crc);
+			p1.setDuration(Duration.millis(2000));
+			p1.setCycleCount(Timeline.INDEFINITE);
+			p1.setInterpolator(Interpolator.LINEAR);
+			PathTransition p2=new PathTransition();
+			p2.setPath(new Circle(1.5));
+			p2.setNode(a2.crc2);
+			p2.setDuration(Duration.millis(2000));
+			p2.setCycleCount(Timeline.INDEFINITE);
+			p2.setInterpolator(Interpolator.LINEAR);
+			p1.play();
+			p2.play();
 			/*PathTransition pt2=new PathTransition();
 			pt2.setNode(a2.crc2);
 			pt2.setPath(crc2_path);
@@ -370,16 +388,16 @@ class cell extends Pane implements Serializable{
 			//rt2.setInterpolator(Interpolator.LINEAR);
 			//rt.play();
 			//rt2.play();
-			crc_path.setVisible(false);
+			//crc_path.setVisible(false);
 			//crc2_path.setVisible(false);
-			pt.play();
+			//pt.play();
 			//pt2.play();
 			//StackPane r1=new StackPane();
 			//this.getChildren().add(a2.crc2);
 			//StackPane r2=new StackPane();
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(15);
-			molatom.setLayoutY(23);
+			molatom.setLayoutX(25);
+			molatom.setLayoutY(25);
 			//r2.getChildren().add(a2.crc2);
 			//this.getChildren().add(crc_path);
 			//r2.getChildren().add(crc2_path);
@@ -416,7 +434,7 @@ class cell extends Pane implements Serializable{
 			//rt2.setInterpolator(Interpolator.LINEAR);
 			//rt.play();
 			//rt2.play();
-			Ellipse crc_path=new Ellipse(3,7);
+			/*Ellipse crc_path=new Ellipse(3,7);
 			//Circle crc2_path=new Circle(20);
 			PathTransition pt=new PathTransition();
 			pt.setNode(a2.crc);
@@ -425,7 +443,21 @@ class cell extends Pane implements Serializable{
 			pt.setDuration(Duration.millis(3000));
 			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);
+			pt.setCycleCount(Timeline.INDEFINITE);*/
+			PathTransition p1=new PathTransition();
+			p1.setPath(new Circle(10));
+			p1.setNode(a2.crc);
+			p1.setDuration(Duration.millis(2000));
+			p1.setCycleCount(Timeline.INDEFINITE);
+			p1.setInterpolator(Interpolator.LINEAR);
+			PathTransition p2=new PathTransition();
+			p2.setPath(new Circle(1.5));
+			p2.setNode(a2.crc2);
+			p2.setDuration(Duration.millis(2000));
+			p2.setCycleCount(Timeline.INDEFINITE);
+			p2.setInterpolator(Interpolator.LINEAR);
+			p1.play();
+			p2.play();
 			/*PathTransition pt2=new PathTransition();
 			pt2.setNode(a2.crc2);
 			pt2.setPath(crc2_path);
@@ -435,14 +467,14 @@ class cell extends Pane implements Serializable{
 			pt2.setCycleCount(Timeline.INDEFINITE);
 			crc_path.setVisible(false);
 			crc2_path.setVisible(false);*/
-			pt.play();
-			crc_path.setVisible(false);
+			//pt.play();
+			//crc_path.setVisible(false);
 			//pt2.play();
 			//StackPane r1=new StackPane();
 			//this.getChildren().add(a2.crc2);
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(15);
-			molatom.setLayoutY(23);
+			molatom.setLayoutX(25);
+			molatom.setLayoutY(25);
 			//r1.getChildren().add(a2.crc2);
 			//this.getChildren().add(crc_path);
 			//r1.getChildren().add(crc2_path);
@@ -480,7 +512,7 @@ class cell extends Pane implements Serializable{
 			rt.play();
 			rt2.play();
 			rt3.play();*/
-			Ellipse crc_path=new Ellipse(3,4);
+			/*Ellipse crc_path=new Ellipse(3,4);
 			Ellipse crc_path2=new Ellipse(5,7);
 			crc_path2.setCenterX(15);
 			crc_path2.setCenterY(5);
@@ -502,7 +534,15 @@ class cell extends Pane implements Serializable{
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
-			pt2.setCycleCount(Timeline.INDEFINITE);
+			pt2.setCycleCount(Timeline.INDEFINITE);*/
+			RotateTransition r2=new RotateTransition();
+			r2.setNode(molatom);
+			r2.setAxis(Rotate.Z_AXIS);
+			r2.setDuration(Duration.millis(2000));
+			r2.setCycleCount(Timeline.INDEFINITE);
+			r2.setInterpolator(Interpolator.LINEAR);
+			r2.setToAngle(360);
+			r2.play();
 			//PathTransition pt2=new PathTransition();
 			//pt2.setNode(a3.crc2);
 			//pt2.setPath(crc2_path);
@@ -517,13 +557,13 @@ class cell extends Pane implements Serializable{
 			//pt3.setDuration(Duration.millis(10000));
 			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//pt3.setCycleCount(Timeline.INDEFINITE);
-			crc_path.setVisible(false);
-			crc_path2.setVisible(false);
+			//crc_path.setVisible(false);
+			//crc_path2.setVisible(false);
 			//crc2_path.setVisible(false);
 			//crc3_path.setVisible(false);
 			//pt.play();
-			ParallelTransition p=new ParallelTransition(pt,pt2);
-			p.play();
+			//ParallelTransition p=new ParallelTransition(pt,pt2);
+			//p.play();
 			//pt2.play();
 			//pt3.play();
 			//StackPane r1=new StackPane();
@@ -534,8 +574,8 @@ class cell extends Pane implements Serializable{
 			//r1.getChildren().add(crc2_path);
 			//r1.getChildren().add(crc3_path);
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(15);
-			molatom.setLayoutY(15);
+			molatom.setLayoutX(17);
+			molatom.setLayoutY(17);
 			//if (toggle==true)ch.turn=(ch.turn+1)%8;
 			/*if (toggle==false){
 				System.out.println("neighbour burst");
@@ -574,7 +614,7 @@ class cell extends Pane implements Serializable{
 			rt.play();
 			rt2.play();
 			rt3.play();*/
-			Ellipse crc_path=new Ellipse(3,4);
+			/*Ellipse crc_path=new Ellipse(3,4);
 			Ellipse crc_path2=new Ellipse(5,7);
 			crc_path2.setCenterX(15);
 			crc_path2.setCenterY(5);
@@ -596,7 +636,15 @@ class cell extends Pane implements Serializable{
 			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			pt.setCycleCount(Timeline.INDEFINITE);
-			pt2.setCycleCount(Timeline.INDEFINITE);
+			pt2.setCycleCount(Timeline.INDEFINITE);*/
+			RotateTransition r2=new RotateTransition();
+			r2.setNode(molatom);
+			r2.setAxis(Rotate.Z_AXIS);
+			r2.setDuration(Duration.millis(2000));
+			r2.setCycleCount(Timeline.INDEFINITE);
+			r2.setInterpolator(Interpolator.LINEAR);
+			r2.setToAngle(360);
+			r2.play();
 			//PathTransition pt2=new PathTransition();
 			//pt2.setNode(a3.crc2);
 			//pt2.setPath(crc2_path);
@@ -611,11 +659,11 @@ class cell extends Pane implements Serializable{
 			//pt3.setDuration(Duration.millis(10000));
 			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			//pt3.setCycleCount(Timeline.INDEFINITE);
-			crc_path.setVisible(false);
-			crc_path2.setVisible(false);
+			//crc_path.setVisible(false);
+			//crc_path2.setVisible(false);
 			//crc3_path.setVisible(false);
-			ParallelTransition p=new ParallelTransition(pt,pt2);
-			p.play();
+			//ParallelTransition p=new ParallelTransition(pt,pt2);
+			//p.play();
 			//pt.play();
 			//pt2.play();
 			//pt3.play();
@@ -627,8 +675,8 @@ class cell extends Pane implements Serializable{
 			//r1.getChildren().add(crc2_path);
 			//r1.getChildren().add(crc3_path);
 			this.getChildren().add(molatom);
-			molatom.setLayoutX(15);
-			molatom.setLayoutY(15);
+			molatom.setLayoutX(17);
+			molatom.setLayoutY(17);
 			
 		}
 		/*PointLight light=new PointLight(Color.WHITE);
@@ -1145,6 +1193,7 @@ class compute_cell implements Serializable{
 		}
 	}
 	public void compute_increase_value(boolean toggle){
+		System.out.println(gx+" "+gy+" :p");
 		if ((value==0)&&(toggle==false)){
 			value++;
 		}
@@ -1242,7 +1291,7 @@ public class Main extends Application implements Serializable
 	public int num_turn=0;
 	public cell[][] gr;
 	public cell[][] inner_gr;
-	public  compute_cell[][] gr1;
+	public compute_cell[][] gr1;
 	public Group root;
 	public static int num_players=2;
 	public player[] all_players;
@@ -1255,7 +1304,96 @@ public class Main extends Application implements Serializable
 	public static int[] blue= {0,0,255,0,255,255,100,255};	
 	public int status;
 	public int winner;
- 
+	public compute_cell[][] gr21;
+	//class undo_button implements EventHandler<MouseEvent>{
+	public void undobutton(){
+			for (int i=0;i<hor;i++){
+				for (int j=0;j<ver;j++){
+					gr[i][j].getChildren().remove(gr[i][j].molatom);
+					//System.out.print(gr2[i][j].value+" h1");
+					if (gr21[i][j].value==1){
+						atom a=new atom(Main.this,true,i,j);
+						gr[i][j].a1=a;
+						gr[i][j].getChildren().add(gr[i][j].a1.get_atom());
+						gr[i][j].molatom=a.molatom;
+						gr[i][j].molatom.setLayoutX(25);
+						gr[i][j].molatom.setLayoutY(25);
+					}
+					else if (gr21[i][j].value==2){
+						atom2 a2=new atom2(Main.this,true,i,j);
+						gr[i][j].molatom=a2.molatom;
+						PathTransition p1=new PathTransition();
+						p1.setPath(new Circle(10));
+						p1.setNode(a2.crc);
+						p1.setDuration(Duration.millis(2000));
+						p1.setCycleCount(Timeline.INDEFINITE);
+						p1.setInterpolator(Interpolator.LINEAR);
+						PathTransition p2=new PathTransition();
+						p2.setPath(new Circle(1.5));
+						p2.setNode(a2.crc2);
+						p2.setDuration(Duration.millis(2000));
+						p2.setCycleCount(Timeline.INDEFINITE);
+						p2.setInterpolator(Interpolator.LINEAR);
+						p1.play();
+						p2.play();
+						gr[i][j].getChildren().add(gr[i][j].molatom);
+						gr[i][j].molatom.setLayoutX(25);
+						gr[i][j].molatom.setLayoutY(25);
+						
+					}
+					else if (gr21[i][j].value==3){
+						atom3 a3=new atom3(Main.this,true,i,j);
+						gr[i][j].molatom=a3.molatom;
+						RotateTransition r2=new RotateTransition();
+						r2.setNode(a3.molatom);
+						r2.setAxis(Rotate.Z_AXIS);
+						r2.setDuration(Duration.millis(2000));
+						r2.setCycleCount(Timeline.INDEFINITE);
+						r2.setInterpolator(Interpolator.LINEAR);
+						r2.setToAngle(360);
+						r2.play();
+						gr[i][j].getChildren().add(gr[i][j].molatom);
+						gr[i][j].molatom.setLayoutX(17);
+						gr[i][j].molatom.setLayoutY(17);
+						
+					}
+					gr1[i][j].value=gr21[i][j].value;
+					gr1[i][j].player_index=gr21[i][j].player_index;
+					gr[i][j].value=gr21[i][j].value;
+				}
+				System.out.println();
+			}
+			turn=prev_turn;
+			for(int i=0;i<hor;i++){
+				for(int j=0;j<ver;j++){
+					gr[i][j].get_rectangle().setStroke(Color.rgb(red[prev_turn],green[prev_turn],blue[prev_turn]));
+				}
+			}
+			num_turn--;
+			if (num_turn>=num_players){
+			for (int i=0;i<num_players;i++){
+				all_players[i].num_atom=0;
+			}
+			for (int i=0;i<hor;i++){
+				for (int j=0;j<ver;j++){
+					int pl=gr1[i][j].player_index;
+					if (gr1[i][j].value>0){
+						//System.out.print((pl+1)+" ");
+						System.out.println(i+" "+j+" "+gr1[i][j].value);
+						all_players[pl].num_atom+=gr1[i][j].value;
+					}
+				}
+			}
+			for (int i=0;i<num_players;i++){
+				if (all_players[i].num_atom==0)alive[i]=false;
+				else alive[i]=true;
+			}
+			}
+			
+		}
+		
+		//if (new_turn==0)new_turn=num_players-1;
+	
 	public static void give_obj() throws IOException
 	{
 		
@@ -1282,7 +1420,24 @@ public class Main extends Application implements Serializable
 		this.primaryStage=primaryStage;
 		this.primaryStage.setTitle("Chain Reaction Game");
 		showMainView();
-	     
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+				if (hor==6 && ver==9)
+					{
+						c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+					}
+					
+					else
+					{
+						//System.out.println("abc");
+						c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+					}
+					gr[i][j]=c;
+					gr1[i][j]=new compute_cell(this,i,j);
+					gr21[i][j]=new compute_cell(this,i,j);
+			}
+		}
 		to_serialize obj= deserialize("1");
 		if(obj.red!=null)
 		{
@@ -1390,6 +1545,13 @@ public class Main extends Application implements Serializable
 			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
 			//System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
+			for (int i=0;i<hor;i++){
+				for (int j=0;j<ver;j++){
+					if (gr1[i][j].value>0)System.out.println("***"+i+" "+j+" "+gr1[i][j].value+"***");
+					gr21[i][j].value=gr1[i][j].value;
+					gr21[i][j].player_index=gr1[i][j].player_index;
+				}
+			}
 			if (temp.get_value()==0){
 				num_turn++;
 				atom a=new atom(Main.this,false,temp.gx,temp.gy);
@@ -1464,10 +1626,12 @@ public class Main extends Application implements Serializable
 					turn=(turn+1)%num_players;
 				}*/
 				//!!!!!----------------------------
-					//num_turn++;
+			//num_turn++;
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
 				num_turn++;
-				temp.getChildren().remove(temp.a1.get_atom());
+				if (temp.value==1)temp.getChildren().remove(temp.a1.get_atom());
+				else if (temp.value==2)temp.getChildren().remove(temp.a2.get_atom());
+				else if (temp.value==3)temp.getChildren().remove(temp.a3.get_atom());
 				//System.out.println(turn+" :)");
 				compute_temp.compute_change_value(true);
 				temp.change_value(true);
@@ -1727,7 +1891,7 @@ public class Main extends Application implements Serializable
 		try	
 		{	
 				out	=	new	ObjectOutputStream	(	
-				new FileOutputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
+				new FileOutputStream("C:/Users/Arushi Chauhan/workspace/agguchain/src" + name + ".txt"));	
 				out.writeObject(gr1);	
 		}	
 		finally	
@@ -1745,7 +1909,7 @@ public class Main extends Application implements Serializable
 			ObjectInputStream	in	=	null;	
 			try	
 			{	
-				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
+				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/Arushi Chauhan/workspace/agguchain/src" + name + ".txt"));	
 				to_serialize gr1	=(to_serialize)in.readObject();					
 				return gr1;
 			}
@@ -1827,10 +1991,13 @@ public class Main extends Application implements Serializable
 		num_turn=gr2.num_turn;
 		alive=gr2.alive;
 		
+		gr21=new compute_cell[hor][ver];
 		for (int i=0;i<gr2.hor;i++){
 			for (int j=0;j<gr2.ver;j++){
 				int pl=grid[i][j].value;
-				 
+				gr21[i][j]=new compute_cell(this,i,j);
+				gr21[i][j].value=grid[i][j].value;
+				gr21[i][j].player_index=grid[i][j].player_index-1;
 					 
 				System.out.print(pl+" ");
 			}
@@ -1865,48 +2032,116 @@ public class Main extends Application implements Serializable
 		}
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
-				cell c=null;
+				//cell c=null;
 				if(hor==6 && ver==9)
-				{c=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
+				{inner_gr[i][j]=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
 				else
 				{
-					c=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
+					inner_gr[i][j]=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
 				}
-				root.getChildren().add(c);
-				inner_gr[i][j]=c;
+				root.getChildren().add(inner_gr[i][j]);
 			 
 			}
 		}
 	
-		
+		//gr21=new compute_cell[hor][ver];
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
-				cell c=null;
+				//cell c=null;
 			if (hor==6 && ver==9)
 				{
-					c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+					gr[i][j]=new cell(this,i,j,i*50+150,j*50+150,50,50);
 				}
 				
 				else
 				{
 					//System.out.println("abc");
-					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+					gr[i][j]=new cell(this,i,j,i*50+50,j*50+70,50,50);
 				}
 				//gr1[i][j]=new compute_cell(this,i,j);
-				root.getChildren().add(c);
-				gr[i][j]=c;
-				c.setOnMouseClicked(new cell_click_event());
-				
-			 
+				root.getChildren().add(gr[i][j]);
+				gr1[i][j]=new compute_cell(this,i,j);
+				gr1[i][j].value=gr21[i][j].value;
+				gr1[i][j].player_index=gr21[i][j].player_index;
+				gr[i][j].setOnMouseClicked(new cell_click_event());
 			}
 		}
-		
-		
+		//System.out.println();
+		//System.out.println(gr[gx]);
 		for(int i=0;i<hor;i++)
 		{
 			for(int j=0;j<ver;j++)
 			{
-				///YOU HAVE TO CODE HERE CHAUHAN
+				//chauhan
+				//if (gr[i][j]==null)System.out.println(i+" :: "+j);
+				//System.out.println(gr1);
+				if (gr1[i][j].value==1){
+					atom a=new atom(this,false,i,j);
+					final PhongMaterial temp_color=new PhongMaterial();
+					temp_color.setDiffuseColor(Color.rgb(red[gr1[i][j].player_index],green[gr1[i][j].player_index] ,blue[gr1[i][j].player_index]));
+					temp_color.setSpecularColor(Color.BLACK);
+					a.crc.setMaterial(temp_color);
+					gr[i][j].a1=a;
+					gr[i][j].molatom=a.molatom;
+					gr[i][j].getChildren().add(a.molatom);
+					a.molatom.setLayoutX(25);
+					a.molatom.setLayoutY(25);
+					gr[i][j].value=1;
+					gr[i][j].a1.player_index=gr1[i][j].player_index;
+				}
+				else if (gr1[i][j].value==2){
+					atom2 a=new atom2(this,false,i,j);
+					final PhongMaterial temp_color=new PhongMaterial();
+					temp_color.setDiffuseColor(Color.rgb(red[gr1[i][j].player_index],green[gr1[i][j].player_index] ,blue[gr1[i][j].player_index]));
+					temp_color.setSpecularColor(Color.BLACK);
+					gr[i][j].a2=a;
+					a.crc.setMaterial(temp_color);
+					a.crc2.setMaterial(temp_color);
+					gr[i][j].molatom=a.molatom;
+					PathTransition p1=new PathTransition();
+					p1.setPath(new Circle(10));
+					p1.setNode(a.crc);
+					p1.setDuration(Duration.millis(2000));
+					p1.setCycleCount(Timeline.INDEFINITE);
+					p1.setInterpolator(Interpolator.LINEAR);
+					PathTransition p2=new PathTransition();
+					p2.setPath(new Circle(1.5));
+					p2.setNode(a.crc2);
+					p2.setDuration(Duration.millis(2000));
+					p2.setCycleCount(Timeline.INDEFINITE);
+					p2.setInterpolator(Interpolator.LINEAR);
+					p1.play();
+					p2.play();
+					gr[i][j].getChildren().add(a.molatom);
+					a.molatom.setLayoutX(25);
+					a.molatom.setLayoutY(25);
+					gr[i][j].value=2;
+					gr[i][j].a2.player_index=gr1[i][j].player_index;
+				}
+				else if (gr1[i][j].value==3) {
+					atom3 a=new atom3(this,false,i,j);
+					final PhongMaterial temp_color=new PhongMaterial();
+					temp_color.setDiffuseColor(Color.rgb(red[gr1[i][j].player_index],green[gr1[i][j].player_index] ,blue[gr1[i][j].player_index]));
+					temp_color.setSpecularColor(Color.BLACK);
+					gr[i][j].a3=a;
+					a.crc.setMaterial(temp_color);
+					a.crc2.setMaterial(temp_color);
+					a.crc3.setMaterial(temp_color);
+					gr[i][j].molatom=a.molatom;
+					gr[i][j].getChildren().add(a.molatom);
+					RotateTransition r2=new RotateTransition();
+					r2.setNode(gr[i][j].molatom);
+					r2.setAxis(Rotate.Z_AXIS);
+					r2.setDuration(Duration.millis(2000));
+					r2.setCycleCount(Timeline.INDEFINITE);
+					r2.setInterpolator(Interpolator.LINEAR);
+					r2.setToAngle(360);
+					r2.play();
+					a.molatom.setLayoutX(17);
+					a.molatom.setLayoutY(17);
+					gr[i][j].value=3;
+					gr[i][j].a3.player_index=gr1[i][j].player_index;
+				}
 			}
 		}
 		
@@ -1993,6 +2228,7 @@ public class Main extends Application implements Serializable
 		
 		gr=new cell[hor][ver];
 		gr1=new compute_cell[hor][ver];
+		gr21=new compute_cell[hor][ver];
 		grid=new grid[hor][ver];
 
 //		System.out.println(grid);
@@ -2031,6 +2267,7 @@ public class Main extends Application implements Serializable
 					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
 				}
 				gr1[i][j]=new compute_cell(this,i,j);
+				gr21[i][j]=new compute_cell(this,i,j);
 				root.getChildren().add(c);
 				gr[i][j]=c;
 				c.setOnMouseClicked(new cell_click_event());
