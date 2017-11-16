@@ -1305,13 +1305,33 @@ public class Main extends Application implements Serializable
 	public int status;
 	public int winner;
 	public compute_cell[][] gr21;
+	public static grid[][] old_grid;
+	public static grid[][] ret_main(){
+		return old_grid;
+	}
 	//class undo_button implements EventHandler<MouseEvent>{
-	public void undobutton(){
-			for (int i=0;i<hor;i++){
+	public void undobutton()throws IOException{
+		grid[][] temp=new grid[hor][ver];
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				temp[i][j]=new grid(old_grid[i][j].player_index,old_grid[i][j].value);
+			}
+		}
+		try{
+		this.resumeGame();}
+		catch(ClassNotFoundException e){}
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				old_grid[i][j]=new grid(temp[i][j].player_index,temp[i][j].value);
+			}
+		}
+		//@Override
+		//public void handle(MouseEvent m){	
+		for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					gr[i][j].getChildren().remove(gr[i][j].molatom);
 					//System.out.print(gr2[i][j].value+" h1");
-					if (gr21[i][j].value==1){
+					if (old_grid[i][j].value==1){
 						atom a=new atom(Main.this,true,i,j);
 						gr[i][j].a1=a;
 						gr[i][j].getChildren().add(gr[i][j].a1.get_atom());
@@ -1319,7 +1339,7 @@ public class Main extends Application implements Serializable
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
 					}
-					else if (gr21[i][j].value==2){
+					else if (old_grid[i][j].value==2){
 						atom2 a2=new atom2(Main.this,true,i,j);
 						gr[i][j].molatom=a2.molatom;
 						PathTransition p1=new PathTransition();
@@ -1341,7 +1361,7 @@ public class Main extends Application implements Serializable
 						gr[i][j].molatom.setLayoutY(25);
 						
 					}
-					else if (gr21[i][j].value==3){
+					else if (old_grid[i][j].value==3){
 						atom3 a3=new atom3(Main.this,true,i,j);
 						gr[i][j].molatom=a3.molatom;
 						RotateTransition r2=new RotateTransition();
@@ -1357,9 +1377,9 @@ public class Main extends Application implements Serializable
 						gr[i][j].molatom.setLayoutY(17);
 						
 					}
-					gr1[i][j].value=gr21[i][j].value;
-					gr1[i][j].player_index=gr21[i][j].player_index;
-					gr[i][j].value=gr21[i][j].value;
+					gr1[i][j].value=old_grid[i][j].value;
+					gr1[i][j].player_index=old_grid[i][j].player_index;
+					gr[i][j].value=old_grid[i][j].value;
 				}
 				System.out.println();
 			}
@@ -1367,6 +1387,13 @@ public class Main extends Application implements Serializable
 			for(int i=0;i<hor;i++){
 				for(int j=0;j<ver;j++){
 					gr[i][j].get_rectangle().setStroke(Color.rgb(red[prev_turn],green[prev_turn],blue[prev_turn]));
+					inner_gr[i][j].get_rectangle().setStroke(Color.rgb(red[prev_turn],green[prev_turn],blue[prev_turn]));
+				}
+			}
+			for (int i=0;i<hor+1;i++){
+				for (int j=0;j<ver+1;j++){
+					Line c=arr.get(i*(ver+1)+j);
+					c.setStroke(Color.rgb(red[prev_turn], green[prev_turn], blue[prev_turn]));
 				}
 			}
 			num_turn--;
@@ -1391,7 +1418,7 @@ public class Main extends Application implements Serializable
 			}
 			
 		}
-		
+//	}
 		//if (new_turn==0)new_turn=num_players-1;
 	
 	public static void give_obj() throws IOException
@@ -1420,6 +1447,7 @@ public class Main extends Application implements Serializable
 		this.primaryStage=primaryStage;
 		this.primaryStage.setTitle("Chain Reaction Game");
 		showMainView();
+		//old_grid=new grid[hor][ver];
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
 				cell c=null;
@@ -1545,9 +1573,11 @@ public class Main extends Application implements Serializable
 			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
 			//System.out.println(temp.gx+" "+temp.gy);
 			boolean b=false;
+			old_grid=new grid[hor][ver];
 			for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					if (gr1[i][j].value>0)System.out.println("***"+i+" "+j+" "+gr1[i][j].value+"***");
+					old_grid[i][j]=new grid(gr1[i][j].player_index,gr1[i][j].value);
 					gr21[i][j].value=gr1[i][j].value;
 					gr21[i][j].player_index=gr1[i][j].player_index;
 				}
@@ -1992,13 +2022,14 @@ public class Main extends Application implements Serializable
 		alive=gr2.alive;
 		
 		gr21=new compute_cell[hor][ver];
+		old_grid=new grid[hor][ver];
 		for (int i=0;i<gr2.hor;i++){
 			for (int j=0;j<gr2.ver;j++){
 				int pl=grid[i][j].value;
+				old_grid[i][j]=new grid(gr1[i][j].player_index,gr1[i][j].value);
 				gr21[i][j]=new compute_cell(this,i,j);
 				gr21[i][j].value=grid[i][j].value;
-				gr21[i][j].player_index=grid[i][j].player_index-1;
-					 
+				gr21[i][j].player_index=grid[i][j].player_index-1;	 
 				System.out.print(pl+" ");
 			}
 			System.out.println("");
@@ -2072,7 +2103,6 @@ public class Main extends Application implements Serializable
 		{
 			for(int j=0;j<ver;j++)
 			{
-				//chauhan
 				//if (gr[i][j]==null)System.out.println(i+" :: "+j);
 				//System.out.println(gr1);
 				if (gr1[i][j].value==1){
@@ -2279,6 +2309,7 @@ public class Main extends Application implements Serializable
 //		grid g=new grid(gr);
 	//	System.out.println(mainLayout);
 		mainLayout.getChildren().add(root);
+		//System.out.println(mainLayout.getChildren());
 //		Scene scene=new Scene(root,500,550,Color.BLACK);
 //		primaryStage.setScene(scene);
 //		primaryStage.show();
