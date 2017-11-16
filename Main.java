@@ -1337,6 +1337,10 @@ public class Main extends Application implements Serializable
 						gr[i][j].getChildren().add(gr[i][j].a1.get_atom());
 						gr[i][j].molatom=a.molatom;
 						gr[i][j].value=1;
+						final PhongMaterial temp_color=new PhongMaterial();
+						temp_color.setDiffuseColor(Color.rgb(red[old_grid[i][j].player_index],green[old_grid[i][j].player_index] ,blue[old_grid[i][j].player_index]));
+						temp_color.setSpecularColor(Color.BLACK);
+						a.crc.setMaterial(temp_color);
 						//gr[i][j].a1.player_index=prev_turn;
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
@@ -1361,6 +1365,11 @@ public class Main extends Application implements Serializable
 						p2.play();
 						gr[i][j].getChildren().add(gr[i][j].molatom);
 						gr[i][j].value=2;
+						final PhongMaterial temp_color=new PhongMaterial();
+						temp_color.setDiffuseColor(Color.rgb(red[old_grid[i][j].player_index],green[old_grid[i][j].player_index] ,blue[old_grid[i][j].player_index]));
+						temp_color.setSpecularColor(Color.BLACK);
+						a2.crc.setMaterial(temp_color);
+						a2.crc2.setMaterial(temp_color);
 						//gr[i][j].a2.player_index=prev_turn;
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
@@ -1381,6 +1390,12 @@ public class Main extends Application implements Serializable
 						gr[i][j].getChildren().add(gr[i][j].molatom);
 						gr[i][j].value=3;
 						//gr[i][j].a3.player_index=prev_turn;
+						final PhongMaterial temp_color=new PhongMaterial();
+						temp_color.setDiffuseColor(Color.rgb(red[old_grid[i][j].player_index],green[old_grid[i][j].player_index] ,blue[old_grid[i][j].player_index]));
+						temp_color.setSpecularColor(Color.BLACK);
+						a3.crc.setMaterial(temp_color);
+						a3.crc2.setMaterial(temp_color);
+						a3.crc3.setMaterial(temp_color);
 						gr[i][j].molatom.setLayoutX(17);
 						gr[i][j].molatom.setLayoutY(17);
 						
