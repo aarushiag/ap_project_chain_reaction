@@ -1261,8 +1261,10 @@ class to_serialize implements Serializable
 	 
 	public boolean[] alive;
  
+	public compute_cell[][] gr21;
+	public static grid[][] old_grid;
 	
-	public to_serialize(boolean[] alive,int num_turn,cell[][] gr,compute_cell[][] norm,player[] all_players,grid[][] gr1,int turn,int prev_turn,int num_players,int[] red,int []green,int[] blue,int hor,int ver)
+	public to_serialize(compute_cell[][] gr21,grid[][] old_grid,boolean[] alive,int num_turn,cell[][] gr,compute_cell[][] norm,player[] all_players,grid[][] gr1,int turn,int prev_turn,int num_players,int[] red,int []green,int[] blue,int hor,int ver)
 	{
 		this.gr1=gr1;
 		this.turn=turn;
@@ -1277,6 +1279,8 @@ class to_serialize implements Serializable
 		this.norm=norm;
 		this.all_players=all_players;
 		this.alive=alive;
+		this.gr21=gr21;
+		this.old_grid=old_grid;
 	}
 	
 }
@@ -1311,36 +1315,39 @@ public class Main extends Application implements Serializable
 	}
 	//class undo_button implements EventHandler<MouseEvent>{
 	public void undobutton()throws IOException{
-		grid[][] temp=new grid[hor][ver];
-		for (int i=0;i<hor;i++){
-			for (int j=0;j<ver;j++){
-				temp[i][j]=new grid(old_grid[i][j].player_index,old_grid[i][j].value);
-			}
-		}
+//		grid[][] temp=new grid[hor][ver];
+//		for (int i=0;i<hor;i++){
+//			for (int j=0;j<ver;j++){
+//				temp[i][j]=new grid(old_grid[i][j].player_index,old_grid[i][j].value);
+//			}
+//		}
 		try{
 		this.resumeGame();}
 		catch(ClassNotFoundException e){}
-		for (int i=0;i<hor;i++){
-			for (int j=0;j<ver;j++){
-				old_grid[i][j]=new grid(temp[i][j].player_index,temp[i][j].value);
-			}
-		}
+//		for (int i=0;i<hor;i++){
+//			for (int j=0;j<ver;j++){
+//				old_grid[i][j]=new grid(temp[i][j].player_index,temp[i][j].value);
+//			}
+//		}
 		//@Override
 		//public void handle(MouseEvent m){	
 		for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					gr[i][j].getChildren().remove(gr[i][j].molatom);
 					//System.out.print(gr2[i][j].value+" h1");
+					//gr[i][j].get_player_index()
+//					System.out.println(i+" "+j);
+//					System.out.println(old_grid[i][j].player_index);
+//					System.out.println("");
+					gr1[i][j].value=old_grid[i][j].value;
+					gr1[i][j].player_index=old_grid[i][j].player_index;
+					gr[i][j].value=old_grid[i][j].value;
 					if (old_grid[i][j].value==1){
 						atom a=new atom(Main.this,true,i,j);
 						gr[i][j].a1=a;
 						gr[i][j].getChildren().add(gr[i][j].a1.get_atom());
 						gr[i][j].molatom=a.molatom;
 						gr[i][j].value=1;
-						final PhongMaterial temp_color=new PhongMaterial();
-						temp_color.setDiffuseColor(Color.rgb(red[old_grid[i][j].player_index],green[old_grid[i][j].player_index] ,blue[old_grid[i][j].player_index]));
-						temp_color.setSpecularColor(Color.BLACK);
-						a.crc.setMaterial(temp_color);
 						//gr[i][j].a1.player_index=prev_turn;
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
@@ -1365,11 +1372,6 @@ public class Main extends Application implements Serializable
 						p2.play();
 						gr[i][j].getChildren().add(gr[i][j].molatom);
 						gr[i][j].value=2;
-						final PhongMaterial temp_color=new PhongMaterial();
-						temp_color.setDiffuseColor(Color.rgb(red[old_grid[i][j].player_index],green[old_grid[i][j].player_index] ,blue[old_grid[i][j].player_index]));
-						temp_color.setSpecularColor(Color.BLACK);
-						a2.crc.setMaterial(temp_color);
-						a2.crc2.setMaterial(temp_color);
 						//gr[i][j].a2.player_index=prev_turn;
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
@@ -1390,19 +1392,11 @@ public class Main extends Application implements Serializable
 						gr[i][j].getChildren().add(gr[i][j].molatom);
 						gr[i][j].value=3;
 						//gr[i][j].a3.player_index=prev_turn;
-						final PhongMaterial temp_color=new PhongMaterial();
-						temp_color.setDiffuseColor(Color.rgb(red[old_grid[i][j].player_index],green[old_grid[i][j].player_index] ,blue[old_grid[i][j].player_index]));
-						temp_color.setSpecularColor(Color.BLACK);
-						a3.crc.setMaterial(temp_color);
-						a3.crc2.setMaterial(temp_color);
-						a3.crc3.setMaterial(temp_color);
 						gr[i][j].molatom.setLayoutX(17);
 						gr[i][j].molatom.setLayoutY(17);
 						
 					}
-					gr1[i][j].value=old_grid[i][j].value;
-					gr1[i][j].player_index=old_grid[i][j].player_index;
-					gr[i][j].value=old_grid[i][j].value;
+					
 				}
 				System.out.println();
 			}
@@ -1440,6 +1434,27 @@ public class Main extends Application implements Serializable
 			}
 			}
 			
+			
+			for(int k=0;k<hor;k++)
+			{
+				for(int l=0;l<ver;l++)
+				{
+					//System.out.println(grid);
+					grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
+					  
+					//System.out.print(gr1[k][l].player_index+1);
+					// .getClass(System.out.println("abc"+gr1);
+					to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+				  	try {
+						serialize(obj,"1");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				System.out.println("");
+			}
 		}
 //	}
 		//if (new_turn==0)new_turn=num_players-1;
@@ -1447,7 +1462,7 @@ public class Main extends Application implements Serializable
 	public static void give_obj() throws IOException
 	{
 		
-		to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,num_players,red,green,blue,0,0);
+		to_serialize obj=new to_serialize(null,null,null,0,null,null,null,null,0,0,num_players,red,green,blue,0,0);
 		serialize(obj, "1");
 		//System.out.println("abc");
 	}
@@ -1575,7 +1590,7 @@ public class Main extends Application implements Serializable
 					try {
 						AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
 						mainLayout.getChildren().setAll(a1);
-						to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,red,green,blue,0,0);
+						to_serialize obj=new to_serialize(null,null,null,0,null,null,null,null,0,0,0,red,green,blue,0,0);
 						serialize(obj, "1");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -1933,7 +1948,7 @@ public class Main extends Application implements Serializable
 					  
 					//System.out.print(gr1[k][l].player_index+1);
 					// .getClass(System.out.println("abc"+gr1);
-					to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+					to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
 				  	try {
 						serialize(obj,"1");
 					} catch (IOException e) {
@@ -1957,7 +1972,7 @@ public class Main extends Application implements Serializable
 		try	
 		{	
 				out	=	new	ObjectOutputStream	(	
-				new FileOutputStream("C:/Users/Arushi Chauhan/workspace/agguchain/src" + name + ".txt"));	
+				new FileOutputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
 				out.writeObject(gr1);	
 		}	
 		finally	
@@ -1975,13 +1990,13 @@ public class Main extends Application implements Serializable
 			ObjectInputStream	in	=	null;	
 			try	
 			{	
-				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/Arushi Chauhan/workspace/agguchain/src" + name + ".txt"));	
+				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
 				to_serialize gr1	=(to_serialize)in.readObject();					
 				return gr1;
 			}
 			catch(Exception e)
 			{
-				to_serialize obj=new to_serialize(null,0,null,null,null,null,0,0,0,null,null,null,0,0);
+				to_serialize obj=new to_serialize(null,null,null,0,null,null,null,null,0,0,0,null,null,null,0,0);
 			
 				return obj;
 				
@@ -2056,22 +2071,25 @@ public class Main extends Application implements Serializable
 		all_players=gr2.all_players;
 		num_turn=gr2.num_turn;
 		alive=gr2.alive;
+		this.gr21=gr2.gr21;
+		//this.old_grid=gr2.old_grid;
 		
-		gr21=new compute_cell[hor][ver];
+//		gr21=new compute_cell[hor][ver];
 		old_grid=new grid[hor][ver];
+		System.out.println(old_grid);
 		for (int i=0;i<gr2.hor;i++){
 			for (int j=0;j<gr2.ver;j++){
 				int pl=grid[i][j].value;
-				old_grid[i][j]=new grid(gr1[i][j].player_index,gr1[i][j].value);
-				gr21[i][j]=new compute_cell(this,i,j);
-				gr21[i][j].value=grid[i][j].value;
-				gr21[i][j].player_index=grid[i][j].player_index-1;	 
+				old_grid[i][j]=new grid(gr21[i][j].player_index,gr21[i][j].value);
+//				gr21[i][j]=new compute_cell(this,i,j);
+//				gr21[i][j].value=grid[i][j].value;
+//				gr21[i][j].player_index=grid[i][j].player_index-1;	 
 				//System.out.print(pl+" ");
 			}
 			//System.out.println("");
 		}
 		//System.out.println("****");
-		
+//		System.out.println(old_grid);
 		
 		gr=new cell[hor][ver];
 		inner_gr=new cell[hor][ver];
@@ -2128,8 +2146,8 @@ public class Main extends Application implements Serializable
 				//gr1[i][j]=new compute_cell(this,i,j);
 				root.getChildren().add(gr[i][j]);
 				gr1[i][j]=new compute_cell(this,i,j);
-				gr1[i][j].value=gr21[i][j].value;
-				gr1[i][j].player_index=gr21[i][j].player_index;
+				gr1[i][j].value=grid[i][j].value;
+				gr1[i][j].player_index=grid[i][j].player_index-1;
 				gr[i][j].setOnMouseClicked(new cell_click_event());
 			}
 		}
@@ -2209,6 +2227,28 @@ public class Main extends Application implements Serializable
 					gr[i][j].a3.player_index=gr1[i][j].player_index;
 				}
 			}
+		}
+		
+		
+		for(int k=0;k<hor;k++)
+		{
+			for(int l=0;l<ver;l++)
+			{
+				//System.out.println(grid);
+				grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
+				  
+				//System.out.print(gr1[k][l].player_index+1);
+				// .getClass(System.out.println("abc"+gr1);
+				to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+			  	try {
+					serialize(obj,"1");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println("");
 		}
 		
 		mainLayout.getChildren().add(root);
@@ -2300,24 +2340,7 @@ public class Main extends Application implements Serializable
 //		System.out.println(grid);
 //		System.out.println(gr);
 //		System.out.println(gr1);
-		for(int k=0;k<hor;k++)
-		{
-			for(int l=0;l<ver;l++)
-			{
-				grid[k][l]=new grid(0,0);
-				  
-				 
-				to_serialize obj=new to_serialize(alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);;
-			  	try {
-					serialize(obj,"1");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			System.out.println("");
-		}
+	
 		
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
@@ -2340,6 +2363,25 @@ public class Main extends Application implements Serializable
 				
 			 
 			}
+		}
+		
+		for(int k=0;k<hor;k++)
+		{
+			for(int l=0;l<ver;l++)
+			{
+				grid[k][l]=new grid(0,0);
+				  
+				 
+				to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);;
+			  	try {
+					serialize(obj,"1");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println("");
 		}
 	 
 //		grid g=new grid(gr);

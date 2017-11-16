@@ -51,6 +51,18 @@ public class topcontroller extends AnchorPane
 	}
 	
 	@FXML
+	private void undo() throws IOException, ClassNotFoundException
+	{
+		 
+		Main obj=new Main();
+		obj.undobutton();
+		 
+		  
+	}
+	
+	
+	
+	@FXML
 	private void options() throws IOException
 	{
 		 

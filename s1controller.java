@@ -26,7 +26,7 @@ public class s1controller extends AnchorPane
 	static String a =Integer.toString(Main.num_players);	
 	static String init=a+" Player Game";
 	  
-	int num=0;
+	static int num=0;
 	
 	 
 	@FXML
