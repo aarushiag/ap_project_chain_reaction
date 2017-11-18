@@ -51,6 +51,9 @@ public class s1controller extends AnchorPane
 	@FXML
 	private Button Settings;
 	
+	@FXML
+	private Button Oneplayer;
+	
  
 	
 	@FXML
@@ -141,8 +144,14 @@ public class s1controller extends AnchorPane
 		 
 	}
 	
-	
+	@FXML
+	private void oneplayer() throws IOException
+	{
+		 Main obj=new Main();
+		 obj.oneplayer();
+	}
 //	@FXML
+	
 //	public  void play2(AnchorPane a2) throws IOException
 //	{
 //		 

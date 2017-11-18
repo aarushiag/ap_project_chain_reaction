@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.JLabel;
@@ -864,6 +865,7 @@ public class Main extends Application implements Serializable
 	private Scene scene;	 
 	public static int turn=0;
 	public static int prev_turn=0;
+	public boolean one_player_mode=false;
 	public int num_turn=0;
 	public cell[][] gr;
 	public cell[][] inner_gr;
@@ -882,6 +884,96 @@ public class Main extends Application implements Serializable
 	public int winner;
 	public compute_cell[][] gr21;
 	public static grid[][] old_grid;
+	public ArrayList<Integer> xx;
+	public ArrayList<Integer> yy;
+	public void oneplayer() throws IOException
+	{
+		Group root=null;
+		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 
+		undo=s1controller.undo;
+		undo.setDisable(true);
+		mainLayout.getChildren().setAll(a1);
+		root=new Group();
+		
+		num_players=2;
+		hor=6;
+		ver=9;
+		one_player_mode=true;
+		//Point pnt=Point.getInstance(x, y);
+		
+		
+		inner_gr=new cell[hor][ver];		 
+		arr=new ArrayList<>();
+		
+		 
+		for (int i=0;i<hor+1;i++){
+			for (int j=0;j<ver+1;j++)
+			{	
+				Line c=null;
+				if(hor==6 && ver==9)
+				{
+					c=new Line(i*50+150, j*50+150,i*(46)+162,j*46+168);
+				}
+				else
+				{
+					c=new Line(i*50+50, j*50+70,i*(46)+70,j*46+100);
+				}
+				c.setStroke(Color.rgb(red[turn],green[turn],blue[turn]));
+				arr.add(c);
+				root.getChildren().add(c);
+				 
+		 
+			}
+		}
+		 
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+				if(hor==6 && ver==9)
+				{c=new cell(this,i,j,i*(46)+162,j*46+168,46,46);}
+				else
+				{
+					c=new cell(this,i,j,i*(46)+70,j*46+100,46,46);
+				}
+				root.getChildren().add(c);
+				inner_gr[i][j]=c;
+			 
+			}
+		}
+		 
+		
+		gr=new cell[hor][ver];
+		gr1=new compute_cell[hor][ver];
+		gr21=new compute_cell[hor][ver];
+		grid=new grid[hor][ver]; 
+		xx=new ArrayList<Integer>();
+		yy=new ArrayList<Integer>();
+		alive=new boolean[2];
+		alive[0]=true;
+		alive[1]=true;
+		for (int i=0;i<hor;i++){
+			for (int j=0;j<ver;j++){
+				cell c=null;
+			if (hor==6 && ver==9)
+				{
+					c=new cell(this,i,j,i*50+150,j*50+150,50,50);
+				}
+
+				else
+				{
+					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
+				}
+				gr1[i][j]=new compute_cell(this,i,j);
+				gr21[i][j]=new compute_cell(this,i,j);
+				root.getChildren().add(c);
+				gr[i][j]=c;
+				c.setOnMouseClicked(new cell_click_event());
+			}
+		}
+		
+		mainLayout.getChildren().add(root); 
+		
+	}
 	/**
 	 * @throws IOException
 	 * @throws ExceptionClass
@@ -1157,6 +1249,110 @@ public class Main extends Application implements Serializable
 			}
 			else
 			{
+			if ((num_players==2)&&(one_player_mode==true)) {
+				all_players=new player[2];
+				all_players[0]=new player(0,red[0],green[0],blue[0]);
+				all_players[1]=new player(1,red[1],green[1],blue[1]);
+				cell temp=(cell)m.getSource();
+				compute_cell compute_temp=gr1[temp.gx][temp.gy];
+				compute_temp.player_index=0;
+				System.out.println(temp.value);
+				System.out.println(turn+" "+temp.get_player_index());
+				if (temp.get_value()==0) {
+					atom a=new atom(Main.this,false,temp.gx,temp.gy);
+					temp.a1=a;
+					temp.value_plus();
+					compute_temp.value++;
+					temp.getChildren().add(temp.a1.get_atom());
+					temp.molatom=a.molatom;
+					temp.molatom.setLayoutX(25);
+					temp.molatom.setLayoutY(25);
+					if (num_turn>1){
+						for (int i=0;i<2;i++){
+							all_players[i].num_atom=0;
+						}
+						for (int i=0;i<hor;i++){
+							for (int j=0;j<ver;j++){
+								int pl=gr1[i][j].player_index;
+								if (gr1[i][j].value>0){
+									all_players[pl].num_atom+=gr1[i][j].value;
+								}
+								if ((gr1[i][j].value==2)&&(gr1[i][j].value==3)&&(gr1[i][j].player_index==1)) {
+									xx.add(i);
+									yy.add(j);
+								}
+							}
+						}
+						
+						for (int i=0;i<2;i++){
+							if (all_players[i].num_atom==0)alive[i]=false;
+						}
+					}
+				}else if (((temp.get_value()==1)&&(turn==0))||((temp.get_value()==2)&&(turn==0))||((temp.get_value()==3)&&(turn==0))){
+					System.out.println("a");
+					if (temp.value==1)temp.getChildren().remove(temp.a1.get_atom());
+					else if (temp.value==2)temp.getChildren().remove(temp.a2.get_atom());
+					else if (temp.value==3)temp.getChildren().remove(temp.a3.get_atom());
+					compute_temp.compute_change_value(true);
+					temp.change_value(true);
+					if (num_turn>1){
+						for (int i=0;i<2;i++){
+							all_players[i].num_atom=0;
+						}
+						for (int i=0;i<hor;i++){
+							for (int j=0;j<ver;j++){
+								int pl=gr1[i][j].player_index;
+								if (gr1[i][j].value>0){
+									all_players[pl].num_atom+=gr1[i][j].value;
+								}
+							}
+						}
+						for (int i=0;i<2;i++){
+							if (all_players[i].num_atom==0)alive[i]=false;
+						}
+					}
+				}
+				Random r = new Random();
+				int Low = 0;
+				int High = 6;
+				int x = r.nextInt(High-Low) + Low;
+				Random r1 = new Random();
+				Low = 0;
+				High = 9;
+				int y = r1.nextInt(High-Low) + Low;
+				int prob=r.nextInt(11);
+				if ((xx.size()!=0)&&(prob<=7)) {
+					x=r.nextInt(xx.size());
+					y=yy.get(x);
+					x=xx.get(x);
+					gr1[x][y].player_index=1;
+					gr1[x][y].compute_change_value(false);
+					gr[x][y].change_value(false);
+				}
+				else if ((gr[x][y].get_value()==0)||(gr[x][y].get_player_index()!=0)) {
+					gr1[x][y].player_index=1;
+					gr1[x][y].compute_change_value(false);
+					gr[x][y].change_value(false);
+				}
+				else {
+					while((gr[x][y].get_value()==0)||(gr[x][y].get_player_index()==0)) {
+						r = new Random();
+						Low = 0;
+						High = 6;
+						x = r.nextInt(High-Low) + Low;
+						r1 = new Random();
+						Low = 0;
+						High = 9;
+						y = r1.nextInt(High-Low) + Low;
+					}
+					gr1[x][y].player_index=1;
+					gr1[x][y].compute_change_value(false);
+					gr[x][y].change_value(false);
+				}
+				//turn=(turn+1)%2;
+				num_turn++;
+			}
+			else {
 			cell temp=(cell)m.getSource();
 			compute_cell compute_temp=gr1[temp.gx][temp.gy];
 			compute_temp.player_index=turn;
@@ -1355,7 +1551,7 @@ public class Main extends Application implements Serializable
 			if (status==1)undo.setDisable(true);
 			
 		}
-			
+			}
 		}
 	}
 	
@@ -1365,7 +1561,7 @@ public class Main extends Application implements Serializable
 		try	
 		{	
 				out	=	new	ObjectOutputStream	(	
-				new FileOutputStream("C:/Users/Arushi Chauhan/workspace/agguchain/src/" + name + ".txt"));	
+				new FileOutputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
 				out.writeObject(gr1);	
 		}	
 		finally	
@@ -1382,7 +1578,7 @@ public class Main extends Application implements Serializable
 			ObjectInputStream	in	=	null;	
 			try	
 			{	
-				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/Arushi Chauhan/workspace/agguchain/src/" + name + ".txt"));	
+				in	=new  ObjectInputStream	(new	FileInputStream("C:/Users/AARUSHI/workspace/APproject/src/" + name + ".txt"));	
 				to_serialize gr1	=(to_serialize)in.readObject();					
 				return gr1;
 			}
@@ -1619,6 +1815,7 @@ public class Main extends Application implements Serializable
     
 	public void play1(Button a,AnchorPane a1,int n,int red[],int green[],int blue[],int hor,int ver) throws IOException
 	{
+		one_player_mode=false;
 		a.setDisable(false);
 		undo=a;
 		mainLayout.getChildren().setAll(a1);
