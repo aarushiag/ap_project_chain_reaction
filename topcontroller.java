@@ -3,6 +3,7 @@ package hello.pages;
  
 import java.io.IOException;
 
+import hello.ExceptionClass;
 import hello.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,8 +28,6 @@ public class topcontroller extends AnchorPane
 	
 	@FXML
 	private AnchorPane top; 
-	
-	
 	 
  
 	
@@ -46,16 +45,30 @@ public class topcontroller extends AnchorPane
 	{
 		 
 		options.setItems(lst);
-		 
+		s1controller.undo=Undo;
 		  
 	}
+	
+//	@FXML
+//	public void disable(boolean a) throws IOException
+//	{
+//		//System.out.println(Undo);
+//		Undo.setDisable(a);
+//		 
+//		  
+//	}
 	
 	@FXML
 	private void undo() throws IOException, ClassNotFoundException
 	{
 		 
 		Main obj=new Main();
-		obj.undobutton();
+		try {
+			obj.undobutton();
+		} catch (ExceptionClass e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
 		 
 		  
 	}
@@ -72,6 +85,7 @@ public class topcontroller extends AnchorPane
 		 {
 			// AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
 			 s1controller obj=new s1controller();
+			  
 			 obj.play1();
 		 }
 		 
@@ -99,6 +113,7 @@ public class topcontroller extends AnchorPane
 		 {
 			// AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
 			 s1controller obj=new s1controller();
+			 
 			 obj.play2();
 		 }
 		 

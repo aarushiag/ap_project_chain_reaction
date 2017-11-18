@@ -3,6 +3,7 @@ package hello.pages;
  
 import java.io.IOException;
 
+import hello.ExceptionClass;
 import hello.Main;
 import hello.pages.s2controller;
 import javafx.collections.FXCollections;
@@ -27,7 +28,7 @@ public class s1controller extends AnchorPane
 	static String init=a+" Player Game";
 	  
 	static int num=0;
-	
+	public static Button undo;
 	 
 	@FXML
 	private  AnchorPane subroots1;	
@@ -61,15 +62,21 @@ public class s1controller extends AnchorPane
 	
  
 	@FXML
-	private void resumegame() throws IOException, ClassNotFoundException
+	private void resumegame() throws IOException, ClassNotFoundException, ExceptionClass
 	
 	{
 //		to_serialize obj=Main.deserialize("1");
 //		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 	 
 //		s2controller obj1=new s2controller();
-	
+	try
+	{
 		Main obj=new Main();
 		obj.resumeGame();
+	}
+	catch(ExceptionClass e)
+	{
+		System.out.println(e.getMessage());
+	}
 	}
 	
 	
@@ -118,19 +125,19 @@ public class s1controller extends AnchorPane
 		s2controller obj1=new s2controller();
 	
 		Main obj=new Main();
-		obj.play1(a1,num,obj1.red,obj1.green,obj1.blue,6,9);
+		obj.play1(undo,a1,num,obj1.red,obj1.green,obj1.blue,6,9);
 		 
 	}
 	
 	@FXML
-	public  void play2() throws IOException
+	public  void play2( ) throws IOException
 	{
 		 
 		AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 	 
 		s2controller obj1=new s2controller();
 	
 		Main obj=new Main();
-		obj.play1(a1,num,obj1.red,obj1.green,obj1.blue,10,15);
+		obj.play1(undo,a1,num,obj1.red,obj1.green,obj1.blue,10,15);
 		 
 	}
 	

@@ -90,7 +90,7 @@ public class s3controller
 								int input =JOptionPane.showOptionDialog(null, label,"Warning",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
 								if(input==0)
 								{
-									System.out.println(reds3.getText());
+								//	System.out.println(reds3.getText());
 									AnchorPane a=FXMLLoader.load(Main.class.getResource("pages/s3.fxml"));
 									Main.mainLayout.getChildren().setAll(a);
 								}

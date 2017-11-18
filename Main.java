@@ -26,6 +26,8 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import hello.pages.s1controller;
+import hello.pages.topcontroller;
 //import chain_test1.atom;
 //import chain_test1.atom2;
 //import chain_test1.atom3;
@@ -61,28 +63,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-//import java.awt.Font;
-  
-//import java.awt.Font;
-//---------------------------------
-//ISSUES
-//1.need to map players to turn indexes when other players are eliminated--->>done
-//2.no splitting animation
-//3.convert grid
-//4.allow change in number of players--->>done
-//5.allow change in size of grid--->>done
-//6.allow elimination of players--->>done
-//7.serialisation
-//8.allow change of colors--->>done
-//9.undo option
-//---------------------------------
-//SOLVED ISSUES
-//4.allow change in number of players
-//8.allow change of colors
-//1.need to map players to turn indexes when other players are eliminated
-//5.allow change in size of grid
-//6.allow elimination of players
-//---------------------------------
+
+import hello.ExceptionClass;
 class player implements Serializable{
 	int index;
 	int num_atom;
@@ -137,11 +119,11 @@ class atom implements Serializable{
 		return player_index;
 	}
 	public void change_color(Sphere crc,boolean color_sasta){
-		//System.out.println("hi :)");
+	 
 		player_index=ch.turn;
 		if (color_sasta==true)player_index=ch.prev_turn;
 		player_index=ch.gr1[gx][gy].player_index;
-		//System.out.println("hi :) "+player_index);
+		 
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -191,14 +173,8 @@ class atom2 extends atom implements Serializable{
 		crc2.setRadius(10);
 		change_color(crc2,color_sasta);
 		crc2.setTranslateX(15);
-		//diatom=new Group();
-		//diatom.getChildren().add(crc);
 		molatom.getChildren().add(crc2);
-		/*Rotate rotate=new Rotate();
-		rotate.setAngle(20);
-		rotate.setPivotX(150);
-		rotate.setPivotY(225);
-		molatom.getTransforms().addAll(rotate);*/
+ 
 	}
 	public void change_color(boolean color_sasta){
 		super.change_color(crc,color_sasta);
@@ -216,11 +192,7 @@ class atom3 extends atom2 implements Serializable{
 		crc3.setTranslateX(8);
 		crc3.setTranslateY(15);
 		molatom.getChildren().add(crc3);
-		/*Rotate rotate=new Rotate();
-		rotate.setAngle(20);
-		rotate.setPivotX(150);
-		rotate.setPivotY(225);
-		molatom.getTransforms().addAll(rotate);*/
+ 
 	}
 	public void change_color(boolean color_sasta){
 		super.change_color(crc,color_sasta);
@@ -243,20 +215,16 @@ class cell extends Pane implements Serializable{
 	public Group molatom;
 	public Group animate;
 	private int threshold;
-	//public int player_index;
 	public cell(Main ch,int gx,int gy,int x,int y,int width,int height){
 		r=new Rectangle(width,height);
 		r.setStroke(Color.rgb(ch.red[ch.turn],ch.green[ch.turn],ch.blue[ch.turn]));
 		r.setFill(Color.TRANSPARENT);
-		//Label l=new Label(new String("0"));
-		//this.setOnMouseClicked(new cell_click_event());
 		this.ch=ch;
 		value=0;
 		this.gx=gx;
 		this.gy=gy;
 		this.x=x;
 		this.y=y;
-		//hor and ver change here--->>done
 		if ((gx==0)&&(gy==0))threshold=1;
 		else if ((gx==ch.hor-1)&&(gy==0))threshold=1;
 		else if ((gx==0)&&(gy==ch.ver-1))threshold=1;
@@ -270,20 +238,14 @@ class cell extends Pane implements Serializable{
 		setTranslateY(y);
 		animate=new Group();
 		getChildren().addAll(r);
-		//System.out.println(r.getX()+" "+r.getY());
+		 
 	}
-	/*class cell_click_event implements EventHandler<MouseEvent>{
-		@Override
-		public void handle(MouseEvent m){
-			System.out.println("cell click");
-			if (ch.turn!=10)r.setFill(Color.BROWN);
-		}
-	}*/
+ 
 	public Rectangle get_rectangle(){
 		return r;
 	}
 	public int get_player_index(){
-		//System.out.println(a1+" "+a2+" "+a3);
+		 
 		if (value==1)return a1.player_index;
 		else if (value==2)return a2.player_index;
 		else if (value==3)return a3.player_index;
@@ -316,11 +278,11 @@ class cell extends Pane implements Serializable{
 	public void increase_value(boolean toggle){
 		if ((value==0)&&(toggle==false)){
 			a1=new atom(ch,true,gx,gy);
-			//System.out.println(a1.get_player_num()+"[]");
+			 
 			value++;
 			molatom=a1.molatom;
 			if (((gx==0)&&(gy==0))||((gx==0)&&(gy==ch.hor-1))||((gx==ch.ver-1)&&(gy==ch.hor-1))||((gx==ch.ver-1)&&(gy==0))){
-				//System.out.println("I rotate");
+				 
 				RotateTransition rt=new RotateTransition();
 				rt.setNode(a1.crc);
 				rt.setAxis(Rotate.Y_AXIS);
@@ -339,19 +301,7 @@ class cell extends Pane implements Serializable{
 			a2=new atom2(ch,false,gx,gy);
 			molatom=a2.molatom;
 			value++;
-			//this.getChildren().add(a2.molatom);
-			//RotateTransition rt=new RotateTransition();
-			//RotateTransition rt2=new RotateTransition();
-			//Ellipse crc_path=new Ellipse(3,7);
-			//Circle crc2_path=new Circle(20);
-			/*PathTransition pt=new PathTransition();
-			pt.setNode(a2.crc);
-			pt.setPath(crc_path);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(3000));
-			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
-			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);*/
+			 
 			PathTransition p1=new PathTransition();
 			p1.setPath(new Circle(10));
 			p1.setNode(a2.crc);
@@ -366,49 +316,11 @@ class cell extends Pane implements Serializable{
 			p2.setInterpolator(Interpolator.LINEAR);
 			p1.play();
 			p2.play();
-			/*PathTransition pt2=new PathTransition();
-			pt2.setNode(a2.crc2);
-			pt2.setPath(crc2_path);
-			pt2.setInterpolator(Interpolator.LINEAR);
-			
-			pt2.setDuration(Duration.millis(10000));
-			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt2.setCycleCount(Timeline.INDEFINITE);*/
-			//rt.setNode(a2.crc);
-			//rt2.setNode(a2.crc2);
-			//rt.setDuration(Duration.millis(9000));
-			//rt2.setDuration(Duration.millis(9000));
-			//rt.setAxis(Rotate.Y_AXIS);
-			//rt2.setAxis(Rotate.Y_AXIS);
-			//rt.setByAngle(360);
-			//rt2.setByAngle(360);
-			//rt.setCycleCount(Animation.INDEFINITE);
-			//rt2.setCycleCount(Animation.INDEFINITE);
-			//rt.setInterpolator(Interpolator.LINEAR);
-			//rt2.setInterpolator(Interpolator.LINEAR);
-			//rt.play();
-			//rt2.play();
-			//crc_path.setVisible(false);
-			//crc2_path.setVisible(false);
-			//pt.play();
-			//pt2.play();
-			//StackPane r1=new StackPane();
-			//this.getChildren().add(a2.crc2);
-			//StackPane r2=new StackPane();
+			 
 			this.getChildren().add(molatom);
 			molatom.setLayoutX(25);
 			molatom.setLayoutY(25);
-			//r2.getChildren().add(a2.crc2);
-			//this.getChildren().add(crc_path);
-			//r2.getChildren().add(crc2_path);
-			//this.getChildren().add(r1);
-			//this.getChildren().add(a2.molatom);
-			//if (toggle==true)ch.turn=(ch.turn+1)%8;
-			/*if (toggle==false){
-				System.out.println("neighbour burst");
-				a2.change_color();
-			}*/
-			//this.getChildren().add(a2.molatom);
+			 
 		}
 		else if ((value==1)&&(toggle==false)){
 			//this.getChildren().remove(a2.molatom);
@@ -417,33 +329,7 @@ class cell extends Pane implements Serializable{
 			a2.change_color(true);
 			molatom=a2.molatom;
 			value++;
-			//this.getChildren().add(a2.molatom);
-			//RotateTransition rt=new RotateTransition();
-			//RotateTransition rt2=new RotateTransition();
-			//rt.setNode(a2.crc);
-			//rt2.setNode(a2.crc2);
-			//rt.setDuration(Duration.millis(9000));
-			//rt2.setDuration(Duration.millis(9000));
-			//rt.setAxis(Rotate.Y_AXIS);
-			//rt2.setAxis(Rotate.Y_AXIS);
-			//rt.setByAngle(360);
-			//rt2.setByAngle(360);
-			//rt.setCycleCount(Animation.INDEFINITE);
-			//rt2.setCycleCount(Animation.INDEFINITE);
-			//rt.setInterpolator(Interpolator.LINEAR);
-			//rt2.setInterpolator(Interpolator.LINEAR);
-			//rt.play();
-			//rt2.play();
-			/*Ellipse crc_path=new Ellipse(3,7);
-			//Circle crc2_path=new Circle(20);
-			PathTransition pt=new PathTransition();
-			pt.setNode(a2.crc);
-			pt.setPath(crc_path);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(3000));
-			if ((gx==0)||(gy==0)||(gx==ch.hor-1)||(gy==ch.ver-1))pt.setDuration(Duration.millis(2000));
-			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);*/
+			 
 			PathTransition p1=new PathTransition();
 			p1.setPath(new Circle(10));
 			p1.setNode(a2.crc);
@@ -458,28 +344,11 @@ class cell extends Pane implements Serializable{
 			p2.setInterpolator(Interpolator.LINEAR);
 			p1.play();
 			p2.play();
-			/*PathTransition pt2=new PathTransition();
-			pt2.setNode(a2.crc2);
-			pt2.setPath(crc2_path);
-			pt2.setInterpolator(Interpolator.LINEAR);
-			pt2.setDuration(Duration.millis(10000));
-			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt2.setCycleCount(Timeline.INDEFINITE);
-			crc_path.setVisible(false);
-			crc2_path.setVisible(false);*/
-			//pt.play();
-			//crc_path.setVisible(false);
-			//pt2.play();
-			//StackPane r1=new StackPane();
-			//this.getChildren().add(a2.crc2);
+			 
 			this.getChildren().add(molatom);
 			molatom.setLayoutX(25);
 			molatom.setLayoutY(25);
-			//r1.getChildren().add(a2.crc2);
-			//this.getChildren().add(crc_path);
-			//r1.getChildren().add(crc2_path);
-			//this.getChildren().add(r1);
-			//this.getChildren().add(a2.molatom);
+		 
 			
 		}
 		else if ((value==2)&&(ch.turn==a2.get_player_num())){
@@ -487,54 +356,7 @@ class cell extends Pane implements Serializable{
 			a3=new atom3(ch,false,gx,gy);
 			molatom=a3.molatom;
 			value++;
-			//this.getChildren().add(a3.molatom);
-			/*RotateTransition rt=new RotateTransition();
-			RotateTransition rt2=new RotateTransition();
-			RotateTransition rt3=new RotateTransition();
-			rt.setNode(a3.crc);
-			rt2.setNode(a3.crc2);
-			rt3.setNode(a3.crc3);
-			rt.setDuration(Duration.millis(9000));
-			rt2.setDuration(Duration.millis(9000));
-			rt3.setDuration(Duration.millis(9000));
-			rt.setAxis(Rotate.Y_AXIS);
-			rt2.setAxis(Rotate.Y_AXIS);
-			rt3.setAxis(Rotate.Y_AXIS);
-			rt.setByAngle(360);
-			rt2.setByAngle(360);
-			rt3.setByAngle(360);
-			rt.setCycleCount(Animation.INDEFINITE);
-			rt2.setCycleCount(Animation.INDEFINITE);
-			rt3.setCycleCount(Animation.INDEFINITE);
-			rt.setInterpolator(Interpolator.LINEAR);
-			rt2.setInterpolator(Interpolator.LINEAR);
-			rt3.setInterpolator(Interpolator.LINEAR);
-			rt.play();
-			rt2.play();
-			rt3.play();*/
-			/*Ellipse crc_path=new Ellipse(3,4);
-			Ellipse crc_path2=new Ellipse(5,7);
-			crc_path2.setCenterX(15);
-			crc_path2.setCenterY(5);
-			crc_path.setCenterX(5);
-			crc_path.setCenterY(5);
-			crc_path.setRotationAxis(Rotate.Y_AXIS);
-			//Circle crc2_path=new Circle(20);
-			//Circle crc3_path=new Circle(20);
-			PathTransition pt=new PathTransition();
-			PathTransition pt2=new PathTransition();
-			pt.setNode(a3.crc);
-			pt2.setNode(a3.crc2);
-			pt.setPath(crc_path);
-			pt2.setPath(crc_path2);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt2.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));
-			pt2.setDuration(Duration.millis(1000));
-			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);
-			pt2.setCycleCount(Timeline.INDEFINITE);*/
+			 
 			RotateTransition r2=new RotateTransition();
 			r2.setNode(molatom);
 			r2.setAxis(Rotate.Z_AXIS);
@@ -543,44 +365,11 @@ class cell extends Pane implements Serializable{
 			r2.setInterpolator(Interpolator.LINEAR);
 			r2.setToAngle(360);
 			r2.play();
-			//PathTransition pt2=new PathTransition();
-			//pt2.setNode(a3.crc2);
-			//pt2.setPath(crc2_path);
-			//pt2.setInterpolator(Interpolator.LINEAR);
-			//pt2.setDuration(Duration.millis(10000));
-			//pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			//pt2.setCycleCount(Timeline.INDEFINITE);
-			//PathTransition pt3=new PathTransition();
-			//pt3.setNode(a3.crc3);
-			//pt3.setPath(crc3_path);
-			//pt3.setInterpolator(Interpolator.LINEAR);
-			//pt3.setDuration(Duration.millis(10000));
-			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			//pt3.setCycleCount(Timeline.INDEFINITE);
-			//crc_path.setVisible(false);
-			//crc_path2.setVisible(false);
-			//crc2_path.setVisible(false);
-			//crc3_path.setVisible(false);
-			//pt.play();
-			//ParallelTransition p=new ParallelTransition(pt,pt2);
-			//p.play();
-			//pt2.play();
-			//pt3.play();
-			//StackPane r1=new StackPane();
-			//r1.getChildren().add(a3.crc);
-			//r1.getChildren().add(a3.crc2);
-			//r1.getChildren().add(a3.crc3);
-			//r1.getChildren().add(crc_path);
-			//r1.getChildren().add(crc2_path);
-			//r1.getChildren().add(crc3_path);
+			 
 			this.getChildren().add(molatom);
 			molatom.setLayoutX(17);
 			molatom.setLayoutY(17);
-			//if (toggle==true)ch.turn=(ch.turn+1)%8;
-			/*if (toggle==false){
-				System.out.println("neighbour burst");
-				a3.change_color();
-			}*/
+			 
 			
 		}
 		else if ((value==2)&&(toggle==false)){
@@ -589,54 +378,7 @@ class cell extends Pane implements Serializable{
 			a3.change_color(true);
 			molatom=a3.molatom;
 			value++;
-			//this.getChildren().add(molatom);
-			/*RotateTransition rt=new RotateTransition();
-			RotateTransition rt2=new RotateTransition();
-			RotateTransition rt3=new RotateTransition();
-			rt.setNode(a3.crc);
-			rt2.setNode(a3.crc2);
-			rt3.setNode(a3.crc3);
-			rt.setDuration(Duration.millis(9000));
-			rt2.setDuration(Duration.millis(9000));
-			rt3.setDuration(Duration.millis(9000));
-			rt.setAxis(Rotate.Y_AXIS);
-			rt2.setAxis(Rotate.Y_AXIS);
-			rt3.setAxis(Rotate.Y_AXIS);
-			rt.setByAngle(360);
-			rt2.setByAngle(360);
-			rt3.setByAngle(360);
-			rt.setCycleCount(Animation.INDEFINITE);
-			rt2.setCycleCount(Animation.INDEFINITE);
-			rt3.setCycleCount(Animation.INDEFINITE);
-			rt.setInterpolator(Interpolator.LINEAR);
-			rt2.setInterpolator(Interpolator.LINEAR);
-			rt3.setInterpolator(Interpolator.LINEAR);
-			rt.play();
-			rt2.play();
-			rt3.play();*/
-			/*Ellipse crc_path=new Ellipse(3,4);
-			Ellipse crc_path2=new Ellipse(5,7);
-			crc_path2.setCenterX(15);
-			crc_path2.setCenterY(5);
-			crc_path.setCenterX(5);
-			crc_path.setCenterY(5);
-			crc_path.setRotationAxis(Rotate.Y_AXIS);
-			//Circle crc2_path=new Circle(20);
-			//Circle crc3_path=new Circle(20);
-			PathTransition pt=new PathTransition();
-			PathTransition pt2=new PathTransition();
-			pt.setNode(a3.crc);
-			pt2.setNode(a3.crc2);
-			pt.setPath(crc_path);
-			pt2.setPath(crc_path2);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt2.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));
-			pt2.setDuration(Duration.millis(1000));
-			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			pt.setCycleCount(Timeline.INDEFINITE);
-			pt2.setCycleCount(Timeline.INDEFINITE);*/
+			 
 			RotateTransition r2=new RotateTransition();
 			r2.setNode(molatom);
 			r2.setAxis(Rotate.Z_AXIS);
@@ -645,51 +387,19 @@ class cell extends Pane implements Serializable{
 			r2.setInterpolator(Interpolator.LINEAR);
 			r2.setToAngle(360);
 			r2.play();
-			//PathTransition pt2=new PathTransition();
-			//pt2.setNode(a3.crc2);
-			//pt2.setPath(crc2_path);
-			//pt2.setInterpolator(Interpolator.LINEAR);
-			//pt2.setDuration(Duration.millis(10000));
-			//pt2.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			//pt2.setCycleCount(Timeline.INDEFINITE);
-			//PathTransition pt3=new PathTransition();
-			//pt3.setNode(a3.crc3);
-			//pt3.setPath(crc3_path);
-			//pt3.setInterpolator(Interpolator.LINEAR);
-			//pt3.setDuration(Duration.millis(10000));
-			//pt3.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			//pt3.setCycleCount(Timeline.INDEFINITE);
-			//crc_path.setVisible(false);
-			//crc_path2.setVisible(false);
-			//crc3_path.setVisible(false);
-			//ParallelTransition p=new ParallelTransition(pt,pt2);
-			//p.play();
-			//pt.play();
-			//pt2.play();
-			//pt3.play();
-			//StackPane r1=new StackPane();.
-			//r1.getChildren().add(a3.crc);
-			//r1.getChildren().add(a3.crc2);
-			//r1.getChildren().add(a3.crc3);
-			//r1.getChildren().add(crc_path);
-			//r1.getChildren().add(crc2_path);
-			//r1.getChildren().add(crc3_path);
+			 
 			this.getChildren().add(molatom);
 			molatom.setLayoutX(17);
 			molatom.setLayoutY(17);
 			
 		}
-		/*PointLight light=new PointLight(Color.WHITE);
-		light.setTranslateX(-1000);
-		light.setTranslateY(100);
-		light.setTranslateZ(-1000);
-		this.getChildren().add(light);*/
+		 
 	}
 	public void set_color(Sphere crc,boolean color_sasta){
 		int temp=ch.turn;
 		if (color_sasta==true)temp=ch.prev_turn;
 		temp=ch.gr1[gx][gy].player_index;
-		//System.out.println("hi :( "+temp+" "+gx+" "+gy);
+		 
 		final PhongMaterial redm=new PhongMaterial();
 		redm.setDiffuseColor(Color.rgb(ch.red[0],ch.green[0],ch.blue[0]));
 		redm.setSpecularColor(Color.BLACK);
@@ -715,8 +425,7 @@ class cell extends Pane implements Serializable{
 		whitem.setDiffuseColor(Color.rgb(ch.red[7],ch.green[7],ch.blue[7]));
 		whitem.setSpecularColor(Color.BLACK);
 		crc.setRadius(10);
-		//---------------------------------------------------
-		//!!!this part needs to change because when players are eliminated this will not be function properly
+		 
 		if (temp==0)crc.setMaterial(redm);
 		if (temp==1)crc.setMaterial(greenm);
 		if (temp==2)crc.setMaterial(bluem);
@@ -733,7 +442,7 @@ class cell extends Pane implements Serializable{
 	}
 	public void burst_the_cell(boolean toggle){
 		value=0;
-		//System.out.println("cell burst");
+		 
 		this.getChildren().remove(molatom);
 		
 		double x1=r.getLayoutX()+25;
@@ -745,11 +454,7 @@ class cell extends Pane implements Serializable{
 			else set_color(s,true);
 			double x2=x1-50;
 			double y2=y1;
-			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
-			//s.setTranslateX(x1);
-			//s.setTranslateY(y1);
-			//s.setTranslateZ(1000);
-			//------------------------------------------------------------------!!
+			 
 			Line l1=new Line(x1,y1,x2,y2);
 			l1.setStroke(Color.WHITE);
 			PathTransition p1=new PathTransition();
@@ -760,8 +465,7 @@ class cell extends Pane implements Serializable{
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
 			
-			//p1.setOnFinished(e->ch.gr[gx-1][gy].change_value(false));
-			//p1.play();
+			 
 			l1.setVisible(false);
 			Group an1=new Group();
 			an1.getChildren().add(s);
@@ -769,62 +473,7 @@ class cell extends Pane implements Serializable{
 			ch.gr[gx][gy].getChildren().add(an1);
 			p1.setOnFinished(e->clear_sphere(an1));
 			p.getChildren().add(p1);
-			//p1.setOnFinished(e->ch.gr[gx-1][gy].change_value(false));
-			//--------------------------------------------------------------------!!
-			//ch.gr[gx-1][gy].getChildren().add(an1);
-			//ch.gr[gx-1][gy].getChildren().add(new Group(s));
-			/*Bounds b1=this.r.getBoundsInParent();
-			Bounds b2=ch.gr[gx-1][gy].r.getBoundsInParent();
-			double x1=b1.getMinX()+b1.getWidth()/2;
-			double y1=b1.getMinY()+b1.getHeight()/2;
-			double x2=b2.getMinX()+b2.getWidth()/2;
-			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			/*double x1=490+50*gx;
-			double x2=490+50*(gx-1);
-			double y1=150+50*gy;
-			double y2=150+50*gy;*/
-			//System.out.println(r.getX()+" "+r.getY()+" "+ch.gr[gx-1][gy].r.getX()+" "+ch.gr[gx-1][gy].r.getY());
-			//Line l=new Line(x1,y1,x2,y2);
-			//Ellipse crc_path=new Ellipse(3,4);
-			//Circle crc2_path=new Circle(20);
-			//Circle crc3_path=new Circle(20);
-			/*PathTransition pt=new PathTransition();
-			pt.setNode(s);
-			pt.setPath(l);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));*/
-			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			//pt.setCycleCount(1);
-			//l.setVisible(false);
-			//pt.play();
-			//this.getChildren().add(s);
-			//ch.gr[gx-1][gy].getChildren().add(s);
-			/*final PathTransition p1=new PathTransition();
-			p1.setDuration(Duration.seconds(10.0));
-			//p1.setDelay(Duration.seconds(1.0));
-			//final Path path1=new Path();
-			//path1.getElements().add(new MoveTo((gx-1)*50+90,gy*50+60));
-			Line path1=new Line(gx*50+90,gy*50+60,(gx-1)*50+90,gy*50+60);
-			ch.root.getChildren().add(path1);
-			p1.setPath(path1);
-			p1.setNode(new atom(ch).crc);
-			//p1.setOrientation(OrientationType.NONE);
-			p1.setCycleCount(1);
-			//p1.setAutoReverse(true);
-			//new ParallelTransition(p1).play();
-			p1.play();*/
-			/*Group ps=new Group();
-			Sphere s=new Sphere();
-			set_color(s);
-			ps.getChildren().add(s);
-			Path p1=new Path();*/
-			//p1.getElements().addAll(new MoveTo((gx-1)*50+90,gy*50+60),new VLineTo(100));
-			//-----------------------------ch.gr[gx-1][gy].change_value(false);
-			//ch.gr[gx][gy].getChildren().remove(an1);
-			/*try{
-				Thread.sleep(1000);
-				}catch(Exception e){}*/
-			//this.getChildren().remove(s);
+		 
 		}
 		if ((gx+1<=ch.hor-1)&&(gy>=0)){
 			Sphere s=new Sphere(10);
@@ -832,11 +481,7 @@ class cell extends Pane implements Serializable{
 			else set_color(s,true);
 			double x2=x1+50;
 			double y2=y1;
-			//s.setTranslateX(x1);
-			//s.setTranslateY(y1);
-			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
-			//s.setTranslateZ(1000);
-			//-------------------------------------------!!
+			 
 			Line l1=new Line(x1,y1,x2,y2);
 			l1.setStroke(Color.CYAN);
 			PathTransition p1=new PathTransition();
@@ -846,9 +491,7 @@ class cell extends Pane implements Serializable{
 			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
-			
-			//p1.setOnFinished(e->ch.gr[gx+1][gy].change_value(false));
-			//p1.play();
+			 
 			l1.setVisible(false);
 			Group an1=new Group();
 			an1.getChildren().add(s);
@@ -856,64 +499,7 @@ class cell extends Pane implements Serializable{
 			ch.gr[gx][gy].getChildren().add(an1);
 			p1.setOnFinished(e->clear_sphere(an1));
 			p.getChildren().add(p1);
-			//p1.setOnFinished(e->ch.gr[gx+1][gy].change_value(false));
-			//-----------------------------------------------!!
-			//Sphere s=new Sphere(10);
-			//set_color(s);
-			//s.setTranslateZ(1000);
-			/*Bounds b1=this.r.getBoundsInLocal();
-			Bounds b2=ch.gr[gx+1][gy].r.getBoundsInLocal();
-			double x1=b1.getMinX()+b1.getWidth()/2;
-			double y1=b1.getMinY()+b1.getHeight()/2;
-			double x2=b2.getMinX()+b2.getWidth()/2;
-			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			/*double x1=490+50*gx;
-			double x2=490+50*(gx+1);
-			double y1=150+50*gy;
-			double y2=150+50*gy;
-			System.out.println(x1+" "+y1+" "+x2+" "+y2);
-			Line l=new Line(x1,y1,x2,y2);
-			l.setStroke(Color.WHITE);
-			l.setFill(Color.WHITE);
-			l.setTranslateZ(1000);*/
-			//Ellipse crc_path=new Ellipse(3,4);
-			//Circle crc2_path=new Circle(20);
-			//Circle crc3_path=new Circle(20);
-			//----------------------------------
-			/*PathTransition pt=new PathTransition();
-			pt.setNode(s);
-			pt.setPath(l);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(10000));*/
-			//----------------------------------
-			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			//-----------------------------------
-			/*pt.setCycleCount(1);
-			l.setVisible(false);
-			pt.play();*/
-			//----------------------------------
-			//this.getChildren().add(s);
-			//ch.gr[gx+1][gy].getChildren().add(s);
-			//final PathTransition p1=new PathTransition();
-			//p1.setDuration(Duration.seconds(10.0));
-			//p1.setDelay(Duration.seconds(1.0));
-			//final Path path1=new Path();
-			//path1.getElements().add(new MoveTo((gx+1)*50+90,gy*50+60));
-			//Line path1=new Line(gx*50+90,gy*50+60,(gx+1)*50+90,gy*50+60);
-			//ch.root.getChildren().add(path1);
-			//p1.setPath(path1);
-			//p1.setNode(new atom(ch).crc);
-			//p1.setOrientation(OrientationType.NONE);
-			//p1.setCycleCount(1);
-			//p1.setAutoReverse(true);
-			//p1.play();
-			//new ParallelTransition(p1).play();
-			//--------------------------ch.gr[gx+1][gy].change_value(false);
-			//ch.gr[gx][gy].getChildren().remove(an1);
-			/*try{
-				Thread.sleep(1000);
-				}catch(Exception e){}*/
-			//this.getChildren().remove(s);
+			 
 		}
 		if ((gx>=0)&&(gy-1>=0)){
 			Sphere s=new Sphere(10);
@@ -921,11 +507,7 @@ class cell extends Pane implements Serializable{
 			else set_color(s,true);
 			double x2=x1;
 			double y2=y1-50;
-			//s.setTranslateX(x1);
-			//s.setTranslateY(y1);
-			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
-			//s.setTranslateZ(1000);
-			//-------------------------------------------!!
+ 
 			Line l1=new Line(x1,y1,x2,y2);
 			l1.setStroke(Color.PURPLE);
 			PathTransition p1=new PathTransition();
@@ -935,7 +517,7 @@ class cell extends Pane implements Serializable{
 			p1.setDuration(Duration.seconds(1));
 			p1.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 			p1.setCycleCount(1);
-			//p1.play();
+			 
 			l1.setVisible(false);
 			Group an1=new Group();
 			an1.getChildren().add(s);
@@ -943,55 +525,7 @@ class cell extends Pane implements Serializable{
 			ch.gr[gx][gy].getChildren().add(an1);
 			p1.setOnFinished(e->clear_sphere(an1));
 			p.getChildren().add(p1);
-			//p1.setOnFinished(e->ch.gr[gx][gy-1].change_value(false));
-			//-------------------------------------------!!
-			//Sphere s=new Sphere(10);
-			//set_color(s);
-			/*Bounds b1=this.r.getBoundsInLocal();
-			Bounds b2=ch.gr[gx][gy-1].r.getBoundsInLocal();
-			double x1=b1.getMinX()+b1.getWidth()/2;
-			double y1=b1.getMinY()+b1.getHeight()/2;
-			double x2=b2.getMinX()+b2.getWidth()/2;
-			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			/*double x1=490+50*gx;
-			double x2=490+50*(gx);
-			double y1=150+50*gy;
-			double y2=150+50*(gy-1);
-			Line l=new Line(x1,y1,x2,y2);*/
-			//Ellipse crc_path=new Ellipse(3,4);
-			//Circle crc2_path=new Circle(20);
-			//Circle crc3_path=new Circle(20);
-			/*PathTransition pt=new PathTransition();
-			pt.setNode(s);
-			pt.setPath(l);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));*/
-			//pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-			/*pt.setCycleCount(1);
-			l.setVisible(false);
-			pt.play();
-			this.getChildren().add(s);*/
-			//ch.gr[gx][gy-1].getChildren().add(s);
-			//final PathTransition p1=new PathTransition();
-			//p1.setDuration(Duration.seconds(10.0));
-			//p1.setDelay(Duration.seconds(1.0));
-			//final Path path1=new Path();
-			//path1.getElements().add(new MoveTo((gx)*50+90,(gy-1)*50+60));
-			//Line path1=new Line(gx*50+90,gy*50+60,(gx)*50+90,(gy-1)*50+60);
-			//ch.root.getChildren().add(path1);
-			//p1.setPath(path1);
-			//p1.setNode(new atom(ch).crc);
-			//p1.setOrientation(OrientationType.NONE);
-			//p1.setCycleCount(1);
-			//p1.setAutoReverse(true);
-			//new ParallelTransition(p1).play();
-			//p1.play();
-			//-----------------------ch.gr[gx][gy-1].change_value(false);
-			//ch.gr[gx][gy].getChildren().remove(an1);
-			/*try{
-				Thread.sleep(1000);
-				}catch(Exception e){}*/
-			//this.getChildren().remove(s);
+			 
 		}
 		if ((gx>=0)&&(gy+1<=ch.ver-1)){
 			Sphere s=new Sphere(10);
@@ -999,11 +533,7 @@ class cell extends Pane implements Serializable{
 			else set_color(s,true);
 			double x2=x1;
 			double y2=y1+50;
-			//s.setTranslateX(x1);
-			//s.setTranslateY(y1);
-			//System.out.println(x1+" "+y1+" "+x2+" "+y2);
-			//s.setTranslateZ(1000);
-			//-----------------------------------!!
+			 
 			Line l1=new Line(x1,y1,x2,y2);
 			l1.setStroke(Color.YELLOW);
 			PathTransition p1=new PathTransition();
@@ -1022,77 +552,13 @@ class cell extends Pane implements Serializable{
 			ch.gr[gx][gy].getChildren().add(an1);
 			p1.setOnFinished(e->clear_sphere(an1));
 			p.getChildren().add(p1);
-			//p1.setOnFinished(e->ch.gr[gx][gy+1].change_value(false));
-			//---------------------------------------!!
-			/*Sphere s=new Sphere(10);
-			set_color(s);*/
-			/*Bounds b1=this.r.getBoundsInLocal();
-			Bounds b2=ch.gr[gx][gy+1].r.getBoundsInLocal();
-			double x1=b1.getMinX()+b1.getWidth()/2;
-			double y1=b1.getMinY()+b1.getHeight()/2;
-			double x2=b2.getMinX()+b2.getWidth()/2;
-			double y2=b2.getMinX()+b2.getHeight()/2;*/
-			/*double x1=490+50*gx;
-			double x2=490+50*(gx);
-			double y1=150+50*gy;
-			double y2=150+50*(gy+1);
-			Line l=new Line(x1,y1,x2,y2);*/
-			//Ellipse crc_path=new Ellipse(3,4);
-			//Circle crc2_path=new Circle(20);
-			//Circle crc3_path=new Circle(20);
-			/*PathTransition pt=new PathTransition();
-			pt.setNode(s);
-			pt.setPath(l);
-			pt.setInterpolator(Interpolator.LINEAR);
-			pt.setDuration(Duration.millis(1000));*/
-			//pt.setOrientation(PathTransitiwon.OrientationType.ORTHOGONAL_TO_TANGENT);
-			/*pt.setCycleCount(1);
-			l.setVisible(false);
-			pt.play();
-			this.getChildren().add(s);*/
-			//ch.gr[gx][gy+1].getChildren().add(s);
-			//final PathTransition p1=new PathTransition();
-			//p1.setDuration(Duration.seconds(10.0));
-			//p1.setDelay(Duration.seconds(1.0));
-			//final Path path1=new Path();
-			//path1.getElements().add(new MoveTo((gx)*50+90,(gy+1)*50+60));
-			//Line path1=new Line(gx*50+90,gy*50+60,(gx)*50+90,(gy+1)*50+60);
-			//ch.root.getChildren().add(path1);
-			//p1.setPath(path1);
-			//p1.setNode(new atom(ch).crc);
-			//p1.setOrientation(OrientationType.NONE);
-			//p1.setCycleCount(1);
-			//p1.setAutoReverse(true);
-			//p1.play();
-			//new ParallelTransition(p1).play();
-			//-----------------ch.gr[gx][gy+1].change_value(false);
-			//ch.gr[gx][gy].getChildren().remove(an1);
-			/*try{
-				Thread.sleep(1000);
-				}catch(Exception e){}*/
-			//this.getChildren().remove(s);
+			 
 		}
-		//a=null;
-		//p.play();
+		 
 		p.setOnFinished(e->if_for_change_value());
-		//if_for_change_value();
-		ParallelTransition p2=new ParallelTransition(p);
-		//System.out.println(ch.turn+" -");
-		//if (toggle==true)p2.setOnFinished(e->ch.increment_turn());
+		ParallelTransition p2=new ParallelTransition(p);		 
 		p2.play();
-		//System.out.println(ch.turn+" -");
-		/*if ((gx-1>=0)&&(gy>=0)){
-			ch.gr[gx-1][gy].change_value(false);
-		}
-		if ((gx+1<=ch.hor-1)&&(gy>=0)){
-			ch.gr[gx+1][gy].change_value(false);
-		}
-		if ((gx>=0)&&(gy-1>=0)){
-			ch.gr[gx][gy-1].change_value(false);
-		}
-		if ((gx>=0)&&(gy+1<=ch.ver-1)){
-			ch.gr[gx][gy+1].change_value(false);
-		}*/
+ 
 	}
 	public void if_for_change_value(){
 		if ((gx-1>=0)&&(gy>=0)){
@@ -1119,7 +585,7 @@ class cell extends Pane implements Serializable{
 		}
 	}
 	public boolean change_value(boolean toggle){
-		//System.out.println(gx+" "+gy);
+		 
 		if (value<threshold){
 			increase_value(toggle);
 			return false;
@@ -1129,21 +595,7 @@ class cell extends Pane implements Serializable{
 			return true;
 		}
 	}
-	/*public void change_color_of_grid(int turn){
-		r.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent t){
-				if (turn==0)r.setStroke(Color.RED);
-				if (turn==1)r.setStroke(Color.GREEN);
-				if (turn==2)r.setStroke(Color.BLUE);
-				if (turn==3)r.setStroke(Color.PINK);
-				if (turn==4)r.setStroke(Color.YELLOW);
-				if (turn==5)r.setStroke(Color.CYAN);
-				if (turn==6)r.setStroke(Color.MEDIUMPURPLE);
-				if (turn==7)r.setStroke(Color.SNOW);
-			}
-		});
-	}*/
+	 
 }
 class compute_cell implements Serializable{
 	public int value;
@@ -1193,7 +645,7 @@ class compute_cell implements Serializable{
 		}
 	}
 	public void compute_increase_value(boolean toggle){
-		//System.out.println(gx+" "+gy+" :p");
+		 
 		if ((value==0)&&(toggle==false)){
 			value++;
 		}
@@ -1213,7 +665,7 @@ class compute_cell implements Serializable{
 	}
 	public void compute_burst_the_cell(boolean toggle){
 		value=0;
-		//System.out.println("I burst "+gx+" "+gy);
+		
 		if ((gx-1>=0)&&(gy>=0)){
 			ch.gr1[gx-1][gy].player_index=player_index;
 		}
@@ -1251,10 +703,11 @@ class to_serialize implements Serializable
 	int hor;
 	int ver;
 	int num_players;
-	
+	int status;
+	int winner;
 	public int num_turn=0;
 	public transient cell[][] gr;
-	//public cell[][] inner_gr;
+	 
 	public  compute_cell[][] norm;
 	 
 	public player[] all_players;
@@ -1264,8 +717,10 @@ class to_serialize implements Serializable
 	public compute_cell[][] gr21;
 	public static grid[][] old_grid;
 	
-	public to_serialize(compute_cell[][] gr21,grid[][] old_grid,boolean[] alive,int num_turn,cell[][] gr,compute_cell[][] norm,player[] all_players,grid[][] gr1,int turn,int prev_turn,int num_players,int[] red,int []green,int[] blue,int hor,int ver)
+	public to_serialize(int status,int winner,compute_cell[][] gr21,grid[][] old_grid,boolean[] alive,int num_turn,cell[][] gr,compute_cell[][] norm,player[] all_players,grid[][] gr1,int turn,int prev_turn,int num_players,int[] red,int []green,int[] blue,int hor,int ver)
 	{
+		this.status=status;
+		this.winner=winner;
 		this.gr1=gr1;
 		this.turn=turn;
 		this.prev_turn=prev_turn;
@@ -1286,7 +741,7 @@ class to_serialize implements Serializable
 }
 public class Main extends Application implements Serializable
 {	
-	
+	private static Button undo;
 	private Stage primaryStage;
 	public static AnchorPane mainLayout;
 	private Scene scene;	 
@@ -1313,32 +768,17 @@ public class Main extends Application implements Serializable
 	public static grid[][] ret_main(){
 		return old_grid;
 	}
-	//class undo_button implements EventHandler<MouseEvent>{
-	public void undobutton()throws IOException{
-//		grid[][] temp=new grid[hor][ver];
-//		for (int i=0;i<hor;i++){
-//			for (int j=0;j<ver;j++){
-//				temp[i][j]=new grid(old_grid[i][j].player_index,old_grid[i][j].value);
-//			}
-//		}
+	 
+	public void undobutton()throws IOException, ExceptionClass{
+ 
 		try{
 		this.resumeGame();}
 		catch(ClassNotFoundException e){}
-//		for (int i=0;i<hor;i++){
-//			for (int j=0;j<ver;j++){
-//				old_grid[i][j]=new grid(temp[i][j].player_index,temp[i][j].value);
-//			}
-//		}
-		//@Override
-		//public void handle(MouseEvent m){	
+ 
 		for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					gr[i][j].getChildren().remove(gr[i][j].molatom);
-					//System.out.print(gr2[i][j].value+" h1");
-					//gr[i][j].get_player_index()
-//					System.out.println(i+" "+j);
-//					System.out.println(old_grid[i][j].player_index);
-//					System.out.println("");
+ 
 					gr1[i][j].value=old_grid[i][j].value;
 					gr1[i][j].player_index=old_grid[i][j].player_index;
 					gr[i][j].value=old_grid[i][j].value;
@@ -1348,7 +788,7 @@ public class Main extends Application implements Serializable
 						gr[i][j].getChildren().add(gr[i][j].a1.get_atom());
 						gr[i][j].molatom=a.molatom;
 						gr[i][j].value=1;
-						//gr[i][j].a1.player_index=prev_turn;
+						 
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
 					}
@@ -1372,7 +812,7 @@ public class Main extends Application implements Serializable
 						p2.play();
 						gr[i][j].getChildren().add(gr[i][j].molatom);
 						gr[i][j].value=2;
-						//gr[i][j].a2.player_index=prev_turn;
+						 
 						gr[i][j].molatom.setLayoutX(25);
 						gr[i][j].molatom.setLayoutY(25);
 						
@@ -1391,14 +831,14 @@ public class Main extends Application implements Serializable
 						r2.play();
 						gr[i][j].getChildren().add(gr[i][j].molatom);
 						gr[i][j].value=3;
-						//gr[i][j].a3.player_index=prev_turn;
+						 
 						gr[i][j].molatom.setLayoutX(17);
 						gr[i][j].molatom.setLayoutY(17);
 						
 					}
 					
 				}
-				System.out.println();
+				 
 			}
 			turn=prev_turn;
 			for(int i=0;i<hor;i++){
@@ -1422,8 +862,7 @@ public class Main extends Application implements Serializable
 				for (int j=0;j<ver;j++){
 					int pl=gr1[i][j].player_index;
 					if (gr1[i][j].value>0){
-						//System.out.print((pl+1)+" ");
-						//System.out.println(i+" "+j+" "+gr1[i][j].value);
+					 
 						all_players[pl].num_atom+=gr1[i][j].value;
 					}
 				}
@@ -1439,12 +878,11 @@ public class Main extends Application implements Serializable
 			{
 				for(int l=0;l<ver;l++)
 				{
-					//System.out.println(grid);
+				 
 					grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
 					  
-					//System.out.print(gr1[k][l].player_index+1);
-					// .getClass(System.out.println("abc"+gr1);
-					to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+					 
+					to_serialize obj=new to_serialize(status,winner,gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
 				  	try {
 						serialize(obj,"1");
 					} catch (IOException e) {
@@ -1453,18 +891,17 @@ public class Main extends Application implements Serializable
 					}
 				}
 				
-				System.out.println("");
+				 
 			}
 		}
-//	}
-		//if (new_turn==0)new_turn=num_players-1;
+ 
 	
 	public static void give_obj() throws IOException
 	{
 		
-		to_serialize obj=new to_serialize(null,null,null,0,null,null,null,null,0,0,num_players,red,green,blue,0,0);
+		to_serialize obj=new to_serialize(0,0,null,null,null,0,null,null,null,null,0,0,num_players,red,green,blue,0,0);
 		serialize(obj, "1");
-		//System.out.println("abc");
+		 
 	}
 	
 	public static int give_num_player() throws ClassNotFoundException, IOException
@@ -1485,7 +922,7 @@ public class Main extends Application implements Serializable
 		this.primaryStage=primaryStage;
 		this.primaryStage.setTitle("Chain Reaction Game");
 		showMainView();
-		//old_grid=new grid[hor][ver];
+		 
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
 				cell c=null;
@@ -1496,7 +933,7 @@ public class Main extends Application implements Serializable
 					
 					else
 					{
-						//System.out.println("abc");
+						 
 						c=new cell(this,i,j,i*50+50,j*50+70,50,50);
 					}
 					gr[i][j]=c;
@@ -1514,7 +951,7 @@ public class Main extends Application implements Serializable
 		if(obj.num_players!=0)
 		{
 			num_players=obj.num_players;
-			//System.out.println(num_players);
+			 
 		}
 		 
 	}
@@ -1534,29 +971,21 @@ public class Main extends Application implements Serializable
 		this.root=new Group();
 	}
 	public boolean[] alive;
-//	{
-//		alive=new boolean[num_players];
-//		all_players=new player[num_players];
-//		
-//		for (int i=0;i<num_players;i++){
-//			alive[i]=true;
-//			all_players[i]=new player(i,red[i],green[i],blue[i]);
-//		}
-//	}
+ 
 	public void kill_player(int index){
 		if (index<num_players){
 		alive[index]=false;
 		}
 	}
 	public void increment_turn(){
-		//System.out.println(turn+" --");
+		 
 		prev_turn=turn;
 		turn=(turn+1)%num_players;
-		//System.out.println(alive);
+	 
 		while(alive[turn]==false){
 			turn=(turn+1)%num_players;
 		}
-		//System.out.println(turn+" --");
+		 
 	}
 	private void showMainView() throws IOException
 	{
@@ -1575,11 +1004,10 @@ public class Main extends Application implements Serializable
 		public void handle(MouseEvent m){
 			if(status==1)
 			{
+				
 				JLabel label = new JLabel("Player "+(winner)+" won!!");
 				label.setFont(new Font("Arial", Font.BOLD, 18));
-				//UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("ARIAL",Font.PLAIN,23)));
-//				JLabel label1 = new JLabel("Wohoo! Player "+(winner)+" won!!");
-//				label.setFont(new Font("Arial", Font.BOLD, 20));
+ 
 				
 				UIManager.put("OptionPane.minimumSize",new Dimension(500,100)); 
 				int input= JOptionPane.showOptionDialog(null, label,"Congratulations",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, null,null);
@@ -1590,49 +1018,39 @@ public class Main extends Application implements Serializable
 					try {
 						AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/s1.fxml"));
 						mainLayout.getChildren().setAll(a1);
-						to_serialize obj=new to_serialize(null,null,null,0,null,null,null,null,0,0,0,red,green,blue,0,0);
+						to_serialize obj=new to_serialize(0,0,null,null,null,0,null,null,null,null,0,0,0,red,green,blue,0,0);
 						serialize(obj, "1");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+					 
 						e.printStackTrace();
 					}
 				}
 				
 				 
 			}
-			//System.out.println("cell click");
+		 
 			else
 			{
 			cell temp=(cell)m.getSource();
-			//System.out.println(gr1);
-			//System.out.println(temp.gy);
+			 
 			compute_cell compute_temp=gr1[temp.gx][temp.gy];
 			compute_temp.player_index=turn;
-			//System.out.println(m.getScreenX()+" "+m.getScreenY()+" "+turn);
-			//System.out.println(temp.gx+" "+temp.gy);
-			System.out.println("/////");
+		 
+		 
 			boolean b=false;
 			old_grid=new grid[hor][ver];
 			for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
-					//if (gr1[i][j].value>0)System.out.println("***"+i+" "+j+" "+gr1[i][j].value+"***");
-					if (gr[i][j].value>0)System.out.print((gr[i][j].value)+" ");
-					else System.out.print("0 ");
+					 
+					
 					old_grid[i][j]=new grid(gr1[i][j].player_index,gr1[i][j].value);
 					gr21[i][j].value=gr1[i][j].value;
 					gr21[i][j].player_index=gr1[i][j].player_index;
 				}
-				System.out.println();
+				 
 			}
-			System.out.println("........");
-			for (int i=0;i<hor;i++){
-				for (int j=0;j<ver;j++){
-					if (gr[i][j].value>0)System.out.print((gr[i][j].get_player_index()+1)+" ");
-					else System.out.print("0 ");
-				}
-				System.out.println();
-			}
-			System.out.println("//////");
+			 
+			 
 			if (temp.get_value()==0){
 				num_turn++;
 				atom a=new atom(Main.this,false,temp.gx,temp.gy);
@@ -1641,7 +1059,7 @@ public class Main extends Application implements Serializable
 				compute_temp.value++;
 				temp.getChildren().add(temp.a1.get_atom());
 				if (((temp.gx==0)&&(temp.gy==0))||((temp.gx==0)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==ver-1))||((temp.gx==hor-1)&&(temp.gy==0))){
-					//System.out.println("I rotate");
+			 
 					RotateTransition rt=new RotateTransition();
 					rt.setNode(temp.a1.crc);
 					rt.setAxis(Rotate.Y_AXIS);
@@ -1662,58 +1080,27 @@ public class Main extends Application implements Serializable
 						for (int j=0;j<ver;j++){
 							int pl=gr1[i][j].player_index;
 							if (gr1[i][j].value>0){
-								//System.out.print((pl+1)+" ");
-								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
+							 
 								all_players[pl].num_atom+=gr1[i][j].value;
-							}//else System.out.print("0 ");
+							} 
 						}
-						//System.out.println();
+						 
 					}
-					//System.out.println("****");
-					
+					 
 					for (int i=0;i<num_players;i++){
-						//System.out.print(all_players[i].num_atom+" ");
+						 
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
 				}
-				//while(alive[turn-1]==false){
-				
-				/*if (num_turn>num_players){
-					for (int i=0;i<num_players;i++){
-						all_players[i].num_atom=0;
-					}
-					for (int i=0;i<hor;i++){
-						for (int j=0;j<ver;j++){
-							int pl=gr[i][j].get_player_index();
-							if (gr1[i][j].value>0){
-							all_players[pl].num_atom+=gr1[i][j].value;
-						}
-						}
-					}
-					//System.out.println();
-					for (int i=0;i<num_players;i++){
-						System.out.print(all_players[i].num_atom+" ");
-						if (all_players[i].num_atom==0)alive[i]=false;
-					}
-				}*/
+			 
 				increment_turn();
-				/*do{
-					turn=(turn+1)%num_players;
-					}
-					while(alive[turn]==false);*/
-				//!!!!--------------------------
-				/*turn=(turn+1)%num_players;
-				while(alive[turn]==false){
-					turn=(turn+1)%num_players;
-				}*/
-				//!!!!!----------------------------
-			//num_turn++;
+			 
 			}else if (((temp.get_value()==1)&&(turn==temp.a1.player_index))||((temp.get_value()==2)&&(turn==temp.a2.player_index))||((temp.get_value()==3)&&(turn==temp.a3.player_index))){
 				num_turn++;
 				if (temp.value==1)temp.getChildren().remove(temp.a1.get_atom());
 				else if (temp.value==2)temp.getChildren().remove(temp.a2.get_atom());
 				else if (temp.value==3)temp.getChildren().remove(temp.a3.get_atom());
-				//System.out.println(turn+" :)");
+				 
 				compute_temp.compute_change_value(true);
 				temp.change_value(true);
 				if (num_turn>num_players){
@@ -1724,123 +1111,40 @@ public class Main extends Application implements Serializable
 						for (int j=0;j<ver;j++){
 							int pl=gr1[i][j].player_index;
 							if (gr1[i][j].value>0){
-								//System.out.print((pl+1)+" ");
-								//System.out.println(i+" "+j+" "+gr1[i][j].value+" "+pl);
+								 
 								all_players[pl].num_atom+=gr1[i][j].value;
-							}//else System.out.print("0 ");
+							} 
 						}
-						System.out.println();
+						 
 					}
-					//System.out.println("****");
+					 
 					for (int i=0;i<num_players;i++){
-						//System.out.print(all_players[i].num_atom+" ");
+						 
 						if (all_players[i].num_atom==0)alive[i]=false;
 					}
 				}
-				//System.out.println(turn+" :)");
-				//evaluation of number of atoms should be done after cells have burst
-				/*if (num_turn>num_players){
-					for (int i=0;i<num_players;i++){
-						all_players[i].num_atom=0;
-					}
-					for (int i=0;i<hor;i++){
-						for (int j=0;j<ver;j++){
-							int pl=gr[i][j].get_player_index();
-							if (gr[i][j].get_value()>0){
-								//System.out.println(gr[i][j].get_value()+" "+gr[i][j].get_player_index());
-								System.out.println(i+" "+j+" "+gr[i][j].get_value());
-								all_players[pl].num_atom++;
-							}
-						}
-					}
-					System.out.println("****");
-					for (int i=0;i<num_players;i++){
-						//System.out.print(all_players[i].num_atom+" ");
-						if (all_players[i].num_atom==0)alive[i]=false;
-					}
-				}*/
+			 
 				increment_turn();
-				/*do{
-					turn=(turn+1)%num_players;
-					}
-					while(alive[turn]==false);*/
-				//!!!----------------------------------
-				/*turn=(turn+1)%num_players;
-				while(alive[turn]==false){
-					turn=(turn+1)%num_players;
-				}*/
-				//!!----------------------------------
-					//num_turn++;
+			 
 			}
 			int ct=0;
 			int flag=-1;
-			//System.out.println(turn);
-			
-			//System.out.println();
+			 
 			for (int i=0;i<num_players;i++){
-				//System.out.println(alive[i]);
+				 
 				if (alive[i]==true){
 					ct++;
 					flag=i;
 				}
 			}
 			if (ct==1){
-				System.out.println("Player "+(flag+1)+" won");
+				 
 				status=1;
 				winner=flag+1;
-				//Platform.exit();
-				//System.exit(0);
+				 
 			}
-			//if (temp.get_value()!=0)temp.getChildren().remove(temp.a.get_atom());
-			//boolean b=temp.change_value(true);//!!!!!!!!!!!!
-			//temp.get_rectangle().setFill(Color.BROWN);
-			/*Sphere crc=new Sphere();
-			final PhongMaterial redm=new PhongMaterial();
-			redm.setDiffuseColor(Color.RED);
-			redm.setSpecularColor(Color.BLACK);
-			final PhongMaterial greenm=new PhongMaterial();
-			greenm.setDiffuseColor(Color.GREEN);
-			greenm.setSpecularColor(Color.BLACK);
-			final PhongMaterial bluem=new PhongMaterial();
-			bluem.setDiffuseColor(Color.BLUE);
-			bluem.setSpecularColor(Color.BLACK);
-			final PhongMaterial pinkm=new PhongMaterial();
-			pinkm.setDiffuseColor(Color.PINK);
-			pinkm.setSpecularColor(Color.BLACK);
-			final PhongMaterial yellowm=new PhongMaterial();
-			yellowm.setDiffuseColor(Color.YELLOW);
-			yellowm.setSpecularColor(Color.BLACK);
-			final PhongMaterial cyanm=new PhongMaterial();
-			cyanm.setDiffuseColor(Color.CYAN);
-			cyanm.setSpecularColor(Color.BLACK);
-			final PhongMaterial purplem=new PhongMaterial();
-			purplem.setDiffuseColor(Color.PURPLE);
-			purplem.setSpecularColor(Color.BLACK);
-			final PhongMaterial whitem=new PhongMaterial();
-			whitem.setDiffuseColor(Color.WHITE);
-			whitem.setSpecularColor(Color.BLACK);
-			crc.setRadius(10);
-			if (turn==0)crc.setMaterial(redm);
-			if (turn==1)crc.setMaterial(greenm);
-			if (turn==2)crc.setMaterial(bluem);
-			if (turn==3)crc.setMaterial(pinkm);
-			if (turn==4)crc.setMaterial(yellowm);
-			if (turn==5)crc.setMaterial(cyanm);
-			if (turn==6)crc.setMaterial(purplem);
-			if (turn==7)crc.setMaterial(whitem);*/
-			//atom a=new atom(chain2.this);
-			//if (b==false)temp.getChildren().add(temp.a.get_atom());
-			//if (b==true){
-				//turn=(turn+1)%8;
-				/*
-				if ((temp.gx-1>=0)&&(temp.gy>=0)){
-					cell temp2=gr[temp.gx-1][temp.gy];
-					temp2.change_value();
-				}*/
-			//}
-			//turn=(turn+1)%8;
-			//System.out.println("click identified");
-			System.out.println("click identified");
+			 
+			 
 			for (int i=0;i<hor;i++){
 				for (int j=0;j<ver;j++){
 					Rectangle r1=gr[i][j].get_rectangle();
@@ -1934,7 +1238,7 @@ public class Main extends Application implements Serializable
 								}
 						}
 					}
-					//----------------------------------------
+					 
 				}
 			}
 		
@@ -1943,21 +1247,28 @@ public class Main extends Application implements Serializable
 			{
 				for(int l=0;l<ver;l++)
 				{
-					//System.out.println(grid);
+					 
 					grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
 					  
-					//System.out.print(gr1[k][l].player_index+1);
-					// .getClass(System.out.println("abc"+gr1);
-					to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+					 
+			 
+					to_serialize obj=new to_serialize(status,winner,gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
 				  	try {
 						serialize(obj,"1");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						 
 						e.printStackTrace();
 					}
 				}
 				
-				System.out.println("");
+				 
+			}
+			
+			if(status==1)
+			{
+			 
+				undo.setDisable(true);
+			
 			}
 			
 		}
@@ -1965,9 +1276,10 @@ public class Main extends Application implements Serializable
 		}
 	}
 	
+ 
 	public	 static void	serialize(to_serialize gr1,String name) throws	IOException	
 	{	
-		//System.out.println("abc");
+		 
 		ObjectOutputStream out	=	null;	
 		try	
 		{	
@@ -1986,7 +1298,7 @@ public class Main extends Application implements Serializable
 	public	static to_serialize deserialize(String name)		
 			throws	IOException,	ClassNotFoundException  
 			{	
-		//System.out.println("def");
+		 
 			ObjectInputStream	in	=	null;	
 			try	
 			{	
@@ -1996,43 +1308,26 @@ public class Main extends Application implements Serializable
 			}
 			catch(Exception e)
 			{
-				to_serialize obj=new to_serialize(null,null,null,0,null,null,null,null,0,0,0,null,null,null,0,0);
+				to_serialize obj=new to_serialize(0,0,null,null,null,0,null,null,null,null,0,0,0,null,null,null,0,0);
 			
 				return obj;
 				
 			}	
 			finally
-			{  // System.out.println("Raj");
+			{   
 			    if(in!=null)
 				in.close();	
-				//System.out.print("KKK");
+				 
 			}			
 										
 			}				
-	public void resumeGame() throws ClassNotFoundException, IOException
+	public void resumeGame() throws ClassNotFoundException, IOException, ExceptionClass
 	{
-		//to_serialize obj=Main.deserialize("1");
-		//AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 	 
-//		s2controller obj1=new s2controller();
-//		mainLayout.getChildren().setAll(a1);
-	//	Group root=new Group();
+	 
+		//System.out.println(b);
+		//undo.setDisable(false);
 		to_serialize gr2=deserialize("1");
-		Group root=null;
-		
-		if(gr2.hor==6)
-		{
-			AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 
-			mainLayout.getChildren().setAll(a1);
-			root=new Group();
-		}
-		
-		else if(gr2.hor==10)
-		{
-			AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 
-			mainLayout.getChildren().setAll(a1);
-			root=new Group();
-		}
-		
+
 		if(gr2.gr1==null)
 		{
 			JLabel label = new JLabel("Sorry! No previously saved game.");
@@ -2051,9 +1346,30 @@ public class Main extends Application implements Serializable
 					e.printStackTrace();
 				}
 			}
+			throw new ExceptionClass("Sorry! No previously saved game.");
 		}
 		else
 		{
+			
+			Group root=null;
+			
+			if(gr2.hor==6)
+			{
+				AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top.fxml")); 
+				mainLayout.getChildren().setAll(a1);
+				root=new Group();
+				undo=s1controller.undo;
+				
+			}
+			
+			else if(gr2.hor==10)
+			{
+				AnchorPane a1=FXMLLoader.load(Main.class.getResource("pages/top1.fxml")); 
+				mainLayout.getChildren().setAll(a1);
+				root=new Group();
+				undo=s1controller.undo;
+			}
+			
 		grid[][] grid=gr2.gr1;
 		
 		turn=gr2.turn;
@@ -2066,30 +1382,26 @@ public class Main extends Application implements Serializable
 		blue=gr2.blue;
 		this.grid=gr2.gr1;
 		gr1=gr2.norm;
+		status=gr2.status;
+		winner=gr2.winner;
 		
-		 //System.out.println(gr1);
+	 
 		all_players=gr2.all_players;
 		num_turn=gr2.num_turn;
 		alive=gr2.alive;
 		this.gr21=gr2.gr21;
-		//this.old_grid=gr2.old_grid;
-		
-//		gr21=new compute_cell[hor][ver];
+ 
 		old_grid=new grid[hor][ver];
-		System.out.println(old_grid);
+		 
 		for (int i=0;i<gr2.hor;i++){
 			for (int j=0;j<gr2.ver;j++){
 				int pl=grid[i][j].value;
 				old_grid[i][j]=new grid(gr21[i][j].player_index,gr21[i][j].value);
-//				gr21[i][j]=new compute_cell(this,i,j);
-//				gr21[i][j].value=grid[i][j].value;
-//				gr21[i][j].player_index=grid[i][j].player_index-1;	 
-				//System.out.print(pl+" ");
+ 
 			}
-			//System.out.println("");
+			 
 		}
-		//System.out.println("****");
-//		System.out.println(old_grid);
+ 
 		
 		gr=new cell[hor][ver];
 		inner_gr=new cell[hor][ver];
@@ -2129,7 +1441,7 @@ public class Main extends Application implements Serializable
 			}
 		}
 	
-		//gr21=new compute_cell[hor][ver];
+	 
 		for (int i=0;i<hor;i++){
 			for (int j=0;j<ver;j++){
 				//cell c=null;
@@ -2140,10 +1452,10 @@ public class Main extends Application implements Serializable
 				
 				else
 				{
-					//System.out.println("abc");
+					 
 					gr[i][j]=new cell(this,i,j,i*50+50,j*50+70,50,50);
 				}
-				//gr1[i][j]=new compute_cell(this,i,j);
+				 
 				root.getChildren().add(gr[i][j]);
 				gr1[i][j]=new compute_cell(this,i,j);
 				gr1[i][j].value=grid[i][j].value;
@@ -2151,14 +1463,12 @@ public class Main extends Application implements Serializable
 				gr[i][j].setOnMouseClicked(new cell_click_event());
 			}
 		}
-		//System.out.println();
-		//System.out.println(gr[gx]);
+	 
 		for(int i=0;i<hor;i++)
 		{
 			for(int j=0;j<ver;j++)
 			{
-				//if (gr[i][j]==null)System.out.println(i+" :: "+j);
-				//System.out.println(gr1);
+				 
 				if (gr1[i][j].value==1){
 					atom a=new atom(this,false,i,j);
 					final PhongMaterial temp_color=new PhongMaterial();
@@ -2228,18 +1538,26 @@ public class Main extends Application implements Serializable
 				}
 			}
 		}
+		 
+		if(status==1)
+		{
+			 
+				undo.setDisable(true);
+				 
+		}
 		
+		else
+		{
 		
 		for(int k=0;k<hor;k++)
 		{
 			for(int l=0;l<ver;l++)
 			{
-				//System.out.println(grid);
+			 
 				grid[k][l]=new grid(gr1[k][l].player_index+1,gr1[k][l].value);
 				  
-				//System.out.print(gr1[k][l].player_index+1);
-				// .getClass(System.out.println("abc"+gr1);
-				to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
+			 
+				to_serialize obj=new to_serialize(status,winner,gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);
 			  	try {
 					serialize(obj,"1");
 				} catch (IOException e) {
@@ -2248,24 +1566,27 @@ public class Main extends Application implements Serializable
 				}
 			}
 			
-			System.out.println("");
+			 
 		}
-		
+		}
 		mainLayout.getChildren().add(root);
 		}
  
 	}
     
-	public void play1(AnchorPane a1,int n,int red[],int green[],int blue[],int hor,int ver) throws IOException
+	public void play1(Button a,AnchorPane a1,int n,int red[],int green[],int blue[],int hor,int ver) throws IOException
 	{
+		 
+		a.setDisable(false);
+		undo=a;
 		mainLayout.getChildren().setAll(a1);
 		Group root=new Group();
-		//System.out.println(n+2);
+		 
 		num_players=n+2;
 		this.hor=hor;
 		this.ver=ver;
 	
-		//System.out.println(num_players);
+	 
 		
 		this.red=red;
 		this.green=green;
@@ -2337,9 +1658,7 @@ public class Main extends Application implements Serializable
 		gr21=new compute_cell[hor][ver];
 		grid=new grid[hor][ver];
 
-//		System.out.println(grid);
-//		System.out.println(gr);
-//		System.out.println(gr1);
+ 
 	
 		
 		for (int i=0;i<hor;i++){
@@ -2352,7 +1671,7 @@ public class Main extends Application implements Serializable
 				
 				else
 				{
-					//System.out.println("abc");
+					
 					c=new cell(this,i,j,i*50+50,j*50+70,50,50);
 				}
 				gr1[i][j]=new compute_cell(this,i,j);
@@ -2372,7 +1691,7 @@ public class Main extends Application implements Serializable
 				grid[k][l]=new grid(0,0);
 				  
 				 
-				to_serialize obj=new to_serialize(gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);;
+				to_serialize obj=new to_serialize(status,winner,gr21,old_grid,alive,num_turn,gr,gr1,all_players,grid,turn,prev_turn,num_players,red, green, blue,hor,ver);;
 			  	try {
 					serialize(obj,"1");
 				} catch (IOException e) {
@@ -2381,16 +1700,12 @@ public class Main extends Application implements Serializable
 				}
 			}
 			
-			System.out.println("");
+		 
 		}
 	 
-//		grid g=new grid(gr);
-	//	System.out.println(mainLayout);
+ 
 		mainLayout.getChildren().add(root);
-		//System.out.println(mainLayout.getChildren());
-//		Scene scene=new Scene(root,500,550,Color.BLACK);
-//		primaryStage.setScene(scene);
-//		primaryStage.show();
+ 
 		
 	}
 	 
